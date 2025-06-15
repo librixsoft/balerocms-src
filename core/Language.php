@@ -34,7 +34,7 @@ class Language {
 	
 	public $multilang = "no";
 	
-	
+	public $app;
 	
 	public function __construct() {
 			

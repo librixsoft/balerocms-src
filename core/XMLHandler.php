@@ -136,11 +136,5 @@ class XMLHandler {
 		}	
 		
 	}
-	
-	
- 	public function __destruct() {
- 		unset($this);
- 	}
-	
 
 }

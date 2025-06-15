@@ -26,6 +26,8 @@ class ThemeLoader {
 
 	public $template,$entries = array();
 
+	public $html;
+
 	private $_template;
 
         function __construct($file = "/themes/") {
