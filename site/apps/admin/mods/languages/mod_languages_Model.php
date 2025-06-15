@@ -12,7 +12,7 @@ class mod_languages_Model extends configSettings {
 	public $editor_headers;
 	public $editor;
 	public $rows;
-	
+	public $tabla_name;
 		
 	public function __construct() {
 		
@@ -100,10 +100,7 @@ class mod_languages_Model extends configSettings {
 		
 	}
 	
- 	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
+
  	
  	
 }

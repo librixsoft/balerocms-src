@@ -225,8 +225,8 @@ class mod_languages_Controller  {
 	/**
 	 * Search language in array
 	 */
-	
-	public function search_language($input = array(), $string) {
+
+    public function search_language($string, $input = array()) {
 		
 		/**
 		 * convert input dynamic array to simple array

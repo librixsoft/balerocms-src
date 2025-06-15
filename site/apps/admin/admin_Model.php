@@ -150,11 +150,7 @@ class admin_Model extends configSettings {
 		$this->db->query("DELETE FROM cookie WHERE expire < '".$delete."'");
 	}
 	
-	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
-	
+
 	
 	
 }

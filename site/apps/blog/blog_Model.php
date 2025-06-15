@@ -258,9 +258,9 @@ class blog_Model extends configSettings {
 			 * is 2nd if sentence is on top will be an error
 			 * Dont edit for now
 			 */
-			
-			if(is_array($this->db->rows)) {
-				foreach ($this->db->rows as $row) {
+
+            if (isset($this->db->rows) && is_array($this->db->rows)) {
+                foreach ($this->db->rows as $row) {
 					$defaultLang = $row['value'];
 					//echo $defaultLang;
 				}
@@ -285,11 +285,7 @@ class blog_Model extends configSettings {
 		
 	}
 	
-	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
-	
+
 	
 	
 }

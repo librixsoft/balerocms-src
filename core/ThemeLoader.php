@@ -26,6 +26,8 @@ class ThemeLoader {
 
 	public $template,$entries = array();
 
+	public $html;
+
 	private $_template;
 
         function __construct($file = "/themes/") {
@@ -76,7 +78,9 @@ class ThemeLoader {
 			
 	
 			foreach ($array as $key => $value) {
-				$template = str_replace("{" . $key . "}", $value, $template);
+                if (!is_null($value)) {
+                    $template = str_replace("{" . $key . "}", $value, $template);
+                }
 			}
 	
 			return $template;

@@ -235,18 +235,5 @@ class mySQL {
 		return $this->error;
 	}
 	
-	/**
-	 * Cerrar conexión.
-	 */
-	
-	public function __destruct() {
-		
-		/**
-		 * Liberar Y cerrar consulta.
-		 */
-		
-		$this->conn->close();
-		
-	}
 
 }

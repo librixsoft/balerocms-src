@@ -215,9 +215,6 @@ class Form {
 		//echo $file;
 		return $file;
 	}
-	
-	public function __destruct() {
-		unset ($this->form);
-	}
+
 	
 }
