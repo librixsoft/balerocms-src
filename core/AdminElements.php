@@ -19,6 +19,8 @@ class AdminElements {
 	public $html;
 	
 	public $mod_regs;
+
+	public $lang;
 	
 	public function __construct() {
 		

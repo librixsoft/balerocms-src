@@ -252,7 +252,7 @@ class mod_virtual_page_Model extends configSettings {
         }
 	}
 	
-	public function add_page_multilang($id, $title, $message, $active, $code, $id) {
+	public function add_page_multilang($id, $title, $message, $active, $code) {
 	
 		date_default_timezone_set('UTC');
 	

@@ -11,6 +11,7 @@ class mod_blog_Model extends configSettings {
 	public $editor_headers;
 	public $editor;
 	public $rows;
+	public $tabla_name;
 	
 	/**
 	 * 

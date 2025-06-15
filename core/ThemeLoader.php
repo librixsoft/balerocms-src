@@ -78,7 +78,9 @@ class ThemeLoader {
 			
 	
 			foreach ($array as $key => $value) {
-				$template = str_replace("{" . $key . "}", $value, $template);
+                if (!is_null($value)) {
+                    $template = str_replace("{" . $key . "}", $value, $template);
+                }
 			}
 	
 			return $template;
