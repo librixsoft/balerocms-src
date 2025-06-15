@@ -338,10 +338,7 @@ class mod_blog_Model extends configSettings {
  		return $total;
  	}
 
- 	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
+
  	
  	
 }

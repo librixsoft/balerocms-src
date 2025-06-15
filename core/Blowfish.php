@@ -117,16 +117,6 @@ class Blowfish {
 			return $objTheme->renderPage($array);
 			
 	}
-	
-	/**
-	 * Metodos magicos de PHP
-	 */
-	
-	public function __destruct() {
-		$this->pwd;
-		unset($this->array);
-	}
 
-	
 	
 }

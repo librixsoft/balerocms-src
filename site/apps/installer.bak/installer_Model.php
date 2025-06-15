@@ -60,7 +60,7 @@ class installer_Model {
 				 * Re-connect and connect to the database
 				 */
 				
-				$this->db->__destruct();
+
 				$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 			
 			} else {
@@ -110,10 +110,6 @@ class installer_Model {
 		//$this->db->query("CREATE DATABASE IF NOT EXISTS ".$this->dbname.";");
 	}
 	
-	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
 	
 	
 	

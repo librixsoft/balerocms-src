@@ -100,10 +100,7 @@ class mod_languages_Model extends configSettings {
 		
 	}
 	
- 	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
+
  	
  	
 }

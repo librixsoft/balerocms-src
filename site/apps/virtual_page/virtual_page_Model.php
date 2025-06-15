@@ -253,11 +253,7 @@ class virtual_page_Model extends configSettings {
 	
 	}
 	
-	# Método destructor del objeto
- 	public function __destruct() {
- 		unset($this);
- 	}
-	
+
 	
 	
 }

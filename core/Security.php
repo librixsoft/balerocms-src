@@ -93,8 +93,5 @@ class Security {
 		return (string)$this->var;
 	}
 	
-	public function __destruct() {
-		unset ($this->var);
-	}
 	
 }

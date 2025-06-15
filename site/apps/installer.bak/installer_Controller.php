@@ -131,9 +131,6 @@ class installer_Controller {
 			
 			$this->objView->check_db = $this->objView->check_icon;
 			
-			$cfg->__destruct();
-				unset($cfg);
-			
 			} catch (Exception $e) {
 				$this->objView->check_db = "";
 				$this->objView->file_error($e->getMessage());
