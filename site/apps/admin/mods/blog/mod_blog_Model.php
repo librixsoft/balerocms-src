@@ -69,8 +69,6 @@ class mod_blog_Model extends configSettings {
 			$e->getMessage();
 		}
 		
-		unset($this->db->rows);
-		
 	}
 	
 	public function add_post_multilang($post_id, $title, $message, $code, $id) {
@@ -96,8 +94,6 @@ class mod_blog_Model extends configSettings {
 			$e->getMessage();
 		}
 	
-		unset($this->db->rows);
-	
 	}
 	
 	public function get_post($min, $limit) {
@@ -106,20 +102,11 @@ class mod_blog_Model extends configSettings {
 			$this->db->query("SELECT * FROM blog ORDER BY id DESC LIMIT $min, $limit");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 			
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				$this->rows = array();
 			} else {
-				$this->rows = $this->db->rows;
+				$this->rows = $this->db->getRows();
 			}
-			
-			
-			//				recorrer datos almacenados en $rows[]
-			//				lo hacemos desde la vista:
-			//foreach ($this->db->rows as $row) {
-				//$this->content .= $row['id'] . $row['title'];
-			//}
-			
-			unset($this->db->rows);
 		
 	}
 	
@@ -129,19 +116,17 @@ class mod_blog_Model extends configSettings {
 		$this->db->query("SELECT * FROM blog WHERE id='$id'");
 		$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 			
-		$this->rows = $this->db->rows;
+		$this->rows = $this->db->getRows();
 
 		$post_content = "";
 			
 		//				recorrer datos almacenados en $rows[]
 		//				lo hacemos desde la vista:
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$post_content = $row['message'];
 		}
-		
-		unset($this->db->rows);
+
 		return $post_content;
-		
 	
 	}
 	
@@ -154,7 +139,7 @@ class mod_blog_Model extends configSettings {
 		$this->db->query("SELECT * FROM blog WHERE id='$id'");
 		$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 			
-		$this->rows = $this->db->rows;
+		$this->rows = $this->db->getRows();
 	
 		$post_title = "";
 			
@@ -164,16 +149,15 @@ class mod_blog_Model extends configSettings {
 		//				recorrer datos almacenados en $rows[]
 		//				lo hacemos desde la vista:
 		
-		if(count($this->db->rows) == 0) {
+		if(count($this->db->getRows()) == 0) {
 			die(_ID_DONT_EXIST);
 		}
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$post_title = $row['title'];
 		}
 		
 		return $post_title;
-		unset($this->db->rows);
 	
 	}
 	
@@ -197,11 +181,11 @@ class mod_blog_Model extends configSettings {
 		 * No results
 		 */
 		
-		if(empty($this->db->rows)) {
+		if(empty($this->db->getRows())) {
 			throw new Exception();
 		}
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			
 			if(empty($row['message'])) {
 				throw new Exception();
@@ -215,9 +199,6 @@ class mod_blog_Model extends configSettings {
 		} catch (Exception $e) {
 			$this->message = "";
 		}
-	
-
-		unset($this->db->rows);
 		
 	}
 	
@@ -232,11 +213,11 @@ class mod_blog_Model extends configSettings {
 		$this->db->query("SELECT * FROM blog_multilang WHERE post_id='".$id.";".$code."'");
 		$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 		
-		if(empty($this->db->rows)) {
+		if(empty($this->db->getRows())) {
 			throw new Exception();
 		}
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			
 			if(empty($row['title'])) {
 				throw new Exception();
@@ -252,19 +233,15 @@ class mod_blog_Model extends configSettings {
 			$this->title = "";
 		}
 	
-		unset($this->db->rows);
-	
 	}
 	
 	public function delete_query($id) {
 		$this->db->query("DELETE FROM blog WHERE id='$id'");
 		$this->db->query("DELETE FROM blog_multilang WHERE id='$id'");
-		unset($this->db->rows);
 	}
 	
 	public function delete_query_multilang($id, $code) {
 		$this->db->query("DELETE FROM blog_multilang WHERE id='$id' AND code='$code'");
-		unset($this->db->rows);
 	}
 		
 	/**
@@ -299,9 +276,6 @@ class mod_blog_Model extends configSettings {
 		} else {
 			return $regs_result;
 		}
-		
-		unset($this->db->rows);
-	
 	
 	}
 		
@@ -312,7 +286,7 @@ class mod_blog_Model extends configSettings {
 		$this->db->query("SELECT * FROM custom_settings WHERE id = '$admin_god'");
 		$this->db->get();
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$limit = $row['pagination'];
 		}
 		
@@ -320,8 +294,7 @@ class mod_blog_Model extends configSettings {
 		 * Siempre (siempre) debemos de matar la variable $rows despues de una consulta,
 		 * para limpiar los datos y esten limpios en la siguiente consulta. 
 		 */
-		
-		unset($this->db->rows);
+
 		return $limit;
 		
 	}
@@ -334,8 +307,7 @@ class mod_blog_Model extends configSettings {
  		$this->db->query("SELECT * FROM blog");
  		$this->db->get();
  		$total = $this->db->num_rows();
- 		
- 		unset($this->db->rows);
+
  		return $total;
  	}
 

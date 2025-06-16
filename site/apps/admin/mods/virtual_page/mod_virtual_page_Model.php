@@ -98,7 +98,7 @@ class mod_virtual_page_Model extends configSettings {
 		
 		$this->db->query("SELECT * FROM virtual_page");
 		$this->db->get();
-		$this->rows = $this->db->rows;
+		$this->rows = $this->db->getRows();
 		
 	}
 	
@@ -107,11 +107,10 @@ class mod_virtual_page_Model extends configSettings {
 		$this->db->query("SELECT * FROM virtual_page WHERE id='$id'");
 		$this->db->get();
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$virtual_title = $row['virtual_title'];
 		}
-		
-		unset($this->db->rows);
+
 		return $virtual_title;
 	}
 	
@@ -127,11 +126,11 @@ class mod_virtual_page_Model extends configSettings {
 			$this->db->query("SELECT * FROM virtual_page_multilang WHERE page_id='".$id.";".$code."'");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 	
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				throw new Exception();
 			}
 	
-			foreach ($this->db->rows as $row) {
+			foreach ($this->db->getRows() as $row) {
 					
 				if(empty($row['virtual_title'])) {
 					throw new Exception();
@@ -147,8 +146,6 @@ class mod_virtual_page_Model extends configSettings {
 			return "";
 		}
 	
-		unset($this->db->rows);
-	
 	}
 	
 	
@@ -163,11 +160,11 @@ class mod_virtual_page_Model extends configSettings {
 			$this->db->query("SELECT * FROM virtual_page_multilang WHERE page_id='".$id.";".$code."'");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 	
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				throw new Exception();
 			}
 	
-			foreach ($this->db->rows as $row) {
+			foreach ($this->db->getRows() as $row) {
 					
 				if(empty($row['virtual_content'])) {
 					throw new Exception();
@@ -183,8 +180,6 @@ class mod_virtual_page_Model extends configSettings {
 			return "";
 		}
 	
-		unset($this->db->rows);
-	
 	}
 	
 	public function return_virtual_content($id) {
@@ -194,8 +189,8 @@ class mod_virtual_page_Model extends configSettings {
 		$this->db->query($query);
 		$this->db->get();
 		
-		if(!empty($this->db->rows)) {
-		foreach ($this->db->rows as $row) {
+		if(!empty($this->db->getRows())) {
+		foreach ($this->db->getRows() as $row) {
 			$virtual_content = $row['virtual_content'];
 		}
 		}
@@ -209,11 +204,11 @@ class mod_virtual_page_Model extends configSettings {
 		$this->db->query("SELECT * FROM virtual_page WHERE id='$id'");
 		$this->db->get();
 	
-		if(count($this->db->rows) == 0)  {
+		if(count($this->db->getRows()) == 0)  {
 			throw new Exception(_ID_DONT_EXIST);
 		}
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$active = $row['active'];
 		}
 	
@@ -274,8 +269,6 @@ class mod_virtual_page_Model extends configSettings {
 		} catch (Exception $e) {
 			$e->getMessage();
 		}
-	
-		unset($this->db->rows);
 	
 	}
 	

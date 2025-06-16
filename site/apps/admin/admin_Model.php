@@ -44,7 +44,7 @@ class admin_Model extends configSettings {
 				
 			//				recorrer datos almacenados en $rows[]
 			//				lo hacemos desde la vista:
-			foreach ($this->db->rows as $row) {
+			foreach ($this->db->getRows() as $row) {
 				$theme = $row['theme'];
 			}
 			
@@ -52,12 +52,7 @@ class admin_Model extends configSettings {
 		} catch (Exception $e) {
 			$theme = $e->getMessage();
 		}
-		
-		/**
-		 * clean db->rows before return 
-		 */
-		
-		unset($this->db->rows);
+
 		return $theme;
 	}
 	
@@ -88,7 +83,7 @@ class admin_Model extends configSettings {
 		
 			//				recorrer datos almacenados en $rows[]
 			//				lo hacemos desde la vista:
-			foreach ($this->db->rows as $row) {
+			foreach ($this->db->getRows() as $row) {
 				$pages = $row['pagination'];
 			}
 		
@@ -96,13 +91,7 @@ class admin_Model extends configSettings {
 		} catch (Exception $e) {
 			$pages = $e->getMessage();
 		}
-		
-		
-		/**
-		 * clean db->rows before return 
-		 */
-		
-		unset($this->db->rows);
+
 		return $pages;
 	}
 	
