@@ -133,17 +133,17 @@ class blog_View extends configSettings {
 			 */
 			
 			$limit = 144;
-			$word_count = strlen($row['message']);
-			
-			//try {
+            $word_count = isset($row['message']) ? strlen($row['message']) : 0;
+
+            //try {
 				
 				/**
 				 * Truncate post content
 				 */
-				
-			$post = $this->truncate_word($row['message'], $limit);
-			
-			/**
+
+            $post = $this->truncate_word($row['message'] ?? '', $limit);
+
+            /**
 			 * Print "More..." link
 			 */
 			
@@ -172,13 +172,13 @@ class blog_View extends configSettings {
 			
 			//$blocks = $this->block($this->count, 3);
 			//$this->count++;
-			
-			$vars = array("blog_title" => $row['title'],
-						"blog_message" => $render_html,
-						"blog_info" => $row['info'],
-						//"blocks" => $blocks
-						);
-			
+
+            $vars = array(
+                "blog_title"   => $row['title'] ?? '',
+                "blog_message" => $render_html,
+                "blog_info"    => $row['info'] ?? '',
+                //"blocks" => $blocks
+            );
 
 			
 			/**

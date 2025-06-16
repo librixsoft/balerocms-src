@@ -50,34 +50,38 @@ class blog_Model extends configSettings {
 	}
 	
 	public function limit() {
-		
+
+	    $limit = 0;
+
 		$admin_god = 1;
 		
 		$this->db->query("SELECT * FROM custom_settings WHERE id = '$admin_god'");
 		$this->db->get();
-		
-		foreach ($this->db->rows as $row) {
-			$limit = $row['pagination'];
-		}
+
+        $rows = $this->db->getRows();
+        foreach ($rows ?? [] as $row) {
+            $limit = $row['pagination'] ?? null; // o algún valor por defecto, por ejemplo 10
+        }
 		
 		/**
 		 * Siempre (siempre) debemos de matar la variable $rows despues de una consulta,
 		 * para limpiar los datos y esten limpios en la siguiente consulta. 
 		 */
-		
-		unset($this->db->rows);
+
 		return $limit;
 		
 	}
 	
 	public function theme() {
-		
+
+	    $theme = '';
+
 		$admin_god = 1;
 		
 		$this->db->query("SELECT * FROM custom_settings WHERE id = '$admin_god'");
 		$this->db->get();
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$theme = $row['theme'];
 		}
 		
@@ -85,15 +89,14 @@ class blog_Model extends configSettings {
 		 * Siempre (siempre) debemos de matar la variable $rows despues de una consulta,
 		 * para limpiar los datos y esten limpios en la siguiente consulta.
 		 */
-		
-		unset($this->db->rows);
+
 		return $theme;
 		
 	}
 	
 	public function loadModelvars() {
 		
-		$this->rows = $this->db->rows;
+		$this->rows = $this->db->getRows();
 		
 	}
 	
@@ -104,17 +107,15 @@ class blog_Model extends configSettings {
 		
 			$this->db->query("SELECT * FROM blog WHERE id = '$id'");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
-			$this->rows = $this->db->rows;
+			$this->rows = $this->db->getRows();
 			
 		} else {
 		
 			$this->db->query("SELECT * FROM blog_multilang WHERE code = '".$this->lang."' AND id = '".$id."'");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
-			$this->rows = $this->db->rows;
+			$this->rows = $this->db->getRows();
 		
 		}
-		
-		unset($this->db->rows);
 	
 	}
 	
@@ -136,9 +137,9 @@ class blog_Model extends configSettings {
 			$this->db->query("SELECT * FROM blog ORDER BY id DESC LIMIT $min, $max");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 				
-			$this->rows = $this->db->rows;
+			$this->rows = $this->db->getRows();
 				
-			if(empty($this->rows) OR !is_array($this->db->rows)) {
+			if(empty($this->rows) OR !is_array($this->db->getRows())) {
 				return false;
 			}
 			
@@ -147,19 +148,12 @@ class blog_Model extends configSettings {
 			$this->db->query("SELECT * FROM blog_multilang WHERE code = '".$this->lang."' ORDER BY id DESC LIMIT $min, $max");
 			$this->db->get(); // cargar la variable de la clase $this->db->rows[] (MySQL::rows[]) con datos.
 				
-			if(!empty($this->db->rows)) {
-				$this->rows = $this->db->rows;
+			if(!empty($this->db->getRows())) {
+				$this->rows = $this->db->getRows();
 			}
 			
 		}
-			
-		/**
-		 * Siempre (siempre) debemos de matar la variable $rows despues de una consulta,
-		 * para limpiar los datos y esten limpios en la siguiente consulta.
-		 */
-			
-		unset($this->db->rows);
-	
+
 	}
 
 	
@@ -171,13 +165,11 @@ class blog_Model extends configSettings {
 			$this->db->query("SELECT * FROM blog");
 			$this->db->get();
 			$rows = $this->db->num_rows();
-			unset($this->db->rows);
 			return $rows;
 		} else {
 			$this->db->query("SELECT * FROM blog_multilang WHERE code = '$this->lang'");
 			$this->db->get();
 			$rows = $this->db->num_rows();
-			unset($this->db->rows);
 			return $rows;
 		}
 	}
@@ -193,15 +185,14 @@ class blog_Model extends configSettings {
 		try {
 		$this->db->query("SELECT * FROM blog WHERE id = '$id'");
 		$this->db->get();
-		if(empty($this->db->rows)) {
+		if(empty($this->db->getRows())) {
 			throw new Exception(_GET_POST_ERROR);
 		}
-		$result = $this->db->rows;
+		$result = $this->db->getRows();
 		} catch (Exception $e) {
 			throw new Exception($e->getMessage());
 		}
-		
-		unset($this->db->rows);
+
 		return $result;
 		
 	}
@@ -215,13 +206,14 @@ class blog_Model extends configSettings {
 		
 		try {
 			
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				throw new Exception();
 			}
-			
-			foreach ($this->db->rows as $row) {
-				$array[] = $row['code'];
-			}
+			if(is_array($this->db->getRow())) {
+                foreach ($this->db->getRow() as $row) {
+                    $array[] = $row['code'];
+                }
+            }
 			
 		} catch (Exception $e) {
 			
@@ -230,8 +222,7 @@ class blog_Model extends configSettings {
 			 */
 			
 		}
-		
-		unset($this->db->rows);
+
 		return $array;
 	}
 	
@@ -259,14 +250,15 @@ class blog_Model extends configSettings {
 			 * Dont edit for now
 			 */
 
-            if (isset($this->db->rows) && is_array($this->db->rows)) {
-                foreach ($this->db->rows as $row) {
-					$defaultLang = $row['value'];
-					//echo $defaultLang;
-				}
-			}
-			
-			if(empty($this->db->rows) || empty($defaultLang)) {
+            $rows = $this->db->getRows();
+
+            foreach ($rows ?? [] as $row) {
+                $defaultLang = $row['value'] ?? null; // Usa null o un valor por defecto
+                // echo $defaultLang;
+            }
+
+
+            if(empty($this->db->getRows()) || empty($defaultLang)) {
 				throw new Exception();
 			}
 			
@@ -279,8 +271,7 @@ class blog_Model extends configSettings {
 			$defaultLang = "main";
 			
 		}
-		
-		unset($this->db->rows);
+
 		return $defaultLang;
 		
 	}
