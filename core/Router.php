@@ -94,7 +94,7 @@ class Router {
 			 * default app or home
 			 */
 			
-				$ldr = new autoloader("blog"); // cargar clases para la app
+				$ldr = new autoloader("virtual_page"); // cargar clases para la app
 				
 				/**
 				 * First Load Language and wait
@@ -102,14 +102,14 @@ class Router {
 				
 				$this->lang = new Language();
 				$this->lang->init();
-				$this->lang->init_apps_lang("blog");
-				$this->lang->app = "blog";
+				$this->lang->init_apps_lang("virtual_page");
+				$this->lang->app = "virtual_page";
 				
 				/**
 				 * Then load app controller
 				 */
 				
-				$app = new blog_Controller();
+				$app = new virtual_page_Controller();
 				
 				/**
 				 * Kill lang
