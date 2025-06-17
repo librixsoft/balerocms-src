@@ -140,50 +140,26 @@ class mySQL {
 		}
 		
 		
-	}	
-	
-	
-	/**
-	 * Ciclamos al asignar un valor al array.
-	 */
-	
-	public function get() {
-		
-		/**
-		 * @get() Almacena los resultados de la query en un array
-		 * en este caso $this->rows[]
-		 */
-		
-		try {
-
-			if (!$this->result) {
-				throw new Exception(_QUERY_ERROR);
-			}
-				
-			/**
-			 * Almacenamos los resultados MySQLi en un array ($this->rows[])
-			 * Para poder exportarlo a la vista.
-			 */
-			
-			while($row = $this->result->fetch_array()) {
-				$this->rows[] = $row;
-			}
-
-//				recorrer datos almacenados en $rows[]
-//				lo hacemos desde la vista:			
-   			//foreach ($this->rows as $row) {
-   				//echo $row['id'] . $row['title'];
-   			//}
-
-			
-		} catch (Exception $e) {
-			$e->getMessage();
-		}
-		
 	}
 
 
-	/** Regresa el numero total de registros de una $query **/
+    public function get() {
+        try {
+            if (!$this->result) {
+                throw new Exception(_QUERY_ERROR);
+            }
+
+            $this->rows = []; // ← IMPORTANTE: limpiar antes
+            while($row = $this->result->fetch_array(MYSQLI_ASSOC)) {
+                $this->rows[] = $row;
+            }
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+    }
+
+
+    /** Regresa el numero total de registros de una $query **/
 
 	public function num_rows() {
 
