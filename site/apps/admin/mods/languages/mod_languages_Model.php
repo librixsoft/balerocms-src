@@ -27,7 +27,7 @@ class mod_languages_Model extends configSettings {
 		$this->LoadSettings();
 		
 		try {
-			$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+			$this->db = new mySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage());
 		}
@@ -52,9 +52,9 @@ class mod_languages_Model extends configSettings {
 			$this->db->query("SELECT * FROM languages");
 			$this->db->get();
 					
-			$lang_array = $this->db->rows;
+			$lang_array = $this->db->getRows();
 			
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				throw new Exception();
 			}
 				
@@ -62,12 +62,7 @@ class mod_languages_Model extends configSettings {
 			//$lang_array = _NO_LANGUAGES;
 		}
 	
-			
-		/**
-		 * clean db->rows before return
-		 */
-	
-		unset($this->db->rows);
+
 		return $lang_array;
 	
 	}

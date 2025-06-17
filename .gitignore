@@ -10,3 +10,5 @@ public/images
 .DS_Store
 .idea
 *.iml
+#/site/apps/installer/
+/site/apps/installer_bak/

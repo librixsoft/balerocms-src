@@ -17,11 +17,6 @@ class virtual_page_Model extends configSettings {
 	
 	public $result;
 	public $db;
-
-	public $dbhost;
-	public $dbuser;
-	public $dbpass;
-	public $dbname;
 	
 	public $rows; // pasar variable a vista
 	
@@ -36,7 +31,7 @@ class virtual_page_Model extends configSettings {
 		$this->LoadSettings();
 		
 		try {
-			$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+			$this->db = new mySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage());
 		}
@@ -52,7 +47,7 @@ class virtual_page_Model extends configSettings {
 		$this->db->query("SELECT * FROM custom_settings WHERE id = '$admin_god'");
 		$this->db->get();
 		
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$theme = $row['theme'];
 		}
 		
@@ -60,8 +55,7 @@ class virtual_page_Model extends configSettings {
 		 * Siempre (siempre) debemos de matar la variable $rows despues de una consulta,
 		 * para limpiar los datos y esten limpios en la siguiente consulta.
 		 */
-		
-		unset($this->db->rows);
+
 		return $theme;
 		
 	}
@@ -77,15 +71,14 @@ class virtual_page_Model extends configSettings {
 				$virtual_pages = array();
 				$this->db->query("SELECT * FROM virtual_page WHERE id = '$id'");
 				$this->db->get();
-				$virtual_pages = $this->db->rows;
+				$virtual_pages = $this->db->getRows();
 			} else {
 				$virtual_pages = array();
 				$this->db->query("SELECT * FROM virtual_page_multilang WHERE id = '$id' AND code = '".$this->lang."'");
 				$this->db->get();
-				$virtual_pages = $this->db->rows;
+				$virtual_pages = $this->db->getRows();
 			}
-			
-		unset($this->db->rows);
+
 		return $virtual_pages;
 	
 	}
@@ -109,13 +102,12 @@ class virtual_page_Model extends configSettings {
 			$this->db->query("SELECT * FROM virtual_page WHERE active = '1'");
 			$this->db->get();
 		
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				$virtual_pages = "";
 			} else {
-				$virtual_pages = $this->db->rows;
+				$virtual_pages = $this->db->getRows();
 			}
-		
-			unset($this->db->rows);
+
 			return $virtual_pages;
 			
 		} else {
@@ -127,13 +119,12 @@ class virtual_page_Model extends configSettings {
 			$this->db->query("SELECT * FROM virtual_page_multilang WHERE code = '$this->lang'");
 			$this->db->get();
 				
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				$virtual_pages = "";
 			} else {
-				$virtual_pages = $this->db->rows;
+				$virtual_pages = $this->db->getRows();
 			}
-				
-			unset($this->db->rows);
+
 			return $virtual_pages;
 		}
 		
@@ -154,23 +145,24 @@ class virtual_page_Model extends configSettings {
 		
 		try {
 			
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				throw new Exception();
 			}
-			
-			foreach ($this->db->rows as $row) {
-				$array[] = $row['code'];
-			}
-			
-		} catch (Exception $e) {
+
+            foreach ($this->db->getRows() as $row) {
+                if (isset($row['code'])) {
+                    $array[] = $row['code'];
+                }
+            }
+
+        } catch (Exception $e) {
 			
 			/**
 			 * Np actions
 			 */
 			
 		}
-	
-		unset($this->db->rows);
+
 		return $array;
 	}
 	
@@ -188,11 +180,11 @@ class virtual_page_Model extends configSettings {
 		
 		try {
 			
-			if(empty($this->db->rows) || empty($defaultLang)) {
+			if(empty($this->db->getRows()) || empty($defaultLang)) {
 				throw new Exception();
 			}
 			
-			foreach ($this->db->rows as $row) {
+			foreach ($this->db->getRows() as $row) {
 				$defaultLang = $row['value'];
 				//echo $defaultLang;
 			}
@@ -206,8 +198,7 @@ class virtual_page_Model extends configSettings {
 			$defaultLang = "main";
 			
 		}
-		
-		unset($this->db->rows);
+
 		return $defaultLang;
 		
 	}
@@ -220,13 +211,11 @@ class virtual_page_Model extends configSettings {
 			$this->db->query("SELECT * FROM virtual_page WHERE active = '1'");
 			$this->db->get();
 			$rows = $this->db->num_rows();
-			unset($this->db->rows);
 			return $rows;
 		} else {
 			$this->db->query("SELECT * FROM virtual_page_multilang WHERE code = '$this->lang'");
 			$this->db->get();
 			$rows = $this->db->num_rows();
-			unset($this->db->rows);
 			return $rows;
 		}
 		
@@ -239,7 +228,7 @@ class virtual_page_Model extends configSettings {
 		$this->db->query("SELECT * FROM custom_settings WHERE id = '$admin_god'");
 		$this->db->get();
 	
-		foreach ($this->db->rows as $row) {
+		foreach ($this->db->getRows() as $row) {
 			$limit = $row['pagination'];
 		}
 	
@@ -247,8 +236,7 @@ class virtual_page_Model extends configSettings {
 		 * Siempre (siempre) debemos de matar la variable $rows despues de una consulta,
 		 * para limpiar los datos y esten limpios en la siguiente consulta.
 		 */
-	
-		unset($this->db->rows);
+
 		return $limit;
 	
 	}

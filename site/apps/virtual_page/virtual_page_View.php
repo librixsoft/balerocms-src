@@ -81,18 +81,25 @@ class virtual_page_View extends configSettings {
 		$value = $this->objModel->get_virtual_pages();
 		
 		if(empty($this->lang) || $this->lang == "main") {
+
+            foreach ($value ?? [] as $page) {
+				// Validar claves con valores por defecto
+				$virtualTitle = $page['virtual_title'] ?? '';
+				$id = $page['id'] ?? 0;
 			
-			foreach ($value as $page) {
-				if($this->active == $page['virtual_title']) {
-					$this->css_active = "class=\"active\"";
+				// Solo generar HTML si hay título
+				if ($virtualTitle !== '') {
+					if ($this->active == $virtualTitle) {
+						$this->css_active = 'class="active"';
+					}
+			
+					$html .= "<li $this->css_active><a href=\"./virtual_page/main/id-$id\">$virtualTitle</a></li>";
+					$this->css_active = ""; // reset
 				}
-				// dynamic
-                //$html .= "<li><a href=\"index.php?app=virtual_page&id=".$page['id']."\">" . $page['virtual_title'] . "</a></li>";
-                $html .= "<li $this->css_active><a href=\"./virtual_page/main/id-".$page['id']."\">" . $page['virtual_title'] . "</a></li>";
-                $this->css_active = ""; // reset
-			}
-			
-		} else {
+			}			
+
+
+        } else {
 			
 			if(is_array($value)) {
 			

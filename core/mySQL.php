@@ -58,14 +58,14 @@ class mySQL {
 	 * Ejecutar query
 	 */
 	
-	public $result;
+	private $result;
 	
 	/**
 	 * 
 	 * Almacenar mensajes de errores.
 	 */
 	
-	public $error = FALSE;
+	private $error = FALSE;
 	
 	
 	/**
@@ -73,15 +73,15 @@ class mySQL {
 	 * Almacenamos los resultados en un array llamado rows[]. 
 	 */
 	
-	public $rows;
-	public $row;
+	private $rows;
+	private $row;
 	
 	/**
 	 * 
 	 * Connection status
 	 */
 	
-	public $status = FALSE;
+	private $status = FALSE;
 	
 	/**
 	 * Método constructor
@@ -140,50 +140,26 @@ class mySQL {
 		}
 		
 		
-	}	
-	
-	
-	/**
-	 * Ciclamos al asignar un valor al array.
-	 */
-	
-	public function get() {
-		
-		/**
-		 * @get() Almacena los resultados de la query en un array
-		 * en este caso $this->rows[]
-		 */
-		
-		try {
-
-			if (!$this->result) {
-				throw new Exception(_QUERY_ERROR);
-			}
-				
-			/**
-			 * Almacenamos los resultados MySQLi en un array ($this->rows[])
-			 * Para poder exportarlo a la vista.
-			 */
-			
-			while($row = $this->result->fetch_array()) {
-				$this->rows[] = $row;
-			}
-
-//				recorrer datos almacenados en $rows[]
-//				lo hacemos desde la vista:			
-   			//foreach ($this->rows as $row) {
-   				//echo $row['id'] . $row['title'];
-   			//}
-
-			
-		} catch (Exception $e) {
-			$e->getMessage();
-		}
-		
 	}
 
 
-	/** Regresa el numero total de registros de una $query **/
+    public function get() {
+        try {
+            if (!$this->result) {
+                throw new Exception(_QUERY_ERROR);
+            }
+
+            $this->rows = []; // ← IMPORTANTE: limpiar antes
+            while($row = $this->result->fetch_array(MYSQLI_ASSOC)) {
+                $this->rows[] = $row;
+            }
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+    }
+
+
+    /** Regresa el numero total de registros de una $query **/
 
 	public function num_rows() {
 
@@ -234,6 +210,165 @@ class mySQL {
 	public function mySQLError() {
 		return $this->error;
 	}
-	
+
+    /**
+     * @return mixed
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param mixed $host
+     */
+    public function setHost($host): void
+    {
+        $this->host = $host;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPass()
+    {
+        return $this->pass;
+    }
+
+    /**
+     * @param mixed $pass
+     */
+    public function setPass($pass): void
+    {
+        $this->pass = $pass;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
+     * @param mixed $db
+     */
+    public function setDb($db): void
+    {
+        $this->db = $db;
+    }
+
+    /**
+     * @return mysqli
+     */
+    public function getConn(): mysqli
+    {
+        return $this->conn;
+    }
+
+    /**
+     * @param mysqli $conn
+     */
+    public function setConn(mysqli $conn): void
+    {
+        $this->conn = $conn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param mixed $result
+     */
+    public function setResult($result): void
+    {
+        $this->result = $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isError(): bool
+    {
+        return $this->error;
+    }
+
+    /**
+     * @param bool $error
+     */
+    public function setError(bool $error): void
+    {
+        $this->error = $error;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
+    /**
+     * @param mixed $rows
+     */
+    public function setRows($rows): void
+    {
+        $this->rows = $rows;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
+
+    /**
+     * @param mixed $row
+     */
+    public function setRow($row): void
+    {
+        $this->row = $row;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatus(): bool
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param bool $status
+     */
+    public function setStatus(bool $status): void
+    {
+        $this->status = $status;
+    }
 
 }

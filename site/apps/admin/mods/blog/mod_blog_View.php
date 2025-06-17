@@ -177,9 +177,11 @@ class mod_blog_View extends configSettings {
 			}  else {
 				$color = "color1";
 			}
-	
-			// Guardar filas renderizadas en $html
-			$html .= $this->RenderTableRows($i, $row['id'], $row['title'], $row['message'], $color);
+
+            $title = isset($row['title']) ? $row['title'] : '';
+            $message = isset($row['message']) ? $row['message'] : '';
+
+            $html .= $this->RenderTableRows($i, $row['id'], $title, $message, $color);
 			
 		}
 		

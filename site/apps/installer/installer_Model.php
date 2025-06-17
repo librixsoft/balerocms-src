@@ -51,7 +51,7 @@ class installer_Model {
 			 * 
 			 */
 			
-			if($this->db->status == TRUE) {
+			if($this->db->isStatus() == TRUE) {
 				
 				 $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->dbname . ";");
 			
@@ -75,24 +75,6 @@ class installer_Model {
 			
 		}
 		
-	}
-	
-	
-	public function test() {
-	
-			try {
-				$testDB = new mySQL($this->dbpass, $this->dbuser, $this->dbpass, $this->dbname);
-				
-				if(mysqli_errno()) {
-					throw new Exception(mysql_errno());
-				}
-				
-			} catch (Exception $e) {
-				throw  new Exception($e->getMessage());
-			}
-			
-			return $e->getMessage();
-	
 	}
 	
 	public function install() {
