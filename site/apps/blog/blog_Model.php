@@ -17,11 +17,6 @@ class blog_Model extends configSettings {
 	
 	public $result;
 	public $db;
-
-	public $dbhost;
-	public $dbuser;
-	public $dbpass;
-	public $dbname;
 	
 	public $rows; // pasar variable a vista
 	
@@ -41,7 +36,7 @@ class blog_Model extends configSettings {
 		$this->LoadSettings();
 		
 		try {
-			$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+			$this->db = new mySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage());
 		}

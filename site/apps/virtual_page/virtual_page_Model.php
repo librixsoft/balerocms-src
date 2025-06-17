@@ -17,11 +17,6 @@ class virtual_page_Model extends configSettings {
 	
 	public $result;
 	public $db;
-
-	public $dbhost;
-	public $dbuser;
-	public $dbpass;
-	public $dbname;
 	
 	public $rows; // pasar variable a vista
 	
@@ -36,7 +31,7 @@ class virtual_page_Model extends configSettings {
 		$this->LoadSettings();
 		
 		try {
-			$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+			$this->db = new mySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage());
 		}
@@ -124,7 +119,7 @@ class virtual_page_Model extends configSettings {
 			$this->db->query("SELECT * FROM virtual_page_multilang WHERE code = '$this->lang'");
 			$this->db->get();
 				
-			if(empty($this->db->rows)) {
+			if(empty($this->db->getRows())) {
 				$virtual_pages = "";
 			} else {
 				$virtual_pages = $this->db->getRows();

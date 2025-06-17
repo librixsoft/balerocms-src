@@ -27,10 +27,10 @@ class configSettings {
 	 * DB test
 	 */
 	
-	public $dbhost;
-	public $dbuser;
-	public $dbpass;
-	public $dbname;
+	private $dbhost;
+	private $dbuser;
+	private $dbpass;
+	private $dbname;
 	
 	/**
 	 *
@@ -187,5 +187,71 @@ class configSettings {
 		return $url;
 	
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getDbhost()
+    {
+        return $this->dbhost;
+    }
+
+    /**
+     * @param mixed $dbhost
+     */
+    public function setDbhost($dbhost): void
+    {
+        $this->dbhost = $dbhost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbuser()
+    {
+        return $this->dbuser;
+    }
+
+    /**
+     * @param mixed $dbuser
+     */
+    public function setDbuser($dbuser): void
+    {
+        $this->dbuser = $dbuser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbpass()
+    {
+        return $this->dbpass;
+    }
+
+    /**
+     * @param mixed $dbpass
+     */
+    public function setDbpass($dbpass): void
+    {
+        $this->dbpass = $dbpass;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbname()
+    {
+        return $this->dbname;
+    }
+
+    /**
+     * @param mixed $dbname
+     */
+    public function setDbname($dbname): void
+    {
+        $this->dbname = $dbname;
+    }
+
+
 
 }
