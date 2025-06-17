@@ -23,7 +23,6 @@ class Router
     public $lang;
 
     private RequestHelper $request;
-    private Security $security;
 
     /**
      * Public get variable controller
@@ -35,8 +34,7 @@ class Router
     public function __construct()
     {
 
-        $this->security = new Security(); // tu clase existente
-        $this->request = new RequestHelper($this->security);
+        $this->request = new RequestHelper(new Security());
         $this->installer();
 
     }
