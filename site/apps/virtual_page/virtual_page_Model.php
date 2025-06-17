@@ -148,12 +148,14 @@ class virtual_page_Model extends configSettings {
 			if(empty($this->db->getRows())) {
 				throw new Exception();
 			}
-			
-			foreach ($this->db->getRows() as $row) {
-				$array[] = $row['code'];
-			}
-			
-		} catch (Exception $e) {
+
+            foreach ($this->db->getRows() as $row) {
+                if (isset($row['code'])) {
+                    $array[] = $row['code'];
+                }
+            }
+
+        } catch (Exception $e) {
 			
 			/**
 			 * Np actions

@@ -83,17 +83,20 @@ class virtual_page_View extends configSettings {
 		if(empty($this->lang) || $this->lang == "main") {
 
             foreach ($value ?? [] as $page) {
-                // Validar que las claves existan, si no dar valores por defecto
-                $virtualTitle = $page['virtual_title'] ?? '(sin título)';
-                $id = $page['id'] ?? 0;
-
-                if ($this->active == $virtualTitle) {
-                    $this->css_active = 'class="active"';
-                }
-
-                $html .= "<li $this->css_active><a href=\"./virtual_page/main/id-$id\">$virtualTitle</a></li>";
-                $this->css_active = ""; // reset
-            }
+				// Validar claves con valores por defecto
+				$virtualTitle = $page['virtual_title'] ?? '';
+				$id = $page['id'] ?? 0;
+			
+				// Solo generar HTML si hay título
+				if ($virtualTitle !== '') {
+					if ($this->active == $virtualTitle) {
+						$this->css_active = 'class="active"';
+					}
+			
+					$html .= "<li $this->css_active><a href=\"./virtual_page/main/id-$id\">$virtualTitle</a></li>";
+					$this->css_active = ""; // reset
+				}
+			}			
 
 
         } else {
