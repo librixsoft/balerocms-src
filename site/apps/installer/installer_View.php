@@ -232,10 +232,10 @@ class installer_View extends configSettings {
 				 * TextBox
 				 */
 								
-				'txt_dbhost' => $this->dbhost,
-				'txt_dbuser' => $this->dbuser,
-				'txt_dbpass' => $this->dbpass,
-				'txt_dbname' => $this->dbname,
+				'txt_dbhost' => $this->getDbhost(),
+				'txt_dbuser' => $this->getDbuser(),
+				'txt_dbpass' => $this->getDbpass(),
+				'txt_dbname' => $this->getDbname(),
 				
 				'txt_basepath' => $basepath,
 				'txt_title' => $this->title,

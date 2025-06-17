@@ -374,20 +374,10 @@ class Router {
 			if(!file_exists(APPS_DIR . "installer")) {
 				die("App installer NOT found.");		
 			}
-			
-			$this->lang = new Language();
-			$this->lang->init();
-			$this->lang->init_apps_lang("installer");
-			
-			$theme = new ThemeLoader(APPS_DIR . "installer/html/cfgFileError.html");
-			echo $theme->renderPage(array(
-					"msg_error"=>_CONFIG_FILE_ERROR,
-					"refresh"=>_REFRESH));
-			die();
+
+			die($e->getMessage());
 		
 		}
-		
-		unset($this->lang);
 		
 		
 	} // installer
