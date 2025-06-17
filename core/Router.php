@@ -329,9 +329,9 @@ class Router {
 		
 			$xml = new XMLHandler(LOCAL_DIR . "/site/etc/balero.config.xml");
 			$installed = $xml->Child("system", "installed");
-			$pos = strpos($installed, "yes");
+			$isInstalled = strpos($installed, "yes");
 			
- 			if ($pos === false) {
+ 			if ($isInstalled === false) {
 
  				//die("no instalado");
  				
@@ -346,26 +346,6 @@ class Router {
  				$ldr = new autoloader("installer"); // cargar clases para la app
  				$app = new installer_Controller();
  				die();
-								
-				
-			} else {
-				
-				//die("instalado");
-				
-				if(file_exists(APPS_DIR . "installer")) {
-						
-					$this->lang = new Language();
-					$this->lang->init();
-					$this->lang->init_apps_lang("installer");
-						
-					$ldr = new autoloader("installer"); // cargar clases para la app
-					$app = new installer_View();
-					$msgbox = new MsgBox(_SECURITY_LOCK, _SECURITY_LOCK_MESSAGE, "I");
-					$app->content .= $msgbox->Show();
-					$app->Render();
-					unset($this->lang);
-					die();
-				}
 				
 			}
 			
