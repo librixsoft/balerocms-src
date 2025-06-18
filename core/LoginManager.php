@@ -2,9 +2,9 @@
 
 class LoginManager
 {
-    private $security;
+    private Security  $security;
 
-    private $message;
+    private string $message = '';
 
     public function __construct($security)
     {
