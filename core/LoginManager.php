@@ -74,5 +74,17 @@ class LoginManager
 
         echo $login->login_form(APPS_DIR . "admin/panel/login.html");
     }
+
+    public static function logout()
+    {
+        if (isset($_COOKIE['admin_god_balero'])) {
+            try {
+                setcookie("admin_god_balero", "", time() - 3600);
+                header("Location: ./admin");
+            } catch (Exception $e) {
+                setcookie("admin_god_balero", "", time() - 1);
+            }
+        }
+    }
     
 }

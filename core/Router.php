@@ -19,7 +19,6 @@ require_once(LOCAL_DIR . "/core/boot.php");
 class Router
 {
 
-    public $message;
     public $lang;
 
     private Security $security;
@@ -61,11 +60,11 @@ class Router
         switch ($app) {
 
             case "admin":
-                $this->admin_router(); // login inside this method
+                $this->login();
                 break;
 
             case "logout";
-                $this->logout();
+                LoginManager::logout();
                 break;
 
             default:
@@ -78,7 +77,7 @@ class Router
 
     }
 
-    public function admin_router()
+    public function login()
     {
         $this->lang = new Language();
         $this->lang->init();
@@ -241,32 +240,5 @@ class Router
 
 
     } // installer
-
-    public function logout()
-    {
-        if (isset($_COOKIE['admin_god_balero'])) {
-
-            try {
-
-                /**
-                 * Delete cookie admin
-                 */
-
-                setcookie("admin_god_balero", "", time() - 3600);
-                //header("Location: index.php?app=admin");
-                header("Location: ./admin");
-
-            } catch (Exception $e) {
-
-                /**
-                 * forzar
-                 */
-
-                setcookie("admin_god_balero", "", time() - 1);
-
-            }
-
-        }
-    } // end logout
 
 }
