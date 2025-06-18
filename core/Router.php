@@ -22,6 +22,7 @@ class Router
     public $message;
     public $lang;
 
+    private Security $security;
     private RequestHelper $request;
 
     /**
@@ -34,7 +35,8 @@ class Router
     public function __construct()
     {
 
-        $this->request = new RequestHelper(new Security());
+        $this->security = new Security();
+        $this->request = new RequestHelper($this->security);
         $this->installer();
 
     }
@@ -96,7 +98,7 @@ class Router
          * Fixed by Anibal Gomez <anibalgomez@icloud.com>
          */
         if (isset($_COOKIE['counter'])) {
-            $counter = $this->objSecurity->toInt($_COOKIE['counter']);
+            $counter = $this->security->toInt($_COOKIE['counter']);
             if ($counter >= 5) {
                 die(_LOGIN_ATTEMPS);
             }
