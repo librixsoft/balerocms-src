@@ -78,104 +78,25 @@ class Router
 
     }
 
-    /**
-     * Router has the login page inside BlowFish class
-     */
-
     public function admin_router()
     {
-
         $this->lang = new Language();
         $this->lang->init();
         $this->lang->init_apps_lang("admin");
         $this->lang->app = "admin";
 
-        //echo "cokie: " . base64_decode($_COOKIE['admin_god_balero']);
+        $loginManager = new LoginManager($this->security);
+        $isAuthenticated = $loginManager->handleLogin();
 
-        /**
-         * 15-02-2015 XSS on the cookie 'counter'.
-         * Reported By Gjoko Krstic <gjoko@zeroscience.mk>
-         * Fixed by Anibal Gomez <anibalgomez@icloud.com>
-         */
-        if (isset($_COOKIE['counter'])) {
-            $counter = $this->security->toInt($_COOKIE['counter']);
-            if ($counter >= 5) {
-                die(_LOGIN_ATTEMPS);
-            }
-        }
-
-        if (!isset($_COOKIE['admin_god_balero'])) {
-            if (isset($_POST['login'])) {
-                $cfg = new configSettings();
-                $login = new Blowfish();
-                $verify = $login->verify_hash($_POST['pwd'], $cfg->pass);
-
-                if ($_POST['usr'] == $cfg->user && $verify == TRUE) {
-                    $value = base64_encode($cfg->user . ":" . $cfg->pass);
-                    setcookie("admin_god_balero", $value, time() + 3600 * 24);
-                    //header("Location: index.php?app=admin");
-                    header("Location: ./admin");
-                } else {
-                    if (!isset($_COOKIE['counter'])) {
-                        setcookie("counter", 1, time() + 120);
-                    }
-                    if (isset($_COOKIE['counter'])) {
-                        $counter = $this->objSecurity->toInt($_COOKIE['counter']);
-                        setcookie("counter", $counter + 1, time() + 120);
-                        echo $counter;
-                    }
-                    $this->message = _LOGIN_ERROR;
-                }
-            }
-        }
-
-        if (isset($_COOKIE['admin_god_balero'])) {
-
-            //echo("logeado");
-            $cfg = new configSettings();
-            $login = new Blowfish();
-
-            $cookie = base64_decode($_COOKIE['admin_god_balero']);
-
-            //echo $cookie;
-
-            $pieces = explode(":", $cookie);
-            $cookie_usr = $pieces[0];
-            $cookie_pwd = $pieces[1];
-
-
-            if ($cfg->user == $cookie_usr && $cfg->pass == $cookie_pwd) {
-                //die("buscando...");
-                $ldr = new autoloader("admin"); // cargar clases para la app
-                $this->init_mod();
-            } else {
-                // remomve cookie
-                setcookie("admin_god_balero", "", time() - 3600);
-                die("Hash Error");
-            }
-
+        if ($isAuthenticated) {
+            $this->init_mod();
         } else {
-
-            $cfg = new configSettings();
-            $login = new Blowfish();
-            $login->message = $this->message;
-            $login->basepath = $cfg->basepath;
-
-            try {
-
-                echo $login->login_form(APPS_DIR . "admin/panel/login.html");
-
-            } catch (Exception $e) {
-
-                die($e->getMessage());
-
-            }
-
+            $loginManager->showLoginForm();
         }
 
         unset($this->lang);
-
     }
+
 
     /**
      * init() app system
