@@ -15,7 +15,7 @@
 **/
 
 error_reporting(-1); // Debug: Developer (-1) / User (0)
-define("_CORE_VERSION", "0.8"); // Version
+define("_CORE_VERSION", "0.9"); // Version
 
 // DO NOT EDIT
 // -----------
