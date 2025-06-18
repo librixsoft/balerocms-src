@@ -94,7 +94,6 @@ class Router
             $loginManager->showLoginForm();
         }
 
-        unset($this->lang);
     }
 
 

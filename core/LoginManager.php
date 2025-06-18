@@ -4,7 +4,7 @@ class LoginManager
 {
     private $security;
 
-    public $message;
+    private $message;
 
     public function __construct($security)
     {
@@ -74,4 +74,5 @@ class LoginManager
 
         echo $login->login_form(APPS_DIR . "admin/panel/login.html");
     }
+    
 }
