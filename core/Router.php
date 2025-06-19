@@ -12,10 +12,6 @@
  *
  **/
 
-require_once(LOCAL_DIR . "/core/RequestHelper.php");
-require_once(LOCAL_DIR . "/core/Security.php");
-require_once(LOCAL_DIR . "/core/boot.php");
-
 class Router
 {
 
@@ -42,8 +38,6 @@ class Router
 
     public function init()
     {
-
-        new boot();
 
         $app = $this->request->get('app');
 
