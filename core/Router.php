@@ -20,10 +20,6 @@ class Router
     private Security $security;
     private RequestHelper $request;
 
-    /**
-     * Public get variable controller
-     */
-
     private string $app;
 
 
@@ -42,12 +38,11 @@ class Router
         $app = $this->request->get('app');
 
         if ($app === null) {
-            $ldr = new autoloader("virtual_page"); // cargar clases para la app
             $this->lang = new Language();
             $this->lang->init();
             $this->lang->init_apps_lang("virtual_page");
             $this->lang->app = "virtual_page";
-            $app = new virtual_page_Controller();
+            new virtual_page_Controller();
             exit;
         }
 
@@ -89,23 +84,16 @@ class Router
 
     }
 
-
-    /**
-     * init() app system
-     * /site/apps/
-     */
-
     public function init_app()
     {
 
         if (file_exists(APPS_DIR . $this->app . "/" . $this->app . "_Controller.php")) {
-            $ldr = new autoloader($this->app); // cargar clases para la app
             $this->lang = new Language();
             $dynamic = $this->app . "_Controller";
             $this->lang->init();
             $this->lang->init_apps_lang($this->app);
             $this->lang->app = $this->app;
-            $app = new $dynamic();
+            new $dynamic();
             unset($this->lang);
         } else {
             $msg = new MsgBox("error", "dont exist");
@@ -125,10 +113,6 @@ class Router
     public function init_mod()
     {
 
-        /**
-         * Buscar en esta carpeta los modulos modloader("carpeta");
-         */
-
         if (isset($_GET['mod'])) {
 
             $blind_url = $this->objSecurity->antiXSS($_GET['mod']);
@@ -137,17 +121,11 @@ class Router
 
                 case $blind_url:
                     if (file_exists(MODS_DIR . $blind_url)) {
-                        //$this->lang = new Language();
-                        //$this->lang->init();
-                        //$this->lang->app = $blind_url;
-                        //$this->lang->init_mods_lang($blind_url);
-                        //include_once(LOCAL_DIR . "/site/apps/admin/mods/" . $blind_url . "/lang/en.php");
                         $dynamic = "mod_" . $blind_url . "_Controller";
-                        $mod_loader = new Modloader($blind_url);
+                        new Modloader($blind_url);
                         $admin_elements = new AdminElements();
                         $title_mod_menu = $admin_elements->mods_menu();
-                        // cargar controlador de pagina de inicio (admin).
-                        $settings_controller = new $dynamic($title_mod_menu);
+                        new $dynamic($title_mod_menu);
                     } else {
                         die(_CONTROLLER_NOT_FOUND);
                     }
@@ -158,31 +136,16 @@ class Router
 
         } else {
 
-            /**
-             * Init admin app controller
-             */
-
             if (file_exists(APPS_DIR . "admin/admin_Controller.php")) {
-
-                /**
-                 * Load lang and wait
-                 */
 
                 $this->lang = new Language();
                 $this->lang->app = "admin";
                 $this->lang->init();
                 $this->lang->init_apps_lang("admin");
 
-                /**
-                 * Load panel and admin controller
-                 */
-
                 $admin_elements = new AdminElements();
                 $title_mod_menu = $admin_elements->mods_menu();
-                // cargar controlador de pagina de inicio (admin).
-                $settings_controller = new admin_Controller($title_mod_menu);
-
-                unset($this->lang);
+                new admin_Controller($title_mod_menu);
 
             } else {
                 die(_CONTROLLER_ADMIN_NOT_FOUND);
@@ -194,9 +157,7 @@ class Router
     public function installer()
     {
 
-        $init = new boot(); // cargar nucleo
-
-        //die("installer");
+        new boot();
 
         try {
 
@@ -206,8 +167,6 @@ class Router
 
             if ($isInstalled === false) {
 
-                //die("no instalado");
-
                 if (!file_exists(APPS_DIR . "installer")) {
                     die("App installer NOT found.");
                 }
@@ -215,9 +174,7 @@ class Router
                 $this->lang = new Language();
                 $this->lang->init();
                 $this->lang->init_apps_lang("installer");
-
-                $ldr = new autoloader("installer"); // cargar clases para la app
-                $app = new installer_Controller();
+                new installer_Controller();
                 die();
 
             }
@@ -232,7 +189,6 @@ class Router
 
         }
 
-
-    } // installer
+    }
 
 }
