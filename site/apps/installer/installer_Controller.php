@@ -12,22 +12,24 @@
  *
 **/
 
-class installer_Controller {
+class installer_Controller extends  ConfigSettings  {
 	
 	public $objModel;
 	public $objView;
-		
-	private $cfgFile;
-	
-	private $objConfig;
 
+	private $cfgFile;
+
+	private Security $security;
+	private RequestHelper $request;
 	
 	public function __construct() {
 
-		
-		$this->cfgFile = LOCAL_DIR . "/site/etc/balero.config.xml";
-		
+        parent::__construct();
+
 		try {
+
+            $this->security = new Security();
+            $this->request = new RequestHelper($this->security);
 
 			$this->objView = new installer_View();
 			$this->objModel = new installer_Model();
@@ -36,7 +38,7 @@ class installer_Controller {
 		} catch (Exception $e) {
 			$this->objView = new installer_View();
 			
-			if(!is_writable($this->cfgFile)) {
+			if(!is_writable($this->getCfgFile())) {
 				$MsgBox = new MsgBox(_ERROR, _CHMOD_ERROR);
 				$this->objView->content .= $MsgBox->Show();
 			}
@@ -51,8 +53,7 @@ class installer_Controller {
 			}
 			
 		}
-		
-		$this->objConfig = new ConfigSettings();
+
 		$this->initBasePath();
 		
 		$handler = new ControllerHandler($this);
@@ -62,116 +63,90 @@ class installer_Controller {
 	
 	public function initBasePath() {
 
-		$basepath = $this->objConfig->getBasepath();
-		
-		
-		if(empty($basepath)) {
-		
-			$cfg = new XMLHandler($this->cfgFile);
-			$cfg->editChild("/config/site/basepath", $this->objConfig->FullBasepath());
-		
+		if(empty($this->getBasepath())) {
+			$this->setBasepath($this->getFullBasepath());
 		}
 		
 	}
 
-	public function formDBInfo() {
+    public function formDBInfo()
+    {
+        if (isset($_POST['submit'])) {
+            try {
 
-		if(isset($_POST['submit'])) {
+                $this->setDbhost($this->request->post('dbhost'));
+                $this->setDbuser($this->request->post('dbuser'));
+                $this->setDbpass($this->request->post('dbpass'));
+                $this->setDbname($this->request->post('dbname'));
 
-			try {
+                $this->objView->check_db = $this->objView->check_icon;
 
-			$cfg = new XMLHandler($this->cfgFile);
+            } catch (Exception $e) {
+                $this->objView->check_db = "";
+                $this->objView->file_error($e->getMessage());
+            }
+        }
 
-			$cfg->editChild("/config/database/dbhost", $_POST['dbhost']);
-			$cfg->editChild("/config/database/dbuser", $_POST['dbuser']);
-			$cfg->editChild("/config/database/dbpass", $_POST['dbpass']);
-			$cfg->editChild("/config/database/dbname", $_POST['dbname']);
+        header("Location: index.php");
+    }
 
-			$cfg->editChild("/config/system/firsttime", "no");
 
-			$this->objView->check_db = $this->objView->check_icon;
+    public function formSiteInfo()
+    {
+        try {
+            if (isset($_POST['submit'])) {
+                $this->setTitle($this->request->post('title'));
+                $this->setUrl($this->request->post('url'));
+                $this->setDescription($this->request->post('description'));
+                $this->setKeywords($this->request->post('keywords'));
+                $basepath = $this->request->post("basepath");
+                if ($basepath !== null) {
+                    $this->setBasepath($basepath);
+                }
+            }
+        } catch (Exception $e) {
+            // Manejo opcional de errores
+        }
 
-			} catch (Exception $e) {
-				$this->objView->check_db = "";
-				$this->objView->file_error($e->getMessage());
-			}
-		}
+        header("Location: index.php");
+    }
 
-		header("Location: index.php");
+    public function formadminInfo()
+    {
+        if (isset($_POST['submit'])) {
+            try {
+                if (empty($this->request->post("username"))) {
+                    throw new Exception(_EMPTY_USERNAME);
+                }
+                if (empty($this->request->post("passwd"))) {
+                    throw new Exception(_EMPTY_PASSWORD);
+                }
+                if ($this->request->post("passwd") != $this->request->post("passwd2")) {
+                    throw new Exception(_PASSWORDS_DONT_MATCH);
+                }
+                if (!filter_var($this->request->post("email"), FILTER_VALIDATE_EMAIL)) {
+                    throw new Exception(_INDALID_EMAIL);
+                }
 
-	}
-	
+                $this->setLastname($this->request->post('lastname'));
+                $this->setNewsletter($this->request->post('newsletter'));
+                $this->setUser($this->request->post('username'));
+                $this->setEmail($this->request->post('email'));
 
-	public function formSiteInfo() {
-				
-		try {
-								
-			if(isset($_POST['submit'])) {
-				
-				$admcfg = new XMLHandler($this->cfgFile);
-		
-				$admcfg->editChild("/config/site/title", $_POST['title']);
-				$admcfg->editChild("/config/site/url", $_POST['url']);
-				$admcfg->editChild("/config/site/description", $_POST['description']);
-				$admcfg->editChild("/config/site/keywords", $_POST['keywords']);
-				$admcfg->editChild("/config/site/basepath", $_POST['basepath']);	
-							
-			}
-						
-		} catch (Exception $e) {
-			
-			
-		}
-	
-		header("Location: index.php");
-	
-	}
-	
-	public function formadminInfo() {
-	
-		if(isset($_POST['submit'])) {
-		try {
-			
-			$admcfg = new XMLHandler($this->cfgFile);
-			
-			if(empty($_POST['username'])) {
-				throw new Exception(_EMPTY_USERNAME);
-			}
-			if(empty($_POST['passwd'])) {
-				throw new Exception(_EMPTY_PASSWORD);
-			}
-			if($_POST['passwd'] != $_POST['passwd2']) {
-				throw new Exception(_PASSWORDS_DONT_MATCH);
-			}
-			
-			if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-				throw new Exception(_INDALID_EMAIL);
-			}
-						
-			$admcfg->editChild("/config/admin/firstname", $_POST['firstname']);
-			$admcfg->editChild("/config/admin/lastname", $_POST['lastname']);
-			$admcfg->editChild("/config/admin/newsletter", $_POST['newsletter']);
-			$admcfg->editChild("/config/admin/username", $_POST['username']);
-			$admcfg->editChild("/config/admin/email", $_POST['email']);
-				
-			$obj = new Blowfish(); // crear objeto
-			$pwd = $obj->genpwd($_POST['passwd']); // generar passwd encriptado
-			$admcfg->editChild("/config/admin/passwd", $pwd);
-			
-			header("Location: index.php");
-			
-		} catch (Exception $e) {
-			$this->objView->check_admin = "";
-			$this->objView->form_field_error($e->getMessage());
-			$this->main();
-		}
-					
-		} else {
-			header("Location: index.php");
-		}
+                $obj = new Blowfish();
+                $pwd = $obj->genpwd($this->request->post('passwd'));
+                $this->setPass($pwd);
 
-		
-	}
+                header("Location: index.php");
+            } catch (Exception $e) {
+                $this->objView->check_admin = "";
+                $this->objView->form_field_error($e->getMessage());
+                $this->main();
+            }
+        } else {
+            header("Location: index.php");
+        }
+    }
 		
 	public function main() {
 
