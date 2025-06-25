@@ -43,7 +43,7 @@ class installer_Model {
 		
 		try {
 			
-			$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass);
+			$this->db = new MySQL($this->dbhost, $this->dbuser, $this->dbpass);
 			
 			/**
 			 * 

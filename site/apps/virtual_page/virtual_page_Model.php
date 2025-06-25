@@ -31,7 +31,7 @@ class virtual_page_Model extends configSettings {
 		$this->LoadSettings();
 		
 		try {
-			$this->db = new mySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
+			$this->db = new MySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage());
 		}
