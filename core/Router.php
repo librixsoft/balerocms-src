@@ -134,14 +134,16 @@ class Router
 
         $dynamicController = "mod_" . $mod . "_Controller";
 
-        new Modloader($mod);
+        if (!class_exists($dynamicController)) {
+            die("No se pudo cargar la clase $dynamicController");
+        }
 
         $admin_elements = new AdminElements();
         $title_mod_menu = $admin_elements->mods_menu();
 
         new $dynamicController($title_mod_menu);
 
-        unset($this->lang);
+
     }
 
 
