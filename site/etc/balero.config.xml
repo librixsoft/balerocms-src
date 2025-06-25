@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<database>
+		<dbhost>localhost</dbhost>
+		<dbuser>root</dbuser>
+		<!-- empty fields like "_blank" -->
+		<!-- otherwise Balero CMS's core (XMLHandler) sent an error with empty fields -->
+		<!-- wrong values <dbpass></dbpass> -->
+		<!-- correct values <dbpass>_blank</dbpass> -->
+		<dbpass>_blank</dbpass>
+		<dbname>balero_cms</dbname>
+	</database>
+	<admin>
+		<!-- admin god -->
+		<username>admin</username>
+		<!-- pwd encrypt -->
+		<passwd>$2a$07$RG4kMS3uTIQRmWk1KhuaFOI0vz10LxmP3bKGjDMemw6SI6jEa1vpu</passwd>
+		<!-- admin data -->
+		<firstname>Balero</firstname>
+		<lastname>CMS</lastname>
+		<!-- newsletter -->
+		<newsletter>yes</newsletter>
+		<email>hola@librixsoft.com</email>
+	</admin>
+	<system>
+		<!-- balero cms installed -->
+		<installed>no</installed>
+	</system>
+	<site>
+		<!-- title page -->
+		<title>Balero CMS</title>
+		<!-- Direccion -->
+		<url>http://www.balerocms.com/</url>
+		<description>Powered by Balero CMS.</description>
+		<keywords>test(xss-code-detected) cms</keywords>
+		<!-- basepath for url friendly -->
+		<basepath>http://localhost/balerocms-src/</basepath>
+		<!-- multilanguage support -->
+		<multilang>no</multilang>
+		<editor>summernote</editor>
+	</site>
+</config>

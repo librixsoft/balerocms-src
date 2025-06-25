@@ -15,7 +15,7 @@
 class Router
 {
 
-    public $lang;
+    private Language $lang;
 
     private Security $security;
     private RequestHelper $request;
@@ -150,8 +150,6 @@ class Router
 
     public function installer()
     {
-
-        new boot();
 
         try {
 
