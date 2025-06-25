@@ -20,22 +20,15 @@ class installer_Controller {
 	private $cfgFile;
 	
 	private $objConfig;
-	
-	/**
-	 *
-	 * Check icon on top
-	 */
+
 	
 	public function __construct() {
-				
-		/*
-		 * Load balero.config.xml config file
-		 */
+
 		
 		$this->cfgFile = LOCAL_DIR . "/site/etc/balero.config.xml";
 		
 		try {
-			// Iniciar vista
+
 			$this->objView = new installer_View();
 			$this->objModel = new installer_Model();
 						
@@ -59,36 +52,20 @@ class installer_Controller {
 			
 		}
 		
-		$this->objConfig = new configSettings();
+		$this->objConfig = new ConfigSettings();
 		$this->initBasePath();
 		
 		$handler = new ControllerHandler($this);
 
 	
 	}
-		
-	/**
-	 * Methods
-	 */
-		
-	/**
-	 * Set basepath for first time
-	 */
 	
 	public function initBasePath() {
-		
-		/**
-		 * Read basepath value
-		 */
-		
-		$basepath = $this->objConfig->basepath;
+
+		$basepath = $this->objConfig->getBasepath();
 		
 		
 		if(empty($basepath)) {
-		
-			/**
-		 	* Write basepath field
-		 	*/
 		
 			$cfg = new XMLHandler($this->cfgFile);
 			$cfg->editChild("/config/site/basepath", $this->objConfig->FullBasepath());
@@ -96,65 +73,40 @@ class installer_Controller {
 		}
 		
 	}
-	
-	/**
-	 * First block
-	 */
-	
+
 	public function formDBInfo() {
-				
-		if(isset($_POST['submit'])) {	
-		
+
+		if(isset($_POST['submit'])) {
+
 			try {
-				
+
 			$cfg = new XMLHandler($this->cfgFile);
-		
-			/**
-			* 
-			* editChild(PATH)
-			* Eje: <config>
-			* 			<database>
-			* 				<dbuser>root</dbuser>
-			* 			</database>
-			* 		</config>
-			* 	PATH = "/config/database/dbuser"
-			*/
-		
+
 			$cfg->editChild("/config/database/dbhost", $_POST['dbhost']);
 			$cfg->editChild("/config/database/dbuser", $_POST['dbuser']);
 			$cfg->editChild("/config/database/dbpass", $_POST['dbpass']);
 			$cfg->editChild("/config/database/dbname", $_POST['dbname']);
-		
+
 			$cfg->editChild("/config/system/firsttime", "no");
 
-			//http://www.orenyagev.com/application-configuration-and-php
-			
 			$this->objView->check_db = $this->objView->check_icon;
-			
+
 			} catch (Exception $e) {
 				$this->objView->check_db = "";
 				$this->objView->file_error($e->getMessage());
 			}
 		}
-		
+
 		header("Location: index.php");
 
 	}
 	
-	
-	/**
-	 * Second block 
-	 */
-	
+
 	public function formSiteInfo() {
-					
-		//echo "formsiteinfo";
 				
 		try {
 								
 			if(isset($_POST['submit'])) {
-				
-				//echo "edit";
 				
 				$admcfg = new XMLHandler($this->cfgFile);
 		
@@ -217,39 +169,23 @@ class installer_Controller {
 		} else {
 			header("Location: index.php");
 		}
-		
-		
+
 		
 	}
 		
 	public function main() {
-				
-		// no hay modelo
-		// form db settings
-		//$this->objView->formDBInfo();
-		// form site info
-		//$this->objView->formSiteInfo();
-		// form admin settings
-		//$this->objView->formadminInfo();
 
 		$this->objView->is_mod_rewrite_enabled();
 		$this->objView->wizard();
-		// renderizar plantilla
-		$this->objView->Render(); // renderizar pagina
+		$this->objView->Render();
 		
 	}
 	
 	public function progressBar() {
-		
-		// vista
 
-		if(isset($_POST['submit']) && (!preg_match("/_blank/", $this->objView->pass))) {
+		if(isset($_POST['submit']) && (!preg_match("/_blank/", $this->objView->getPass()))) {
 			
 			try {
-				
-				//if(isset($_POST['newsletter'])) {
-					mail("support@balerocms.com", 'newsletter e-mail', "New suscriber: " . $this->objView->email);
-				//}
 				
 				$this->objView->progressBar();
 				$this->objModel->install();
@@ -259,10 +195,6 @@ class installer_Controller {
 			}
 			
 		} else {
-			
-			/**
-			 * Dynamic index.php?app=installer
-			 */
 			
 			header("Location: index.php?app=installer");
 		}
@@ -275,13 +207,6 @@ class installer_Controller {
 			return false;
 		}
 		return true;
-	}
-	
-	public function test_app() {
-		
-		$this->objView->content .= "prueba";
-		//$this->main();
-		$this->objView->Render();
 	}
 	
 }

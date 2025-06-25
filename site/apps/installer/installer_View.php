@@ -12,21 +12,12 @@
  *
 **/
 
-class installer_View extends configSettings {
-	
-	
-	/**
-	 * Variable de contenido $content
-	 */
+class installer_View extends  ConfigSettings {
 
 	public $content = "";
 	
 	public $page;
-	
-	/**
-	 *
-	 * Check icon on top
-	 */
+
 	
 	public $check_db;
 	public $check_site;
@@ -35,70 +26,40 @@ class installer_View extends configSettings {
 	public $check_icon = "<img src=\"site/apps/installer/html/images/check-icon.png\">";
 	
 	public function __construct() {
-		
+
+        parent::__construct();
+
 		$this->check_db = $this->check_icon;
 		$this->check_site = $this->check_icon;
 		$this->check_admin = $this->check_icon;
-		
-		$this->LoadSettings(); //cargar datos XML
+
 		$this->page = _PAGE;
 		
 	}
 
-	
-	/**
-	 * Cargar la vista.
-	 */
-	
+
 	public function Render() {
-		
-		/**
-		 *
-		 * @var unknown_type Balero CMS.
-		 * Creamos nuestro diccionario desde la vista.
-		 * Sintaxis de $array:
-		 * 		Primer y último valor sin coma al final:
-		 * 		'etiqueta' => 'valor'
-		 * 		Los demás valores:
-		 * 		'etiqueta' => 'valor',
-		 */
+
 		
 		$array = array(
-				'title'=>$this->title,
-				'url'=>$this->url,
+				'title'=>$this->getTitle(),
+				'url'=>$this->getUrl(),
 				'page'=>$this->page,
-				'keywords'=>$this->keywords,
-				'description'=>$this->description,
+				'keywords'=>$this->getKeywords(),
+				'description'=>$this->getDescription(),
 				'content'=>$this->content,
 				'virtual_pages'=>'',
-				'basepath'=>$this->basepath,
+				'basepath'=>$this->getBasepath(),
 				'langs'=>''
 				);
-		
-		/**
-		 * 
-		 * Render our page.
-		 * Default theme for installer "tundra"
-		 * 
-		 */
+
 
 		$objTheme = new ThemeLoader(LOCAL_DIR . "/themes/tundra/main.html");		
 		echo $objTheme->renderPage($array);
 		
 	
 	}
-	
-	
-	/**
-	 * Metodos
-	 */
-	
-	/**
-	 * v.0.5
-	 * Pretty URL off on installer app because
-	 * there are some incompatibilities in some servers
-	 */
-	
+
 
 	public function is_mod_rewrite_enabled() {
 		
@@ -120,7 +81,7 @@ class installer_View extends configSettings {
 				throw new Exception();
 			}
 			
-			if(empty($this->pass)) {
+			if(empty($this->getPass())) {
 				throw new Exception();
 			}
 			
@@ -136,27 +97,15 @@ class installer_View extends configSettings {
 		}
 		
 	}
-	
-		
-	/**
-	 * vistas de modelo
-	 */
+
 
 	public function progressBar() {
 		
-		/**
-		 * Load basepath for installer
-		 */
-		
+
 		$array = array(
-				'basepath'=>$this->basepath
+				'basepath'=>$this->getBasepath()
 		);
-		
-		/**
-		 * progress-bar UI
-		 */
-		
-		//echo "progressbar";
+
 		
 		$loading = new ThemeLoader(APPS_DIR . "installer/html/UI.html");
 		echo $loading->renderPage($array);
@@ -168,17 +117,17 @@ class installer_View extends configSettings {
 		try {
 			
 			
-			if(empty($this->basepath)) {
+			if(empty($this->getBasepath())) {
 				$basepath = $this->FullBasepath();
 			} else {
-				$basepath = $this->basepath;
+				$basepath = $this->getBasepath();
 			}
 			
-			if(empty($basepath) || empty($this->title) || empty($this->url) || empty($this->description) || empty($this->keywords)) {
+			if(empty($basepath) || empty($this->getTitle()) || empty($this->getUrl()) || empty($this->getDescription()) || empty($this->getKeywords())) {
 				$this->check_site = "";
 			}
 			
-			if(empty($this->user) || empty($this->pass) || empty($this->firstname) || empty($this->lastname) || empty($this->email)) {
+			if(empty($this->getUser()) || empty($this->getPass()) || empty($this->getFirstname()) || empty($this->getLastname()) || empty($this->getEmail())) {
 				$this->check_admin = "";
 			}
 						
@@ -191,18 +140,12 @@ class installer_View extends configSettings {
 				
 		
 		$array = array(
-				
-				/**
-				 * Objects
-				 */
+
 				
 				'check_db' => $this->check_db,
 				'check_site' => $this->check_site,
 				'check_admin' => $this->check_admin,
-				
-				/**
-				 * Labels
-				 */
+
 				
 				'lbl_dbconfig' => _DB_CONFIG,
 				'lbl_dbhost' => _DB_HOST,
@@ -227,10 +170,6 @@ class installer_View extends configSettings {
 				'lbl_lastname' => _LAST_NAME,
 				'lbl_email' => _EMAIL,
 				'lbl_newsletter' => _NEWSLETTER,
-				
-				/**
-				 * TextBox
-				 */
 								
 				'txt_dbhost' => $this->getDbhost(),
 				'txt_dbuser' => $this->getDbuser(),
@@ -238,22 +177,18 @@ class installer_View extends configSettings {
 				'txt_dbname' => $this->getDbname(),
 				
 				'txt_basepath' => $basepath,
-				'txt_title' => $this->title,
-				'txt_url' => $this->url,
-				'txt_keywords' => $this->keywords,
-				'txt_description' => $this->description,
+				'txt_title' => $this->getTitle(),
+				'txt_url' => $this->getUrl(),
+				'txt_keywords' => $this->getKeywords(),
+				'txt_description' => $this->getDescription(),
 				
-				'txt_administrator' => $this->user,
+				'txt_administrator' => $this->getUser(),
 				'txt_pass' => '',
 				'txt_retype' => '',
-				'txt_firstname' => $this->firstname,
-				'txt_lastname' => $this->lastname,
-				'txt_email' => $this->email,
-				'txt_newsletter' => $this->newsletter,
-				
-				/**
-				 * Buttons
-				 */
+				'txt_firstname' => $this->getFirstname(),
+				'txt_lastname' => $this->getLastname(),
+				'txt_email' => $this->getEmail(),
+				'txt_newsletter' => $this->getNewsletter(),
 				
 				'btn_save' => _INSTALLER_SAVE
 				
@@ -314,4 +249,4 @@ class installer_View extends configSettings {
 	}
 	
 	
-} // fin clase
+}

@@ -45,21 +45,9 @@ class installer_Model {
 			
 			$this->db = new MySQL($this->dbhost, $this->dbuser, $this->dbpass);
 			
-			/**
-			 * 
-			 * DB User and PW are correct but dbname doesn't exist create new one
-			 * 
-			 */
-			
 			if($this->db->isStatus() == TRUE) {
 				
 				 $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->dbname . ";");
-			
-				 
-				/**
-				 * Re-connect and connect to the database
-				 */
-				
 
 				$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 			
@@ -78,7 +66,6 @@ class installer_Model {
 	}
 	
 	public function install() {
-		// obtener las sentencias sql de el archivo tablas.sql
 		$query = file_get_contents(APPS_DIR . "installer/sql/tables.sql");
 		$query = str_replace("{dbname}", $this->dbname, $query);
 		$this->db->create($query);
@@ -89,7 +76,6 @@ class installer_Model {
 	
 	public function createDB() {
 		die("error");
-		//$this->db->query("CREATE DATABASE IF NOT EXISTS ".$this->dbname.";");
 	}
 	
 	
