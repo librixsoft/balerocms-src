@@ -1,79 +1,63 @@
 <?php
 
-/**
- *
- * installer_Controller.php
- * (c) Mar 2, 2013 lastprophet 
- * @author Anibal Gomez (lastprophet)
- * Balero CMS Open Source
- * Proyecto %100 mexicano bajo la licencia GNU.
- * PHP P.O.O. (M.V.C.)
- * Contacto: anibalgomez@icloud.com
- *
-**/
+class installer_Controller extends ControllerHandler {
 
-class installer_Controller extends ControllerHandler  {
-	
-	public $objModel;
-	public $objView;
+    public installer_Model $objModel;
+    public installer_View $objView;
 
-	private Security $security;
-	private RequestHelper $request;
+    private Security $security;
+    protected RequestHelper $request;
     private ConfigSettings $configSettings;
-	
-	public function __construct() {
 
-		try {
+    public function __construct() {
+        try {
+
+            $this->security = new Security();
+            $this->request = new RequestHelper($this->security);
+
+            parent::__construct($this->request);
 
             $this->objView = new installer_View();
             $this->objModel = new installer_Model();
-            parent::__construct();
 
-		    $this->configSettings = new ConfigSettings();
+            $this->configSettings = new ConfigSettings();
             $this->configSettings->LoadSettings();
-            $this->security = new Security();
-            $this->request = new RequestHelper($this->security);
-						
-			$this->objView->installButton();
-		} catch (Exception $e) {
-			$this->objView = new installer_View();
-			
-			if(!is_writable($this->getCfgFile())) {
-				$MsgBox = new MsgBox(_ERROR, _CHMOD_ERROR);
-				$this->objView->content .= $MsgBox->Show();
-			}
-			
-			if(strpos($e->getMessage(), _UNKNOW_DATABASE)) {
-				$this->objView->unknow_database_error();
-				$this->objModel->createDB();
-				$this->objView->check_db = "";
-			} else {
-				$this->objView->unknow_database_connect();
-				$this->objView->check_db = "";
-			}
-			
-		}
 
-		$this->initBasePath();
-		
-		new ControllerHandler($this);
+            $this->objView->installButton();
 
-	
-	}
-	
-	public function initBasePath() {
+        } catch (Exception $e) {
+            $this->objView = new installer_View();
 
-		if(empty($this->configSettings->getBasepath())) {
+            if(!is_writable($this->getCfgFile())) {
+                $MsgBox = new MsgBox(_ERROR, _CHMOD_ERROR);
+                $this->objView->content .= $MsgBox->Show();
+            }
+
+            if(strpos($e->getMessage(), _UNKNOW_DATABASE)) {
+                $this->objView->unknow_database_error();
+                $this->objModel->createDB();
+                $this->objView->check_db = "";
+            } else {
+                $this->objView->unknow_database_connect();
+                $this->objView->check_db = "";
+            }
+        }
+
+        $this->initBasePath();
+
+        // Finalmente, llama init() para procesar el parámetro sr y mostrar vista
+        $this->init();
+    }
+
+    public function initBasePath() {
+        if (empty($this->configSettings->getBasepath())) {
             $this->configSettings->setBasepath($this->configSettings->getFullBasepath());
-		}
-		
-	}
+        }
+    }
 
-    public function formDBInfo()
-    {
+    public function formDBInfo() {
         if ($this->request->hasPost("submit")) {
             try {
-
                 $this->configSettings->setDbhost($this->request->post('dbhost'));
                 $this->configSettings->setDbuser($this->request->post('dbuser'));
                 $this->configSettings->setDbpass($this->request->post('dbpass'));
@@ -90,9 +74,7 @@ class installer_Controller extends ControllerHandler  {
         header("Location: index.php");
     }
 
-
-    public function formSiteInfo()
-    {
+    public function formSiteInfo() {
         try {
             if ($this->request->hasPost("submit")) {
                 $this->configSettings->setTitle($this->request->post('title'));
@@ -101,18 +83,17 @@ class installer_Controller extends ControllerHandler  {
                 $this->configSettings->setKeywords($this->request->post('keywords'));
                 $basepath = $this->request->post("basepath");
                 if ($basepath !== null) {
-                    $this->setBasepath($basepath);
+                    $this->configSettings->setBasepath($basepath);
                 }
             }
         } catch (Exception $e) {
-
+            // Opcional: manejar error aquí
         }
 
         header("Location: index.php");
     }
 
-    public function formadminInfo()
-    {
+    public function formadminInfo() {
         if ($this->request->hasPost("submit")) {
             try {
                 if (empty($this->request->post("username"))) {
@@ -135,7 +116,7 @@ class installer_Controller extends ControllerHandler  {
 
                 $obj = new Blowfish();
                 $pwd = $obj->genpwd($this->request->post('passwd'));
-                $this->setPass($pwd);
+                $this->configSettings->setPass($pwd);
 
                 header("Location: index.php");
             } catch (Exception $e) {
@@ -147,41 +128,30 @@ class installer_Controller extends ControllerHandler  {
             header("Location: index.php");
         }
     }
-		
-	public function main() {
 
-		$this->objView->is_mod_rewrite_enabled();
-		$this->objView->wizard();
-		$this->objView->Render();
-		
-	}
-	
-	public function progressBar() {
+    public function main() {
+        $this->objView->is_mod_rewrite_enabled();
+        $this->objView->wizard();
+        $this->objView->Render();
+    }
 
-		if($this->request->hasPost("submit") && (!preg_match("/_blank/", $this->objView->getPass()))) {
-			
-			try {
-				
-				$this->objView->progressBar();
-				$this->objModel->install();
-				
-			} catch (Exception $e) {
-				
-			}
-			
-		} else {
-			
-			header("Location: index.php?app=installer");
-		}
-		
-	}
-	
-	public function validate($field) {
-		if(empty($field)) {
-			throw new Exception(_EMPTY_FIELD . " " . $field);
-			return false;
-		}
-		return true;
-	}
-	
+    public function progressBar() {
+        if($this->request->hasPost("submit") && (!preg_match("/_blank/", $this->objView->getPass()))) {
+            try {
+                $this->objView->progressBar();
+                $this->objModel->install();
+            } catch (Exception $e) {
+                // Opcional: manejo de error
+            }
+        } else {
+            header("Location: index.php?app=installer");
+        }
+    }
+
+    public function validate($field) {
+        if(empty($field)) {
+            throw new Exception(_EMPTY_FIELD . " " . $field);
+        }
+        return true;
+    }
 }
