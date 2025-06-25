@@ -19,6 +19,11 @@ class RequestHelper
         return $this->filter($_POST[$key] ?? $default);
     }
 
+    public function hasPost($key): bool
+    {
+        return isset($_POST[$key]);
+    }
+
     public function request($key, $default = null)
     {
         return $this->filter($_REQUEST[$key] ?? $default);

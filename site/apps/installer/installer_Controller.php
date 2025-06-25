@@ -17,8 +17,6 @@ class installer_Controller extends  ConfigSettings  {
 	public $objModel;
 	public $objView;
 
-	private $cfgFile;
-
 	private Security $security;
 	private RequestHelper $request;
 	
@@ -56,7 +54,7 @@ class installer_Controller extends  ConfigSettings  {
 
 		$this->initBasePath();
 		
-		$handler = new ControllerHandler($this);
+		new ControllerHandler($this);
 
 	
 	}
@@ -71,7 +69,7 @@ class installer_Controller extends  ConfigSettings  {
 
     public function formDBInfo()
     {
-        if (isset($_POST['submit'])) {
+        if ($this->request->hasPost("submit")) {
             try {
 
                 $this->setDbhost($this->request->post('dbhost'));
@@ -94,7 +92,7 @@ class installer_Controller extends  ConfigSettings  {
     public function formSiteInfo()
     {
         try {
-            if (isset($_POST['submit'])) {
+            if ($this->request->hasPost("submit")) {
                 $this->setTitle($this->request->post('title'));
                 $this->setUrl($this->request->post('url'));
                 $this->setDescription($this->request->post('description'));
@@ -105,7 +103,7 @@ class installer_Controller extends  ConfigSettings  {
                 }
             }
         } catch (Exception $e) {
-            // Manejo opcional de errores
+
         }
 
         header("Location: index.php");
@@ -113,7 +111,7 @@ class installer_Controller extends  ConfigSettings  {
 
     public function formadminInfo()
     {
-        if (isset($_POST['submit'])) {
+        if ($this->request->hasPost("submit")) {
             try {
                 if (empty($this->request->post("username"))) {
                     throw new Exception(_EMPTY_USERNAME);
@@ -158,7 +156,7 @@ class installer_Controller extends  ConfigSettings  {
 	
 	public function progressBar() {
 
-		if(isset($_POST['submit']) && (!preg_match("/_blank/", $this->objView->getPass()))) {
+		if($this->request->hasPost("submit") && (!preg_match("/_blank/", $this->objView->getPass()))) {
 			
 			try {
 				
