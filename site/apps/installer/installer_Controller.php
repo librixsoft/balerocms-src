@@ -12,25 +12,27 @@
  *
 **/
 
-class installer_Controller extends  ConfigSettings  {
+class installer_Controller extends ControllerHandler  {
 	
 	public $objModel;
 	public $objView;
 
 	private Security $security;
 	private RequestHelper $request;
+    private ConfigSettings $configSettings;
 	
 	public function __construct() {
 
-        parent::__construct();
-
 		try {
 
+            $this->objView = new installer_View();
+            $this->objModel = new installer_Model();
+            parent::__construct();
+
+		    $this->configSettings = new ConfigSettings();
+            $this->configSettings->LoadSettings();
             $this->security = new Security();
             $this->request = new RequestHelper($this->security);
-
-			$this->objView = new installer_View();
-			$this->objModel = new installer_Model();
 						
 			$this->objView->installButton();
 		} catch (Exception $e) {
@@ -61,8 +63,8 @@ class installer_Controller extends  ConfigSettings  {
 	
 	public function initBasePath() {
 
-		if(empty($this->getBasepath())) {
-			$this->setBasepath($this->getFullBasepath());
+		if(empty($this->configSettings->getBasepath())) {
+            $this->configSettings->setBasepath($this->configSettings->getFullBasepath());
 		}
 		
 	}
@@ -72,10 +74,10 @@ class installer_Controller extends  ConfigSettings  {
         if ($this->request->hasPost("submit")) {
             try {
 
-                $this->setDbhost($this->request->post('dbhost'));
-                $this->setDbuser($this->request->post('dbuser'));
-                $this->setDbpass($this->request->post('dbpass'));
-                $this->setDbname($this->request->post('dbname'));
+                $this->configSettings->setDbhost($this->request->post('dbhost'));
+                $this->configSettings->setDbuser($this->request->post('dbuser'));
+                $this->configSettings->setDbpass($this->request->post('dbpass'));
+                $this->configSettings->setDbname($this->request->post('dbname'));
 
                 $this->objView->check_db = $this->objView->check_icon;
 
@@ -93,10 +95,10 @@ class installer_Controller extends  ConfigSettings  {
     {
         try {
             if ($this->request->hasPost("submit")) {
-                $this->setTitle($this->request->post('title'));
-                $this->setUrl($this->request->post('url'));
-                $this->setDescription($this->request->post('description'));
-                $this->setKeywords($this->request->post('keywords'));
+                $this->configSettings->setTitle($this->request->post('title'));
+                $this->configSettings->setUrl($this->request->post('url'));
+                $this->configSettings->setDescription($this->request->post('description'));
+                $this->configSettings->setKeywords($this->request->post('keywords'));
                 $basepath = $this->request->post("basepath");
                 if ($basepath !== null) {
                     $this->setBasepath($basepath);
@@ -126,10 +128,10 @@ class installer_Controller extends  ConfigSettings  {
                     throw new Exception(_INDALID_EMAIL);
                 }
 
-                $this->setLastname($this->request->post('lastname'));
-                $this->setNewsletter($this->request->post('newsletter'));
-                $this->setUser($this->request->post('username'));
-                $this->setEmail($this->request->post('email'));
+                $this->configSettings->setLastname($this->request->post('lastname'));
+                $this->configSettings->setNewsletter($this->request->post('newsletter'));
+                $this->configSettings->setUser($this->request->post('username'));
+                $this->configSettings->setEmail($this->request->post('email'));
 
                 $obj = new Blowfish();
                 $pwd = $obj->genpwd($this->request->post('passwd'));
