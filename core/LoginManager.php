@@ -54,7 +54,6 @@ class LoginManager
             $cookie_pwd = $pieces[1];
 
             if ($cfg->user == $cookie_usr && $cfg->pass == $cookie_pwd) {
-                $ldr = new autoloader("admin");
                 return true;
             } else {
                 setcookie("admin_god_balero", "", time() - 3600);

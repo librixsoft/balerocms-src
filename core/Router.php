@@ -101,58 +101,50 @@ class Router
             echo $theme->renderPage($array = array("content" => $msg->Show()));
         }
 
-        /**
-         * Kill app
-         */
-
-        unset($this->app);
-        die();
-
     }
 
     public function init_mod()
     {
+        $mod = $this->request->get("mod");
 
-        if (isset($_GET['mod'])) {
+        if ($mod === null) {
+            $adminControllerFile = APPS_DIR . "admin/admin_Controller.php";
 
-            $blind_url = $this->objSecurity->antiXSS($_GET['mod']);
-
-            switch ($blind_url) {
-
-                case $blind_url:
-                    if (file_exists(MODS_DIR . $blind_url)) {
-                        $dynamic = "mod_" . $blind_url . "_Controller";
-                        new Modloader($blind_url);
-                        $admin_elements = new AdminElements();
-                        $title_mod_menu = $admin_elements->mods_menu();
-                        new $dynamic($title_mod_menu);
-                    } else {
-                        die(_CONTROLLER_NOT_FOUND);
-                    }
-                    unset($this->lang);
-                    break;
-
-            }
-
-        } else {
-
-            if (file_exists(APPS_DIR . "admin/admin_Controller.php")) {
-
-                $this->lang = new Language();
-                $this->lang->app = "admin";
-                $this->lang->init();
-                $this->lang->init_apps_lang("admin");
-
-                $admin_elements = new AdminElements();
-                $title_mod_menu = $admin_elements->mods_menu();
-                new admin_Controller($title_mod_menu);
-
-            } else {
+            if (!file_exists($adminControllerFile)) {
                 die(_CONTROLLER_ADMIN_NOT_FOUND);
             }
+
+            $this->lang = new Language();
+            $this->lang->app = "admin";
+            $this->lang->init();
+            $this->lang->init_apps_lang("admin");
+
+            $admin_elements = new AdminElements();
+            $title_mod_menu = $admin_elements->mods_menu();
+
+            new admin_Controller($title_mod_menu);
+            return;
         }
 
+        $modDir = MODS_DIR . $mod;
+
+        if (!file_exists($modDir)) {
+            die(_CONTROLLER_NOT_FOUND);
+        }
+
+        $dynamicController = "mod_" . $mod . "_Controller";
+
+        new Modloader($mod);
+
+        $admin_elements = new AdminElements();
+        $title_mod_menu = $admin_elements->mods_menu();
+
+        new $dynamicController($title_mod_menu);
+
+        unset($this->lang);
     }
+
+
 
     public function installer()
     {
