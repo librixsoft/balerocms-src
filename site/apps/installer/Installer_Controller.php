@@ -2,11 +2,11 @@
 
 class installer_Controller extends Controller {
 
-    public installer_Model $objModel;
-    public installer_View $objView;
+    private installer_Model $objModel;
+    private installer_View $objView;
 
     private Security $security;
-    protected RequestHelper $request;
+    private RequestHelper $request;
     private ConfigSettings $configSettings;
 
     public function __construct() {

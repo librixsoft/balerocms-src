@@ -1,7 +1,8 @@
 <?php
 
 class Controller {
-    protected RequestHelper $request;
+
+    private RequestHelper $request;
 
     public function __construct(RequestHelper $request) {
         $this->request = $request;

@@ -3,82 +3,63 @@
 /**
  *
  * model.php
- * (c) Feb 26, 2013 lastprophet 
+ * (c) Feb 26, 2013 lastprophet
  * @author Anibal Gomez (lastprophet)
  * Balero CMS Open Source
  * Proyecto %100 mexicano bajo la licencia GNU.
  * PHP P.O.O. (M.V.C.)
  * Contacto: anibalgomez@icloud.com
  *
-**/
+ **/
 
-class installer_Model {
-	
-	public $result;
-	public $db;
-	
-	public $error;
-	public $rows;
-	
-	public $mensaje;
-	
-	public $error_prueba;
+class installer_Model extends ConfigSettings
+{
 
-	public $dbhost;
-	public $dbuser;
-	public $dbpass;
-	public $dbname;
-	
-	public $status;
-	
-	public function __construct() { 
-		
-		
-		$xml = new XMLHandler(LOCAL_DIR . "/site/etc/balero.config.xml");
-		
-		$this->dbhost = $xml->Child("database", "dbhost");
-		$this->dbuser = $xml->Child("database", "dbuser");
-		$this->dbpass = $xml->Child("database", "dbpass");
-		$this->dbname = $xml->Child("database", "dbname");
-		
-		try {
-			
-			$this->db = new MySQL($this->dbhost, $this->dbuser, $this->dbpass);
-			
-			if($this->db->isStatus() == TRUE) {
-				
-				 $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->dbname . ";");
+    private MySQL $db;
 
-				$this->db = new mySQL($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
-			
-			} else {
-				
-				throw new Exception();
-				
-			}
-			
-		} catch(Exception $e) {
-			
-			throw new Exception($e->getMessage());
-			
-		}
-		
-	}
-	
-	public function install() {
-		$query = file_get_contents(APPS_DIR . "installer/sql/tables.sql");
-		$query = str_replace("{dbname}", $this->dbname, $query);
-		$this->db->create($query);
-		
-		$xml = new XMLHandler(LOCAL_DIR . "/site/etc/balero.config.xml");
-		$xml->editChild("/config/system/installed", "yes");
-	}
-	
-	public function createDB() {
-		die("error");
-	}
-	
-	
-	
-	
+    public function __construct()
+    {
+
+        parent::__construct();
+
+        try {
+
+            $this->db = new MySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass());
+
+            if ($this->db->isStatus() == TRUE) {
+
+                $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->getDbname() . ";");
+
+                $this->db = new mySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass(), $this->getDbname());
+
+            } else {
+
+                throw new Exception();
+
+            }
+
+        } catch (Exception $e) {
+
+            throw new Exception($e->getMessage());
+
+        }
+
+    }
+
+    public function install()
+    {
+        $query = file_get_contents(APPS_DIR . "installer/sql/tables.sql");
+        $query = str_replace("{dbname}", $this->getDbname(), $query);
+        $this->db->create($query);
+
+        $xml = new XMLHandler(LOCAL_DIR . "/site/etc/balero.config.xml");
+        $xml->editChild("/config/system/installed", "yes");
+    }
+
+    public function createDB()
+    {
+        die("error");
+    }
+
+
 }
