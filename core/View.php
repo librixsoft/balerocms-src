@@ -4,7 +4,7 @@
 class View
 {
     protected string $layoutPath;
-    protected string $content = '';
+    public string $content = '';
 
     protected ConfigSettings $configSettings;
 
