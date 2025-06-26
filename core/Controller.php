@@ -1,35 +1,48 @@
 <?php
+// 2. Clase base Controller
 
 class Controller {
 
-    private RequestHelper $request;
+    protected RequestHelper $request;
 
     public function __construct(RequestHelper $request) {
         $this->request = $request;
-        // No llamar a init() aquí para no usar propiedades no inicializadas
     }
 
     public function init() {
-        $sr = $this->request->get('sr');
+        $httpMethod = $_SERVER['REQUEST_METHOD'];
+        $requestedSr = $this->request->get('sr') ?? '';
 
-        if ($sr !== null && $sr !== '') {
-            $app = $this->request->get('app');
+        $reflection = new ReflectionClass($this);
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
-            if ($app === null || $app === '') {
-                die(_GET_APP_DONT_EXIST);
+        foreach ($methods as $method) {
+            $attributes = $method->getAttributes();
+
+            foreach ($attributes as $attribute) {
+                $attrName = $attribute->getName();
+                $instance = $attribute->newInstance();
+
+                if (
+                    ($attrName === Get::class && $httpMethod === 'GET') ||
+                    ($attrName === Post::class && $httpMethod === 'POST')
+                ) {
+                    if ($instance->sr === '' && $requestedSr === '') {
+                        $this->{$method->getName()}();
+                        return;
+                    }
+
+                    if ($instance->sr === $requestedSr) {
+                        $this->{$method->getName()}();
+                        return;
+                    }
+                }
             }
-
-            $class_methods = get_class_methods($this);
-
-            if (in_array($sr, $class_methods)) {
-                $this->$sr();
-            } else {
-                die("El método '$sr' no existe en el controlador.");
-            }
-        } else {
-            $this->main();
         }
+
+        $this->main();
     }
+
 
     public function main() {
         echo "Método main() del Controller";

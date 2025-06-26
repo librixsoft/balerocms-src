@@ -8,6 +8,8 @@ class Installer_Model extends Model
     {
         try {
             parent::dbConnect();
+            $this->configSettings = new ConfigSettings();
+            $this->configSettings->LoadSettings(); // si es necesario
         } catch (Exception $e) {
         }
     }
@@ -22,7 +24,5 @@ class Installer_Model extends Model
         } catch(Exception $e) {
             $this->configSettings->setInstalled("no");
         }
-
     }
-
 }
