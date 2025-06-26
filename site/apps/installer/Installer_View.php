@@ -8,7 +8,6 @@ class Installer_View extends View
     public string $check_admin;
     public string $check_icon = "<img src=\"site/apps/installer/html/images/check-icon.png\">";
 
-    private ConfigSettings $configSettings;
     private RequestHelper $request;
 
     public function __construct()
