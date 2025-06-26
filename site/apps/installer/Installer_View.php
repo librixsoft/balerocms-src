@@ -39,7 +39,7 @@ class Installer_View extends View
             'langs' => ''
         ];
 
-        $this->render($params);
+        $this->renderLayout($params);
     }
 
     public function is_mod_rewrite_enabled(): void
@@ -60,7 +60,7 @@ class Installer_View extends View
             }
 
             $array = ['title' => _INSTALL_TITLE, 'btn_install' => _INSTALL_BUTTON];
-            $this->content .= $this->renderPartial(APPS_DIR . "/installer/html/finish_install.html", $array);
+            $this->content .= $this->renderFragment(APPS_DIR . "/installer/html/finish_install.html", $array);
 
         } catch (Exception $e) {
             $this->content .= $this->tips_messages();
@@ -70,7 +70,7 @@ class Installer_View extends View
     public function progressBar(): void
     {
         $array = ['basepath' => $this->configSettings->getBasepath()];
-        echo $this->renderPartial(APPS_DIR . "installer/html/UI.html", $array);
+        echo $this->renderFragment(APPS_DIR . "installer/html/UI.html", $array);
     }
 
     public function wizard(): void
@@ -141,7 +141,7 @@ class Installer_View extends View
             'btn_save' => _INSTALLER_SAVE
         ];
 
-        $this->content .= $this->renderPartial(APPS_DIR . "installer/html/wizard.html", $array);
+        $this->content .= $this->renderFragment(APPS_DIR . "installer/html/wizard.html", $array);
     }
 
     public function tips_messages(): string

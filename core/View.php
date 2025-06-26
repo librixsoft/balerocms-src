@@ -10,13 +10,13 @@ class View
         $this->layoutPath = LOCAL_DIR . $layout;
     }
 
-    protected function renderPartial(string $templatePath, array $params = []): string
+    protected function renderFragment(string $templatePath, array $params = []): string
     {
         $loader = new ThemeLoader($templatePath);
         return $loader->renderPage($params);
     }
 
-    public function render(array $params): void
+    public function renderLayout(array $params): void
     {
         $params['content'] = $params['content'] ?? $this->content;
 
