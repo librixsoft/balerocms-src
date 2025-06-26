@@ -24,7 +24,7 @@
 
 class Security {
 	
-	private $var;
+	private string $var;
 
     /**
      * Anti-XSS Method

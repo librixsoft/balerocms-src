@@ -2,11 +2,11 @@
 
 class RequestHelper
 {
-    protected $security;
+    private Security $security;
 
-    public function __construct($security = null)
+    public function __construct()
     {
-        $this->security = $security;
+        $this->security = new Security();
     }
 
     public function get($key, $default = null)

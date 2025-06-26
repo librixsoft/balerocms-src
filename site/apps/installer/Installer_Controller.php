@@ -5,15 +5,13 @@ class Installer_Controller extends Controller {
     private installer_Model $objModel;
     private installer_View $objView;
 
-    private Security $security;
     private RequestHelper $request;
     private ConfigSettings $configSettings;
 
     public function __construct() {
         try {
 
-            $this->security = new Security();
-            $this->request = new RequestHelper($this->security);
+            $this->request = new RequestHelper();
 
             parent::__construct($this->request);
 
