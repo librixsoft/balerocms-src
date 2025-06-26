@@ -1,6 +1,6 @@
 <?php
 
-class installer_Controller extends Controller {
+class Installer_Controller extends Controller {
 
     private installer_Model $objModel;
     private installer_View $objView;

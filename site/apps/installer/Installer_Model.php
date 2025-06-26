@@ -1,6 +1,6 @@
 <?php
 
-class installer_Model extends Model
+class Installer_Model extends Model
 {
     private ConfigSettings $configSettings;
 
