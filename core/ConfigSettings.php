@@ -20,6 +20,9 @@ class ConfigSettings
     private string $lastname;
     private string $newsletter;
 
+    // System
+    private String $installed;
+
     // Site
     private string $title;
     private string $description;
@@ -53,6 +56,7 @@ class ConfigSettings
             $this->firstname  = $xml->Child("admin", "firstname");
             $this->lastname   = $xml->Child("admin", "lastname");
             $this->newsletter = $xml->Child("admin", "newsletter");
+            $this->installed      = $xml->Child("system", "installed");
             $this->title      = $xml->Child("site", "title");
             $this->url        = $xml->Child("site", "url");
             $this->description= $xml->Child("site", "description");
@@ -110,6 +114,12 @@ class ConfigSettings
     public function setEmail(string $value): void {
         $this->email = $value;
         $this->xml->editChild("/config/admin/email", $value);
+    }
+
+    public function getInstalled(): string { return $this->installed; }
+    public function setInstalled(string $value): void {
+        $this->installed = $value;
+        $this->xml->editChild("/config/system/installed", $value);
     }
 
     public function getTitle(): string { return $this->title; }
