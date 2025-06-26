@@ -1,17 +1,5 @@
 <?php
 
-/**
- *
- * Router.php
- * (c) Feb 26, 2013 lastprophet
- * @author Anibal Gomez (lastprophet)
- * Balero CMS Open Source
- * Proyecto %100 mexicano bajo la licencia GNU.
- * PHP P.O.O. (M.V.C.)
- * Contacto: anibalgomez@icloud.com
- *
- **/
-
 class Router
 {
 
@@ -20,12 +8,15 @@ class Router
     private Security $security;
     private RequestHelper $request;
 
+    private ConfigSettings $configSettings;
+
     private string $app;
 
 
     public function __construct()
     {
 
+        $this->configSettings = new ConfigSettings();
         $this->security = new Security();
         $this->request = new RequestHelper($this->security);
         $this->installer();
@@ -153,11 +144,9 @@ class Router
 
         try {
 
-            $xml = new XMLHandler(LOCAL_DIR . "/site/etc/balero.config.xml");
-            $installed = $xml->Child("system", "installed");
-            $isInstalled = strpos($installed, "yes");
+            $isInstalled = $this->configSettings->getInstalled();
 
-            if ($isInstalled === false) {
+            if ($isInstalled === "no") {
 
                 if (!file_exists(APPS_DIR . "installer")) {
                     die("App installer NOT found.");
