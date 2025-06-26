@@ -26,19 +26,7 @@ class Installer_View extends View
 
     public function renderView(): void
     {
-        $params = [
-            'title' => $this->configSettings->getTitle(),
-            'url' => $this->configSettings->getUrl(),
-            'page' => $this->page,
-            'keywords' => $this->configSettings->getKeywords(),
-            'description' => $this->configSettings->getDescription(),
-            'content' => $this->content,
-            'virtual_pages' => '',
-            'basepath' => $this->configSettings->getBasepath(),
-            'langs' => ''
-        ];
-
-        $this->renderLayout($params);
+        $this->renderLayout(['content' => $this->content]);
     }
 
     public function is_mod_rewrite_enabled(): void
