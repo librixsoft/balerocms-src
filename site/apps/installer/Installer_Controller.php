@@ -132,7 +132,7 @@ class installer_Controller extends Controller {
     public function main() {
         $this->objView->is_mod_rewrite_enabled();
         $this->objView->wizard();
-        $this->objView->Render();
+        $this->objView->renderView();
     }
 
     public function progressBar() {
