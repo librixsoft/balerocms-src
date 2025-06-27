@@ -27,12 +27,16 @@ class Installer_Controller extends Controller {
 
     #[Get(sr: '')]
     public function main() {
+        try {
         $params = $this->getDefaultParams();
         $params['mod_rewrite_enabled'] = $this->checkModRewrite();
         $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
         $params['btn_install'] = _INSTALL_BUTTON;
         $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
         $params['config_writeable'] = is_writable($configFilePath);
+        } catch (Exception $e) {
+            ErrorConsole::handleException($e);
+        }
         return $this->view->render("/views/setup_wizard.html", $params);
     }
 

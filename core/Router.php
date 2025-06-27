@@ -2,30 +2,22 @@
 
 class Router
 {
-
     private Language $lang;
-
     private Security $security;
     private RequestHelper $request;
-
     private ConfigSettings $configSettings;
-
     private string $app;
-
 
     public function __construct()
     {
-
         $this->configSettings = new ConfigSettings();
         $this->security = new Security();
         $this->request = new RequestHelper($this->security);
         $this->installer();
-
     }
 
     public function init()
     {
-
         $app = $this->request->get('app');
 
         if ($app === null) {
@@ -38,12 +30,11 @@ class Router
         }
 
         switch ($app) {
-
             case "admin":
                 $this->login();
                 break;
 
-            case "logout";
+            case "logout":
                 LoginManager::logout();
                 break;
 
@@ -51,10 +42,7 @@ class Router
                 $this->app = $app;
                 $this->init_app();
                 break;
-
         }
-
-
     }
 
     public function login()
@@ -72,26 +60,24 @@ class Router
         } else {
             $loginManager->showLoginForm();
         }
-
     }
 
     public function init_app()
     {
+        $controllerFile = APPS_DIR . $this->app . "/" . $this->app . "_Controller.php";
 
-        if (file_exists(APPS_DIR . $this->app . "/" . $this->app . "_Controller.php")) {
-            $this->lang = new Language();
-            $dynamic = $this->app . "_Controller";
-            $this->lang->init();
-            $this->lang->init_apps_lang($this->app);
-            $this->lang->app = $this->app;
-            new $dynamic();
-            unset($this->lang);
-        } else {
-            $msg = new MsgBox("error", "dont exist");
-            $theme = new ThemeLoader(LOCAL_DIR . "/themes/tundra/main.html");
-            echo $theme->renderPage($array = array("content" => $msg->Show()));
+        if (!file_exists($controllerFile)) {
+            ErrorConsole::handleException(new Exception("Controller file not found: $controllerFile"));
         }
 
+        $this->lang = new Language();
+        $this->lang->init();
+        $this->lang->init_apps_lang($this->app);
+        $this->lang->app = $this->app;
+
+        $dynamic = $this->app . "_Controller";
+        new $dynamic();
+        unset($this->lang);
     }
 
     public function init_mod()
@@ -102,7 +88,7 @@ class Router
             $adminControllerFile = APPS_DIR . "admin/admin_Controller.php";
 
             if (!file_exists($adminControllerFile)) {
-                die(_CONTROLLER_ADMIN_NOT_FOUND);
+                ErrorConsole::handleException(new Exception("Admin controller file not found: $adminControllerFile"));
             }
 
             $this->lang = new Language();
@@ -120,56 +106,45 @@ class Router
         $modDir = MODS_DIR . $mod;
 
         if (!file_exists($modDir)) {
-            die(_CONTROLLER_NOT_FOUND);
+            ErrorConsole::handleException(new Exception("Module directory not found: $modDir"));
         }
 
         $dynamicController = "mod_" . $mod . "_Controller";
 
         if (!class_exists($dynamicController)) {
-            die("No se pudo cargar la clase $dynamicController");
+            ErrorConsole::handleException(new Exception("Module controller class not found: $dynamicController"));
         }
 
         $admin_elements = new AdminElements();
         $title_mod_menu = $admin_elements->mods_menu();
 
         new $dynamicController($title_mod_menu);
-
-
     }
-
-
 
     public function installer()
     {
-
         try {
-
             $isInstalled = $this->configSettings->getInstalled();
 
             if ($isInstalled === "no") {
-
                 if (!file_exists(APPS_DIR . "installer")) {
-                    die("App installer NOT found.");
+                    ErrorConsole::handleException(new Exception("Installer application not found in: " . APPS_DIR . "installer"));
                 }
 
                 $this->lang = new Language();
                 $this->lang->init();
                 $this->lang->init_apps_lang("installer");
+
                 new installer_Controller();
-                die();
-
+                exit;
             }
 
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
             if (!file_exists(APPS_DIR . "installer")) {
-                die("App installer NOT found.");
+                ErrorConsole::handleException(new Exception("Installer application not found in: " . APPS_DIR . "installer"));
             }
 
-            die($e->getMessage());
-
+            ErrorConsole::handleException($e);
         }
-
     }
-
 }

@@ -5,12 +5,11 @@ class ConfigSettings
     private XMLHandler $xml;
     private string $cfgFile;
 
-    // Configuracion DB
+    // DB Configuration
     private string $dbhost;
     private string $dbuser;
     private string $dbpass;
     private string $dbname;
-
 
     // Admin
     private string $user;
@@ -20,7 +19,7 @@ class ConfigSettings
     private string $lastname;
 
     // System
-    private String $installed;
+    private string $installed;
 
     // Site
     private string $title;
@@ -29,15 +28,20 @@ class ConfigSettings
     private string $keywords;
     private string $basepath;
 
-    // Opciones
+    // Options
     private string $multilang;
     private string $editor;
 
     public function __construct()
     {
         $this->cfgFile = LOCAL_DIR . "/site/etc/balero.config.xml";
-        $this->xml = new XMLHandler($this->cfgFile); // ✅ primero inicializar
-        $this->LoadSettings(); // ✅ luego llamar
+
+        try {
+            $this->xml = new XMLHandler($this->cfgFile);
+            $this->LoadSettings();
+        } catch (Throwable $e) {
+            ErrorConsole::handleException($e);
+        }
     }
 
     public function LoadSettings(): void
@@ -49,12 +53,15 @@ class ConfigSettings
             $this->dbuser     = $xml->Child("database", "dbuser");
             $this->dbpass     = $xml->Child("database", "dbpass");
             $this->dbname     = $xml->Child("database", "dbname");
+
             $this->user       = $xml->Child("admin", "username");
             $this->pass       = $xml->Child("admin", "passwd");
             $this->email      = $xml->Child("admin", "email");
             $this->firstname  = $xml->Child("admin", "firstname");
             $this->lastname   = $xml->Child("admin", "lastname");
-            $this->installed      = $xml->Child("system", "installed");
+
+            $this->installed  = $xml->Child("system", "installed");
+
             $this->title      = $xml->Child("site", "title");
             $this->url        = $xml->Child("site", "url");
             $this->description= $xml->Child("site", "description");
@@ -63,14 +70,12 @@ class ConfigSettings
             $this->multilang  = $xml->Child("site", "multilang");
             $this->editor     = $xml->Child("site", "editor");
 
-        } catch (Exception $e) {
-            $title = "ERROR IN CLASS: " . get_class($this);
-            $test = new MsgBox($title, $e->getMessage());
-            echo $test->Show();
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(new Exception("Failed to load configuration in ConfigSettings: " . $e->getMessage(), 0, $e));
         }
     }
 
-    // Getters y Setters con escritura en XML
+    // Getters and setters
 
     public function getDbhost(): string { return $this->dbhost; }
     public function setDbhost(string $value): void {
@@ -160,13 +165,10 @@ class ConfigSettings
         return str_replace("index.php", "", $segments[0]);
     }
 
-    // Edición genérica opcional
     public function edit(string $section, string $key, string $value): void
     {
         $this->xml->editChild("/config/{$section}/{$key}", $value);
     }
-
-    // Métodos ya existentes omitidos por brevedad...
 
     public function getFirstname(): string { return $this->firstname; }
     public function setFirstname(string $value): void {
@@ -191,6 +193,4 @@ class ConfigSettings
         $this->keywords = $value;
         $this->xml->editChild("/config/site/keywords", $value);
     }
-
-
 }
