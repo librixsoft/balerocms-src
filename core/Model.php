@@ -20,11 +20,10 @@ class Model extends ConfigSettings
                     $this->getDbname()
                 );
             } else {
-                throw new Exception("No se pudo conectar a la base de datos.");
+                throw new Exception("Failed to connect to the database.");
             }
-        } catch (Exception $e) {
-            throw new Exception("Error en Model: " . $e->getMessage());
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(new Exception("Error in Model: " . $e->getMessage(), 0, $e));
         }
     }
 }
-

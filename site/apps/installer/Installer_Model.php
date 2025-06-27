@@ -9,8 +9,9 @@ class Installer_Model extends Model
         try {
             parent::dbConnect();
             $this->configSettings = new ConfigSettings();
-            $this->configSettings->LoadSettings(); // si es necesario
-        } catch (Exception $e) {
+            $this->configSettings->LoadSettings(); // If needed
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(new Exception("Error during Installer_Model construction: " . $e->getMessage(), 0, $e));
         }
     }
 
@@ -18,11 +19,13 @@ class Installer_Model extends Model
     {
         try {
             $query = file_get_contents(APPS_DIR . "installer/sql/tables.sql");
-            $query = str_replace("{dbname}", $this->getDbname(), $query);
+            $query = str_replace("{dbname}", $this->configSettings->getDbname(), $query);
             $this->db->create($query);
             $this->configSettings->setInstalled("yes");
-        } catch(Exception $e) {
+        } catch (Throwable $e) {
             $this->configSettings->setInstalled("no");
+            ErrorConsole::handleException(new Exception("Installation failed: " . $e->getMessage(), 0, $e));
         }
     }
+
 }

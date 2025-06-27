@@ -1,374 +1,124 @@
 <?php
 
-/**
- *
- * mySQL.php
- * (c) Feb 26, 2013 lastprophet 
- * @author Anibal Gomez (lastprophet)
- * Balero CMS Open Source
- * Proyecto %100 mexicano bajo la licencia GNU.
- * PHP P.O.O. (M.V.C.)
- * Contacto: anibalgomez@icloud.com
- *
-**/
+class errorConnection extends Exception {}
 
-/**
- * 
- * @author lastprophet
- * ------------------------------------
- * MySQL / MariaDB Class (19-oct-2013)
- * ------------------------------------
- * Clase MySQLi compatible con salida para la "Vista".
- * Implementada en Balero CMS.
- */
+class MySQL {
 
-/**
- * 
- * Excepciones.
- *
- */
+    private $host;
+    private $user;
+    private $pass;
+    private $db;
 
-class errorConnection extends Exception { }
+    private mysqli $conn;
+    private $result;
 
-/**
- * 
- * Fin de excepciones.
- *
- */
+    private bool $error = false;
+    private $rows;
+    private $row;
 
-class mySQL {
-	
-	/**
-	 * 
-	 * Valores para base de datos.
-	 */
-	
-	private $host;
-	private $user;
-	private $pass;
-	private $db;
-	
-	/**
-	 * Nueva conexión
-	 */
-	
-	private $conn;
-	
-	/**
-	 * Ejecutar query
-	 */
-	
-	private $result;
-	
-	/**
-	 * 
-	 * Almacenar mensajes de errores.
-	 */
-	
-	private $error = FALSE;
-	
-	
-	/**
-	 * 
-	 * Almacenamos los resultados en un array llamado rows[]. 
-	 */
-	
-	private $rows;
-	private $row;
-	
-	/**
-	 * 
-	 * Connection status
-	 */
-	
-	private $status = FALSE;
-	
-	/**
-	 * Método constructor
-	 **/
-	
-	public function __construct($host = "", $user = "", $pass = "", $db = "") {
-			
-			/**
-			* 
-			* Conectamos a la base de datos.
-			*/
-		
-			try {
-				$this->conn = new mysqli($host, $user, $pass, $db);
-				$this->status = TRUE;
-				if(mysqli_connect_errno()) {
-					$this->status = FALSE;
-					throw new errorConnection(get_class($this) . ": " . _DB_ERROR . " . " . mysqli_connect_error());
-				}
-			} catch (errorConnection $e) {
-				//$e->getMessage();
-				throw new Exception($e->getMessage());
-			}
-			
-	}
-		
+    private bool $status = false;
 
-	/**
-	 * 
-	 * @param $query Sentencia SQL. Ejemplo: "SELECT id,user,name FROM users"
-	 */
-	
-	public function query($query) {
-		
-		/**
-		 * 
-		 * Ejecutar consulta.
-		 */
-		
-		try {
-			
-		$this->result = $this->conn->query($query);
-		
-			if(!$this->result) {
-				throw new Exception("MYSQL: SYNTAX QUERY ERROR: " . $query);
-			}
-			
-		} catch(Exception $e) {
-			
-			/**
-			 * Siempre hacemos ésta acción para atrapar el error.
-			 */
-			
-			throw new Exception($e->getMessage());
-			
-		}
-		
-		
-	}
+    public function __construct($host = "", $user = "", $pass = "", $db = "") {
+        try {
+            $this->conn = new mysqli($host, $user, $pass, $db);
+            $this->status = true;
 
+            if (mysqli_connect_errno()) {
+                $this->status = false;
+                throw new errorConnection("MySQL connection failed: " . mysqli_connect_error());
+            }
+
+        } catch (errorConnection $e) {
+            ErrorConsole::handleException($e);
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(new Exception("Unexpected error in MySQL connection: " . $e->getMessage(), 0, $e));
+        }
+    }
+
+    public function query($query) {
+        try {
+            $this->result = $this->conn->query($query);
+
+            if (!$this->result) {
+                throw new Exception("SQL syntax error in query: " . $query);
+            }
+
+        } catch (Throwable $e) {
+            ErrorConsole::handleException($e);
+        }
+    }
 
     public function get() {
         try {
             if (!$this->result) {
-                throw new Exception(_QUERY_ERROR);
+                throw new Exception("No result set available for fetching.");
             }
 
-            $this->rows = []; // ← IMPORTANTE: limpiar antes
-            while($row = $this->result->fetch_array(MYSQLI_ASSOC)) {
+            $this->rows = [];
+            while ($row = $this->result->fetch_array(MYSQLI_ASSOC)) {
                 $this->rows[] = $row;
             }
-        } catch (Exception $e) {
-            $e->getMessage();
+
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(new Exception("Error while fetching query result: " . $e->getMessage(), 0, $e));
         }
     }
 
-
-    /** Regresa el numero total de registros de una $query **/
-
-	public function num_rows() {
-
-
-		/**
-		* Obtener el numero total de registros ejemplo: en (modelo)
-		* $this->db->query("SELECT * FROM blog");
-		* echo $this->db->num_rows();
-		**/
-
-		$num_rows = $this->result->num_rows;
-
-		return $num_rows;
-
-	}
-	
-	
-	/**
-	 * Crear tablas en la base de datos.
-	 * @param string $name Nombre de la tabla.
-	 */
-	
-	public function create($query) {
-		try {
-
-		
-
-			$table = mysqli_multi_query($this->conn, $query);
-			
-				if(!$table) {
-					throw new Exception(_CREATE_TABLE_ERROR . $query);
-				}
-			
-		} catch (Exception $e) {
-			$this->error = $e->getMessage();
-		}
-	}
-		
-	
-	public function queryArray() {
-		return $this->rows;
-	}
-	
-	/**
-	 * Retornamos el error en un método.
-	 */
-	
-	public function mySQLError() {
-		return $this->error;
-	}
-
-    /**
-     * @return mixed
-     */
-    public function getHost()
-    {
-        return $this->host;
+    public function num_rows(): int {
+        return $this->result ? $this->result->num_rows : 0;
     }
 
-    /**
-     * @param mixed $host
-     */
-    public function setHost($host): void
-    {
-        $this->host = $host;
+    public function create($query) {
+        try {
+            $success = mysqli_multi_query($this->conn, $query);
+
+            if (!$success) {
+                throw new Exception("Failed to create table(s). Query: " . $query);
+            }
+
+        } catch (Throwable $e) {
+            $this->error = $e->getMessage();
+            ErrorConsole::handleException($e);
+        }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPass()
-    {
-        return $this->pass;
-    }
-
-    /**
-     * @param mixed $pass
-     */
-    public function setPass($pass): void
-    {
-        $this->pass = $pass;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDb()
-    {
-        return $this->db;
-    }
-
-    /**
-     * @param mixed $db
-     */
-    public function setDb($db): void
-    {
-        $this->db = $db;
-    }
-
-    /**
-     * @return mysqli
-     */
-    public function getConn(): mysqli
-    {
-        return $this->conn;
-    }
-
-    /**
-     * @param mysqli $conn
-     */
-    public function setConn(mysqli $conn): void
-    {
-        $this->conn = $conn;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResult()
-    {
-        return $this->result;
-    }
-
-    /**
-     * @param mixed $result
-     */
-    public function setResult($result): void
-    {
-        $this->result = $result;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isError(): bool
-    {
-        return $this->error;
-    }
-
-    /**
-     * @param bool $error
-     */
-    public function setError(bool $error): void
-    {
-        $this->error = $error;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRows()
-    {
+    public function queryArray() {
         return $this->rows;
     }
 
-    /**
-     * @param mixed $rows
-     */
-    public function setRows($rows): void
-    {
-        $this->rows = $rows;
+    public function mySQLError() {
+        return $this->error;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRow()
-    {
-        return $this->row;
-    }
+    // Getters and setters
 
-    /**
-     * @param mixed $row
-     */
-    public function setRow($row): void
-    {
-        $this->row = $row;
-    }
+    public function getHost() { return $this->host; }
+    public function setHost($host): void { $this->host = $host; }
 
-    /**
-     * @return bool
-     */
-    public function isStatus(): bool
-    {
-        return $this->status;
-    }
+    public function getUser() { return $this->user; }
+    public function setUser($user): void { $this->user = $user; }
 
-    /**
-     * @param bool $status
-     */
-    public function setStatus(bool $status): void
-    {
-        $this->status = $status;
-    }
+    public function getPass() { return $this->pass; }
+    public function setPass($pass): void { $this->pass = $pass; }
 
+    public function getDb() { return $this->db; }
+    public function setDb($db): void { $this->db = $db; }
+
+    public function getConn(): mysqli { return $this->conn; }
+    public function setConn(mysqli $conn): void { $this->conn = $conn; }
+
+    public function getResult() { return $this->result; }
+    public function setResult($result): void { $this->result = $result; }
+
+    public function isError(): bool { return $this->error; }
+    public function setError(bool $error): void { $this->error = $error; }
+
+    public function getRows() { return $this->rows; }
+    public function setRows($rows): void { $this->rows = $rows; }
+
+    public function getRow() { return $this->row; }
+    public function setRow($row): void { $this->row = $row; }
+
+    public function isStatus(): bool { return $this->status; }
+    public function setStatus(bool $status): void { $this->status = $status; }
 }
