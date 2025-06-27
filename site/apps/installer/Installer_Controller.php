@@ -3,8 +3,8 @@
 
 class Installer_Controller extends Controller {
 
-    private installer_Model $objModel;
-    private installer_View $objView;
+    private installer_Model $model;
+    private installer_View $view;
 
     private ConfigSettings $configSettings;
 
@@ -13,28 +13,28 @@ class Installer_Controller extends Controller {
             $this->request = new RequestHelper();
             parent::__construct($this->request);
 
-            $this->objView = new installer_View();
-            $this->objModel = new installer_Model();
+            $this->view = new installer_View();
+            $this->model = new installer_Model();
 
             $this->configSettings = new ConfigSettings();
             $this->configSettings->LoadSettings();
 
-            $this->objView->installButton();
+            $this->view->installButton();
         } catch (Exception $e) {
-            $this->objView = new installer_View();
+            $this->view = new installer_View();
 
             if (!is_writable($this->getCfgFile())) {
                 $MsgBox = new MsgBox(_ERROR, _CHMOD_ERROR);
-                $this->objView->content .= $MsgBox->Show();
+                $this->view->content .= $MsgBox->Show();
             }
 
             if (strpos($e->getMessage(), _UNKNOW_DATABASE)) {
-                $this->objView->unknow_database_error();
-                $this->objModel->createDB();
-                $this->objView->check_db = "";
+                $this->view->unknow_database_error();
+                $this->model->createDB();
+                $this->view->check_db = "";
             } else {
-                $this->objView->unknow_database_connect();
-                $this->objView->check_db = "";
+                $this->view->unknow_database_connect();
+                $this->view->check_db = "";
             }
         }
 
@@ -57,11 +57,11 @@ class Installer_Controller extends Controller {
             $this->configSettings->setDbpass($this->request->post('dbpass'));
             $this->configSettings->setDbname($this->request->post('dbname'));
 
-            $this->objView->check_db = $this->objView->check_icon;
+            $this->view->check_db = $this->view->check_icon;
 
         } catch (Exception $e) {
-            $this->objView->check_db = "";
-            $this->objView->file_error($e->getMessage());
+            $this->view->check_db = "";
+            $this->view->file_error($e->getMessage());
         }
 
         header("Location: index.php");
@@ -114,8 +114,8 @@ class Installer_Controller extends Controller {
 
             header("Location: index.php");
         } catch (Exception $e) {
-            $this->objView->check_admin = "";
-            $this->objView->form_field_error($e->getMessage());
+            $this->view->check_admin = "";
+            $this->view->form_field_error($e->getMessage());
             $this->main();
         }
     }
@@ -123,17 +123,17 @@ class Installer_Controller extends Controller {
 
     #[Get(sr: '')]  // ruta raíz para GET (ejemplo index.php?app=installer sin path)
     public function main() {
-        $this->objView->is_mod_rewrite_enabled();
-        $this->objView->wizard();
-        $this->objView->renderView();
+        $this->view->is_mod_rewrite_enabled();
+        $this->view->wizard();
+        $this->view->renderView();
     }
 
     #[Post(sr: 'progressBar')]
     public function progressBar()
     {
         try {
-            $this->objView->progressBar();
-            $this->objModel->install();
+            $this->view->progressBar();
+            $this->model->install();
         } catch (Exception $e) {
             // Manejo opcional de error
         }

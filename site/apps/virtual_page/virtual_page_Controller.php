@@ -1,166 +1,51 @@
 <?php
 
-/**
- *
- * virtual_page_Controller.php
- * (c) Mar 15, 2015 lastprophet
- * @author Anibal Gomez (lastprophet)
- * Balero CMS Open Source
- * Proyecto %100 mexicano bajo la licencia GNU.
- * PHP P.O.O. (M.V.C.)
- * Contacto: anibalgomez@icloud.com
- *
- **/
+class virtual_page_Controller extends Controller {
 
-/**
- * Multi-Language Fixes
- */
+    private Security $objSecurity;
+    public virtual_page_Model $model;
+    public virtual_page_View $view;
+    private string $lang;
 
-class virtual_page_Controller extends ControllerHandler {
+    public function __construct() {
+        try {
+            $this->objSecurity = new Security();
+            $this->request = new RequestHelper($this->objSecurity);
+            parent::__construct($this->request);
 
-    private $objSecurity;
+            $this->model = new virtual_page_Model();
+            $this->view = new virtual_page_View();
 
-	/**
-	* Variables para heredar los métodos de el modelo y la vista.
-	**/
+            $this->lang = $this->model->getLang();
+            $this->view->lang = $this->lang;
+            $this->model->lang = $this->lang;
+        } catch (Exception $e) {
+            $this->view = new virtual_page_View();
+        }
 
-	public $objModel;
-	public $objView;
-	
-	/**
-	 * @param $lang default language
-	 */
-	
-	private $lang;
-	
-	/**
-	* Los cargamos en el constructor
-	**/
+        $this->init();
+    }
 
-	public function __construct() {
+    #[Get(sr: '')]
+    public function main() {
+        try {
+            if ($this->request->get('id')) {
+                $id = $this->objSecurity->toInt($this->request->get('id'));
+                $this->model->lang = $this->objSecurity->antiXSS($this->request->get('sr'));
+                $query_content = $this->model->get_virtual_page_by_id($id);
+                $this->view->rows = $this->model->rows;
+                $this->view->content .= "<div id=\"vp-content\">" .
+                    ($this->view->print_virtual_page($query_content)) .
+                    "</div>";
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception $e) {
+            $this->view->page = _NOT_FOUND;
+            $msgbox = new MsgBox(_VP, _VP_DONT_EXIST);
+            $this->view->content .= $msgbox->Show();
+        }
 
-        $this->objSecurity = new Security();
-
-		try {
-			$this->objModel = new virtual_page_Model();
-			$this->objView = new virtual_page_View();
-		} catch (Exception $e) {
-			$this->objView = new virtual_page_View();
-		}
-		
-		/**
-		 * get default language if empty is main
-		 */
-		
-		$this->lang = $this->objModel->getLang();
-		
-		/**
-		 * Tell this classes the main language
-		*/
-		
-		$this->objView->lang = $this->lang;
-		$this->objModel->lang = $this->lang;
-		
-		
-		$this->init($this);
-	}
-		
-	/**
-	* Método principal llamado main() (similar a C/C++)
-	**/
-
-	public function main() {
-	
-		try {
-			
-			if(isset($_GET['id'])) {
-				$id = $this->objSecurity->toInt($_GET['id']);
-				$this->objModel->lang = $this->objSecurity->antiXSS($_GET['sr']);
-				$query_content = $this->objModel->get_virtual_page_by_id($id);
-				$this->objView->rows = $this->objModel->rows;
-				$md = new Markdown();
-				$this->objView->content .= "<div id=\"vp-content\">" . 
-											$md->defaultTransform($this->objView->print_virtual_page($query_content))
-											. "</div>";
-			} else {
-				throw new Exception();
-			}
-			
-			
-		} catch (Exception $e) {
-			$this->objView->page = _NOT_FOUND;
-			$msgbox = new MsgBox(_VP, _VP_DONT_EXIST);
-			$this->objView->content .= $msgbox->Show();
-		}
-		
-		$this->objView->Render();	
-		
-	}
-	
-	/**
-	* Métodos
-	**/
-		
-	
-	public function init($var) {
-		
-		if(isset($_GET['sr'])) {
-	
-			/**
-			 *
-			 * Problem with CGI/Fast CGI as PHP Server API Fixed
-			 */
-	
-			$sr = $this->objSecurity->antiXSS($_GET['sr']);
-	
-			if(!isset($_GET['app'])) {
-				die(_GET_APP_DONT_EXIST);
-			}
-			
-			//$class_methods = get_class_methods("appController");
-			$shield_var = $this->objSecurity->antiXSS($_GET['app']);
-			$class_methods = get_class_methods($shield_var . "_Controller");
-			//var_dump($class_methods);
-
-			$cfgSettings = new configSettings();
-			
-			if($cfgSettings->multilang == "yes") {
-			
-
-
-			} // end if config settings
-
-			foreach ($class_methods as $method_name) {
-
-				if(($sr == $method_name)) {
-
-					switch($sr) {
-						// llama staticamente
-						//appController::$sr();
-						//appModel::$sr();
-						//AppView::$sr();
-
-
-						// llamar dinamicamente
-						case $sr:
-							$var->$sr();
-							break;
-
-
-					} // switch
-
-				}
-
-			} // for each
-
-		} else {
-			if((!isset($_GET['sr']))) {
-				$var->main();
-			}
-		}
-
-
-	} // fin de init()
-	
-	
+        $this->view->Render();
+    }
 }

@@ -1,218 +1,101 @@
 <?php
 
-/**
-* Plantilla de la clase appView para Balero CMS.
-* Declare aqui todas las 'vistas'
-**/
+class virtual_page_View extends View {
+    public string $theme;
+    public array $rows = [];
+    public string $content = "";
+    public array $virtual_pages = [];
+    public virtual_page_Model $objModel;
+    public string $lang;
+    public string $page;
+    public string $active = "class=\"active\"";
+    public string $css_active = "";
 
-/**
- * Multi-Language Fixes
- */
+    public function __construct() {
+        parent::__construct("/themes/tundra/main.html");
 
-class virtual_page_View extends configSettings {
-	
-	public $theme;
-	
-	public $rows;
-	
-	/**
-	 * Variable de contenido $content
-	 */
+        $this->objModel = new virtual_page_Model();
+        $this->theme = $this->objModel->theme();
+        $this->configSettings = new ConfigSettings();
+        $this->configSettings->LoadSettings();
+    }
 
-	public $content = "";
-	
-	/**
-	 * Variables de sistema
-	 */
-	
-	public $virtual_pages;
-	
-	public $objModel;
-	
-	public $lang;
-	
-	/**
-	 * 
-	 * Page title
-	 */
-	
-	public $page;
-	
-	
-	/**
-	 * Active Link
-	 */
-	
-	public $active = "class=\"active\"";
-	
-	/**
-	 * 
-	 * Highlights active link
-	 */
-	
-	public $css_active;
-	
-	public function __construct() {
-		
-		$this->objModel = new virtual_page_Model();
-		$this->theme = $this->objModel->theme();
-		
-		// forzar la carga de variables de config
-		$this->LoadSettings();
-		
-	}
-	
-	/**
-	 * 
-	 * @code $code: Current language running
-	 * @return Virtual Pages Menú
-	 * 
-	 */
-	
-	public function virtual_pages_menu() {
-		
-		$html = "";
-		
-		//$html = "<ul>";
-		$html .= "<li $this->active><a href=\"./\">". _HOME ."</a></li>";
+    public function virtual_pages_menu(): string {
+        $html = "<li $this->active><a href=\"./\">" . _HOME . "</a></li>";
 
-		// pass lang to class
-		$this->objModel->lang = $this->lang;
-		$value = $this->objModel->get_virtual_pages();
-		
-		if(empty($this->lang) || $this->lang == "main") {
+        $this->objModel->lang = $this->lang;
+        $pages = $this->objModel->get_virtual_pages();
 
-            foreach ($value ?? [] as $page) {
-				// Validar claves con valores por defecto
-				$virtualTitle = $page['virtual_title'] ?? '';
-				$id = $page['id'] ?? 0;
-			
-				// Solo generar HTML si hay título
-				if ($virtualTitle !== '') {
-					if ($this->active == $virtualTitle) {
-						$this->css_active = 'class="active"';
-					}
-			
-					$html .= "<li $this->css_active><a href=\"./virtual_page/main/id-$id\">$virtualTitle</a></li>";
-					$this->css_active = ""; // reset
-				}
-			}			
+        if (empty($pages)) {
+            return "<li><a href=\"#\">" . _NO_VIRTUAL_PAGES . "</a></li>";
+        }
 
+        foreach ($pages as $page) {
+            $title = $page['virtual_title'] ?? '';
+            $id = $page['id'] ?? 0;
 
-        } else {
-			
-			if(is_array($value)) {
-			
-				foreach ($value as $page) {
-					if($this->active == $page['virtual_title']) {
-						$this->css_active = "class=\"active\"";
-					}
-					// dynamic
-					//$html .= "<li><a href=\"index.php?app=virtual_page&id=".$page['id']."\">" . $page['virtual_title'] . "</a></li>";
-					$html .= "<li $this->css_active><a href=\"./virtual_page/".$this->lang."/id-".$page['id']."\">" . $page['virtual_title'] . "</a></li>";
-					$this->css_active = ""; // reset
-				}
-			
-			}
-			
-		}
-				
-		//$html .= "</ul>";
-		
-		if(empty($value)) {
-			$html = "<li><a href=\"#\">" . _NO_VIRTUAL_PAGES . "</a></li>";
-		}
-		
-		return $html;
-			
-	}
-	
-	/**
-	 * 
-	 * Full Virtual Page Content
-	 */
-	
-	public function print_virtual_page($db_array = array()) {
-	
-		if(!is_array($db_array)) {
-			die();
-		}
-		
-		$html = "";
-	
-		foreach ($db_array as $page) {
-			$this->page = $page['virtual_title'];
-			$this->active = $this->page;
-			// markdown header 2
-			$html .= "## " . $page['virtual_title'] . "\n";
-			// markdown italic
-			$html .= "*" . $page['date'] . "*\n";
-			// sin formato markdown
-			$html .= "" . $page['virtual_content'] . "";
-		}
-		
-		return $html;
-	
-	}
+            if ($title !== '') {
+                if ($this->active === $title) {
+                    $this->css_active = 'class="active"';
+                }
 
-	/**
-	 * Cargar la vista.
-	 */
-	
-	public function Render() {
-				
-		
-		$lang = new Language();
-		$lang->multilang = $this->multilang;
-		$lang->app = "blog"; // where is controller? -> blog_controller -> setlang
-		$lang->defaultLang = $this->objModel->getLang();
-		
-		$array = array(
-				'title'=>$this->title,
-				'url'=>$this->url,
-				'keywords'=>$this->keywords,
-				'description'=>$this->description,
-				'content'=>$this->content,
-				'virtual_pages'=>$this->virtual_pages_menu($lang->defaultLang),
-				'basepath'=>$this->basepath,
-				'page'=>$this->page,
-				'langs'=>$lang->langList($this->objModel->getLangList())
-				);
-		
-		/**
-		 * 
-		 * Renderizamos nuestra página.
-		 */
+                $url = ($this->lang === "main" || empty($this->lang))
+                    ? "./virtual_page/main/id-$id"
+                    : "./virtual_page/{$this->lang}/id-$id";
 
-		$objModel = new ThemeLoader(LOCAL_DIR . "/themes/" . $this->theme . "/main.html");		
-		echo $objModel->renderPage($array);
-		
-	
-	}
-	
-	public function print_all_pages() {
-		
-		$this->content .= "<h3>" . _INDEXOF . "</h3>";
-		
-		
-		foreach ($this->rows as $row) {			
-				
-			try {
-			$this->content .= $row['virtual_title'];
-			} catch (Exception $e) {
-			
-			}
-			
-		}
-		
-		
-	}
-	
-	
-	/**
-	 * Metodos
-	 */
-	
-	
-	
+                $html .= "<li $this->css_active><a href=\"$url\">$title</a></li>";
+                $this->css_active = "";
+            }
+        }
+
+        return $html;
+    }
+
+    public function print_virtual_page(array $db_array): string {
+        $html = "";
+
+        foreach ($db_array as $page) {
+            $this->page = $page['virtual_title'];
+            $this->active = $this->page;
+
+            $html .= "## " . $page['virtual_title'] . "\n";
+            $html .= "*" . $page['date'] . "*\n";
+            $html .= $page['virtual_content'] . "\n";
+        }
+
+        return $html;
+    }
+
+    public function Render(): void {
+        $lang = new Language();
+        $lang->app = "virtual_page";
+        $lang->defaultLang = $this->objModel->getLang();
+
+        $data = [
+            'title' => $this->configSettings->getTitle(),
+            'url' => $this->configSettings->getUrl(),
+            'keywords' => $this->configSettings->getKeywords(),
+            'description' => $this->configSettings->getDescription(),
+            'content' => $this->content,
+            'virtual_pages' => $this->virtual_pages_menu(),
+            'basepath' => $this->configSettings->getBasepath(),
+            'page' => $this->page,
+            'langs' => ''
+        ];
+
+        $theme = new ThemeLoader(LOCAL_DIR . "/themes/{$this->theme}/main.html");
+        echo $theme->renderPage($data);
+    }
+
+    public function print_all_pages(): void {
+        $this->content .= "<h3>" . _INDEXOF . "</h3>";
+
+        foreach ($this->rows as $row) {
+            try {
+                $this->content .= $row['virtual_title'];
+            } catch (Exception $e) {
+                // Ignorar errores individuales
+            }
+        }
+    }
 } // fin clase
