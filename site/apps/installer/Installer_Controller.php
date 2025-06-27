@@ -40,6 +40,7 @@ class Installer_Controller extends Controller {
     #[Get(sr: '')]
     public function main() {
         $params = $this->getDefaultParams();
+        $params['btn_install'] = _INSTALL_BUTTON;
         return $this->view->render("/views/setup_wizard.html", $params);
     }
 

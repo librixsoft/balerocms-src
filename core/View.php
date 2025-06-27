@@ -1,15 +1,13 @@
 <?php
 
-// core/View.php
-class View
+class View extends TemplateEngine
 {
-    protected string $layoutPath;
-    public string $content = '';
-
+    protected string $baseDir;
     protected ConfigSettings $configSettings;
 
-    public function __construct()
+    public function __construct(string $baseDir = LOCAL_DIR)
     {
+        $this->baseDir = rtrim($baseDir, '/') . '/';
         $this->configSettings = new ConfigSettings();
         $this->configSettings->LoadSettings();
     }
@@ -23,14 +21,13 @@ class View
             'keywords' => $this->configSettings->getKeywords(),
             'description' => $this->configSettings->getDescription(),
             'basepath' => $this->configSettings->getBasepath(),
-            'virtual_pages' => '',
-            'langs' => '',
+            // otros parámetros...
         ];
     }
 
-    function render(string $templatePath, array $params): string
+    public function render(string $templatePath, array $params = []): string
     {
-        $templateFullPath = LOCAL_DIR . $templatePath;
+        $templateFullPath = $this->baseDir . ltrim($templatePath, '/');
 
         if (!file_exists($templateFullPath)) {
             return "<b>Error:</b> plantilla no encontrada: $templateFullPath";
@@ -41,24 +38,18 @@ class View
             return "<b>Error:</b> no se pudo leer la plantilla: $templateFullPath";
         }
 
+        // Mezclamos parámetros por defecto con los que pasan
+        $params = array_merge($this->getDefaultParams(), $params);
+
+        // Reemplazar variables {var} antes de procesar condicionales
         foreach ($params as $key => $value) {
-            $content = str_replace('{' . $key . '}', htmlspecialchars($value), $content);
+            $safeValue = htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $content = str_replace('{' . $key . '}', $safeValue, $content);
         }
 
+        // Ahora procesa condicionales, etc. con el motor
+        $content = $this->processTemplate($content, $params);
+
         return $content;
-    }
-
-
-    /**
-     * @deprecated eliminar este metodo solo por renderLayout
-     * @param string $templatePath
-     * @param array $params
-     * @return string
-     * @throws Exception
-     */
-    public function renderFragment(string $templatePath, array $params = []): string
-    {
-        $loader = new ThemeLoader($templatePath);
-        return $loader->renderPage($params);
     }
 }

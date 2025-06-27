@@ -51,6 +51,20 @@
 
 <div id="wizard-container">
   <div class="row-fluid section">
+
+    <!-- @if title -->
+    <div class="block" style="margin-top: 20px;">
+      <div class="navbar navbar-inner block-header">
+        <div class="clearfix"></div>
+        <div class="padd-top" style="margin-top: 10px;">
+          <form class="form-inline" method="POST" action="index.php?app=installer&sr=progressBar">
+            <input type="submit" class="btn btn-success btn-large" value="{btn_install}" name="submit">
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- @endif -->
+
     <div class="block">
       <div class="block-content collapse in">
         <div class="span12">
@@ -199,6 +213,7 @@
         </div> <!-- /.span12 -->
       </div> <!-- /.block-content -->
     </div> <!-- /.block -->
+
   </div> <!-- /.row-fluid -->
 </div> <!-- /#wizard-container -->
 
