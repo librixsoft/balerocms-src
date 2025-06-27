@@ -108,7 +108,6 @@ class Installer_View extends View
             'lbl_firstname' => _NAME,
             'lbl_lastname' => _LAST_NAME,
             'lbl_email' => _EMAIL,
-            'lbl_newsletter' => _NEWSLETTER,
             'txt_dbhost' => $this->configSettings->getDbhost(),
             'txt_dbuser' => $this->configSettings->getDbuser(),
             'txt_dbpass' => $this->configSettings->getDbpass(),
@@ -124,7 +123,6 @@ class Installer_View extends View
             'txt_firstname' => $this->configSettings->getFirstname(),
             'txt_lastname' => $this->configSettings->getLastname(),
             'txt_email' => $this->configSettings->getEmail(),
-            'txt_newsletter' => $this->configSettings->getNewsletter(),
             'btn_save' => _INSTALLER_SAVE
         ];
 

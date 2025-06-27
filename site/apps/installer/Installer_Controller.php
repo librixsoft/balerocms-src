@@ -104,7 +104,6 @@ class Installer_Controller extends Controller {
             }
 
             $this->configSettings->setLastname($this->request->post('lastname'));
-            $this->configSettings->setNewsletter($this->request->post('newsletter'));
             $this->configSettings->setUser($this->request->post('username'));
             $this->configSettings->setEmail($this->request->post('email'));
 

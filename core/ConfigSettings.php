@@ -18,7 +18,6 @@ class ConfigSettings
     private string $email;
     private string $firstname;
     private string $lastname;
-    private string $newsletter;
 
     // System
     private String $installed;
@@ -55,7 +54,6 @@ class ConfigSettings
             $this->email      = $xml->Child("admin", "email");
             $this->firstname  = $xml->Child("admin", "firstname");
             $this->lastname   = $xml->Child("admin", "lastname");
-            $this->newsletter = $xml->Child("admin", "newsletter");
             $this->installed      = $xml->Child("system", "installed");
             $this->title      = $xml->Child("site", "title");
             $this->url        = $xml->Child("site", "url");
@@ -150,12 +148,6 @@ class ConfigSettings
     public function setMultilang(string $value): void {
         $this->multilang = $value;
         $this->xml->editChild("/config/site/multilang", $value);
-    }
-
-    public function getNewsletter(): string { return $this->newsletter; }
-    public function setNewsletter(string $value): void {
-        $this->newsletter = $value;
-        $this->xml->editChild("/config/admin/newsletter", $value);
     }
 
     public function getFullBasepath(): string
