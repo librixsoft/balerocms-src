@@ -44,10 +44,8 @@ class Installer_Controller extends Controller {
             $this->configSettings->setDbpass($this->request->post('dbpass'));
             $this->configSettings->setDbname($this->request->post('dbname'));
 
-            $this->check_db = $this->check_icon;
         } catch (Exception $e) {
-            $this->check_db = "";
-            // opcional: puedes agregar mensaje de error
+
         }
 
         $params = $this->getDefaultParams();
@@ -98,7 +96,6 @@ class Installer_Controller extends Controller {
             $this->configSettings->setPass($pwd);
 
         } catch (Exception $e) {
-            $this->check_admin = "";
             $params = $this->getDefaultParams();
             $params['error_message'] = $e->getMessage();
             return $this->view->render("/views/setup_wizard.html", $params);
@@ -126,7 +123,7 @@ class Installer_Controller extends Controller {
             'description' => $this->configSettings->getDescription(),
             'basepath' => $this->configSettings->getBasepath(),
 
-            
+
             // etiquetas y textos
             'lbl_dbconfig' => _DB_CONFIG,
             'lbl_dbhost' => _DB_HOST,
