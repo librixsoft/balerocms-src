@@ -8,7 +8,9 @@
   <meta name="keywords" content="{keywords}">
   <meta name="author" content="Balero CMS (c) 2013-2014.">
 
-  <link href="themes/tundra/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <style>
     body {
@@ -17,7 +19,7 @@
     #wizard-container {
       max-width: 800px;
       margin: 40px auto;
-      background-color: #e9ecef; /* gris clarito */
+      background-color: #e9ecef;
       padding: 30px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -28,8 +30,6 @@
       border: 1px solid #ddd;
       padding: 8px 15px;
     }
-
-    /* ===== MODIFICACIÓN PARA QUE TABS Y CONTENIDO SE VEAN UNIDOS ===== */
     .nav-tabs {
       border: 1px solid #ddd;
       border-bottom: none;
@@ -51,15 +51,53 @@
       padding: 20px;
       border-radius: 0 0 6px 6px;
     }
-    /* ===== FIN DE MODIFICACIÓN ===== */
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+      background: linear-gradient(45deg, #3a8dde, #1e5cbf); /* tu degradado azul */
+      color: white;
+      border: 1px solid #1e5cbf;
+      border-bottom-color: transparent;
+      font-weight: bold;
+    }
+    .btn-primary {
+      background: linear-gradient(45deg, #3a8dde, #1e5cbf);
+      border-color: #1e5cbf;
+      color: white;
+      box-shadow: 0 2px 4px rgba(30, 92, 191, 0.6);
+    }
 
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active,
+    .btn-primary.active {
+      background: linear-gradient(45deg, #1e5cbf, #3a8dde);
+      border-color: #153c75;
+      color: white;
+      box-shadow: 0 3px 6px rgba(21, 60, 117, 0.8);
+    }
+    .btn-success {
+      background: linear-gradient(45deg, #4CAF50, #2E7D32);
+      border-color: #2E7D32;
+      color: white;
+      box-shadow: 0 2px 4px rgba(46, 125, 50, 0.6);
+    }
+
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active,
+    .btn-success.active {
+      background: linear-gradient(45deg, #2E7D32, #4CAF50);
+      border-color: #1B4F20;
+      color: white;
+      box-shadow: 0 3px 6px rgba(27, 79, 32, 0.8);
+    }
   </style>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap-wizard/1.2/jquery.bootstrap.wizard.min.js"></script>
 
-  <script src="themes/tundra/vendors/jquery-1.9.1.js"></script>
-  <script src="themes/tundra/bootstrap/js/bootstrap.min.js"></script>
-  <script src="themes/tundra/vendors/jquery.bootstrap.wizard.min.js"></script>
 
 </head>
 <body>
@@ -100,6 +138,7 @@
       mod_rewrite is not enabled, we need require this option enabled.
     </div>
     <!-- @endif -->
+
     <!-- @if !config_writeable -->
     <div class="alert alert-danger alert-dismissible" style="margin-top: 15px;">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
@@ -112,199 +151,164 @@
     </div>
     <!-- @endif -->
 
-
-
     <div class="block">
       <div class="block-content collapse in">
         <div class="span12">
           <div id="rootwizard">
-            <div class="navbar navbar-inner" style="margin-bottom: 0;">
+            <ul class="nav nav-tabs" style="margin: 0; padding-left: 0;">
+              <li class="active"><a href="#tab1" data-toggle="tab"><i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_dbconfig}</a></li>
+              <li><a href="#tab2" data-toggle="tab"><i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_siteinfo}</a></li>
+              <li><a href="#tab3" data-toggle="tab"><i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_adminconfig}</a></li>
+            </ul>
 
-              <ul class="nav nav-tabs" style="margin: 0; padding-left: 0;">
-                <li class="active">
-                  <a href="#tab1" data-toggle="tab">
-                    <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_dbconfig}
-                  </a>
-                </li>
-                <li>
-                  <a href="#tab2" data-toggle="tab">
-                    <!-- @if title -->
-                    <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i>
-                    <!-- @endif -->
-                    {lbl_siteinfo}
-                  </a>
-                </li>
-                <li>
-                  <a href="#tab3" data-toggle="tab">
-                    <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_adminconfig}
-                  </a>
-                </li>
-              </ul>
+            <form class="form-horizontal" method="POST" action="index.php">
+              <div class="tab-content">
 
-
-
-            </div>
-
-            <div class="tab-content">
-              <!-- TAB 1 -->
-              <div class="tab-pane active" id="tab1">
-                <form class="form-horizontal" method="POST" action="installer/formDBInfo">
+                <!-- TAB 1 -->
+                <div class="tab-pane active" id="tab1">
                   <fieldset>
-                    <div class="control-group">
-                      <label class="control-label" for="dbhost">{lbl_dbhost}</label>
-                      <div class="controls">
-                        <input name="dbhost" class="input-xlarge" id="dbhost" type="text" value="{txt_dbhost}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="dbhost">{lbl_dbhost}</label>
+                      <div class="col-sm-9">
+                        <input name="dbhost" class="form-control" id="dbhost" type="text" value="{txt_dbhost}" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="dbuser">{lbl_dbusername}</label>
-                      <div class="controls">
-                        <input name="dbuser" class="input-xlarge" id="dbuser" type="text" value="{txt_dbuser}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="dbuser">{lbl_dbusername}</label>
+                      <div class="col-sm-9">
+                        <input name="dbuser" class="form-control" id="dbuser" type="text" value="{txt_dbuser}" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="dbpass">{lbl_dbpass}</label>
-                      <div class="controls">
-                        <input name="dbpass" class="input-xlarge" id="dbpass" type="password" value="{txt_dbpass}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="dbpass">{lbl_dbpass}</label>
+                      <div class="col-sm-9">
+                        <input name="dbpass" class="form-control" id="dbpass" type="password" value="{txt_dbpass}">
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="dbname">{lbl_dbname}</label>
-                      <div class="controls">
-                        <input name="dbname" class="input-xlarge" id="dbname" type="text" value="{txt_dbname}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="dbname">{lbl_dbname}</label>
+                      <div class="col-sm-9">
+                        <input name="dbname" class="form-control" id="dbname" type="text" value="{txt_dbname}" required>
                         <p class="help-block">{lbl_dbname_note}</p>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <div class="controls">
-                        <button type="submit" name="submit" class="btn btn-primary">{btn_save}</button>
+                    <div class="form-group">
+                      <div class="col-sm-offset-3 col-sm-9">
+                        <button type="button" class="btn btn-primary next-tab" style="margin-top: 15px;">{btn_save}</button>
                       </div>
                     </div>
                   </fieldset>
-                </form>
-              </div>
+                </div>
 
-              <!-- TAB 2 -->
-              <div class="tab-pane" id="tab2">
-                <form class="form-horizontal" method="POST" action="installer/formSiteInfo">
+                <!-- TAB 2 -->
+                <div class="tab-pane" id="tab2">
                   <fieldset>
-                    <div class="control-group">
-                      <label class="control-label" for="basepath">{lbl_basepath}</label>
-                      <div class="controls">
-                        <input name="basepath" class="input-xlarge" id="basepath" type="text" value="{txt_basepath}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="basepath">{lbl_basepath}</label>
+                      <div class="col-sm-9">
+                        <input name="basepath" class="form-control" id="basepath" type="text" value="{txt_basepath}">
                         <p class="help-block">{lbl_basepath_note}</p>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="title">{lbl_title}</label>
-                      <div class="controls">
-                        <input name="title" class="input-xlarge" id="title" type="text" value="{txt_title}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="title">{lbl_title}</label>
+                      <div class="col-sm-9">
+                        <input name="title" class="form-control" id="title" type="text" value="{txt_title}">
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="url">{lbl_url}</label>
-                      <div class="controls">
-                        <input name="url" class="input-xlarge" placeholder="http://" id="url" type="text" value="{txt_url}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="url">{lbl_url}</label>
+                      <div class="col-sm-9">
+                        <input name="url" class="form-control" id="url" placeholder="http://" type="text" value="{txt_url}">
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="keywords">{lbl_keywords}</label>
-                      <div class="controls">
-                        <input name="keywords" class="input-xlarge" id="keywords" type="text" value="{txt_keywords}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="keywords">{lbl_keywords}</label>
+                      <div class="col-sm-9">
+                        <input name="keywords" class="form-control" id="keywords" type="text" value="{txt_keywords}">
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="description">{lbl_description}</label>
-                      <div class="controls">
-                        <textarea name="description" class="input-xlarge" id="description" style="height: 200px;">{txt_description}</textarea>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="description">{lbl_description}</label>
+                      <div class="col-sm-9">
+                        <textarea name="description" class="form-control" id="description" style="height: 200px;">{txt_description}</textarea>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <div class="controls">
-                        <button type="submit" name="submit" class="btn btn-primary">{btn_save}</button>
+                    <div class="form-group">
+                      <div class="col-sm-offset-3 col-sm-9">
+                        <button type="button" class="btn btn-primary next-tab" style="margin-top: 15px;">{btn_save}</button>
                       </div>
                     </div>
                   </fieldset>
-                </form>
-              </div>
+                </div>
 
-              <!-- TAB 3 -->
-              <div class="tab-pane" id="tab3">
-                <form class="form-horizontal" method="POST" action="index.php?app=installer&sr=formadminInfo">
+                <!-- TAB 3 -->
+                <div class="tab-pane" id="tab3">
                   <fieldset>
-                    <div class="control-group">
-                      <label class="control-label" for="username">{lbl_administrator}</label>
-                      <div class="controls">
-                        <input name="username" class="input-xlarge" id="username" type="text" value="{txt_administrator}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="username">{lbl_administrator}</label>
+                      <div class="col-sm-9">
+                        <input name="username" class="form-control" id="username" type="text" value="{txt_administrator}" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="passwd">{lbl_pass}</label>
-                      <div class="controls">
-                        <input name="passwd" class="input-xlarge" id="passwd" type="password" value="">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="passwd">{lbl_pass}</label>
+                      <div class="col-sm-9">
+                        <input name="passwd" class="form-control" id="passwd" type="password" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="passwd2">{lbl_retype}</label>
-                      <div class="controls">
-                        <input name="passwd2" class="input-xlarge" id="passwd2" type="password" value="">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="passwd2">{lbl_retype}</label>
+                      <div class="col-sm-9">
+                        <input name="passwd2" class="form-control" id="passwd2" type="password" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="firstname">{lbl_firstname}</label>
-                      <div class="controls">
-                        <input name="firstname" class="input-xlarge" id="firstname" type="text" value="{txt_firstname}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="firstname">{lbl_firstname}</label>
+                      <div class="col-sm-9">
+                        <input name="firstname" class="form-control" id="firstname" type="text" value="{txt_firstname}" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="lastname">{lbl_lastname}</label>
-                      <div class="controls">
-                        <input name="lastname" class="input-xlarge" id="lastname" type="text" value="{txt_lastname}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="lastname">{lbl_lastname}</label>
+                      <div class="col-sm-9">
+                        <input name="lastname" class="form-control" id="lastname" type="text" value="{txt_lastname}" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <label class="control-label" for="email">{lbl_email}</label>
-                      <div class="controls">
-                        <input name="email" class="input-xlarge" id="email" type="text" value="{txt_email}">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="email">{lbl_email}</label>
+                      <div class="col-sm-9">
+                        <input name="email" class="form-control" id="email" type="email" value="{txt_email}" required>
                       </div>
                     </div>
-                    <div class="control-group">
-                      <div class="controls">
-                        <button type="submit" name="submit" class="btn btn-primary">{btn_save}</button>
+                    <div class="form-group">
+                      <div class="col-sm-offset-3 col-sm-9">
+                        <button type="submit" class="btn btn-success" style="margin-top: 15px;">{btn_save}</button>
                       </div>
                     </div>
                   </fieldset>
-                </form>
-              </div>
-            </div> <!-- /.tab-content -->
-          </div> <!-- /#rootwizard -->
-        </div> <!-- /.span12 -->
-      </div> <!-- /.block-content -->
-    </div> <!-- /.block -->
+                </div>
 
-  </div> <!-- /.row-fluid -->
-</div> <!-- /#wizard-container -->
+              </div>
+            </form>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <script>
   $(function() {
-    $('#rootwizard').bootstrapWizard({
-      onTabShow: function(tab, navigation, index) {
-        var $total = navigation.find('li').length;
-        var $current = index + 1;
-        var $percent = ($current / $total) * 100;
-        $('#rootwizard').find('.bar').css({width: $percent + '%'});
-        if ($current >= $total) {
-          $('#rootwizard').find('.pager .next').hide();
-          $('#rootwizard').find('.pager .finish').show().removeClass('disabled');
-        } else {
-          $('#rootwizard').find('.pager .next').show();
-          $('#rootwizard').find('.pager .finish').hide();
-        }
-      }
-    });
-    $('#rootwizard .finish').click(function() {
-      alert('Finished!, Starting over!');
-      $('#rootwizard').find("a[href*='tab1']").trigger('click');
+    $('#rootwizard').bootstrapWizard();
+
+    // Botones "Siguiente" avanzan a la siguiente pestaña
+    $('.next-tab').click(function() {
+      $('#rootwizard').bootstrapWizard('next');
     });
   });
 </script>

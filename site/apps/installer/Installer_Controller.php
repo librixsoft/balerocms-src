@@ -40,44 +40,27 @@ class Installer_Controller extends Controller {
         return $this->view->render("/views/setup_wizard.html", $params);
     }
 
-    #[Post(sr: 'formDBInfo')]
-    public function formDBInfo() {
+    #[Post(sr: '')]
+    public function install() {
         try {
+
             $this->configSettings->setDbhost($this->request->post('dbhost'));
             $this->configSettings->setDbuser($this->request->post('dbuser'));
             $this->configSettings->setDbpass($this->request->post('dbpass'));
             $this->configSettings->setDbname($this->request->post('dbname'));
 
-        } catch (Exception $e) {
 
-        }
-
-        $params = $this->getDefaultParams();
-        return $this->view->render("/views/setup_wizard.html", $params);
-    }
-
-    #[Post(sr: 'formSiteInfo')]
-    public function formSiteInfo() {
-        try {
             $this->configSettings->setTitle($this->request->post('title'));
             $this->configSettings->setUrl($this->request->post('url'));
             $this->configSettings->setDescription($this->request->post('description'));
             $this->configSettings->setKeywords($this->request->post('keywords'));
+
             $basepath = $this->request->post("basepath");
             if ($basepath !== null) {
                 $this->configSettings->setBasepath($basepath);
             }
-        } catch (Exception $e) {
-            // opcional: manejar error
-        }
 
-        $params = $this->getDefaultParams();
-        return $this->view->render("/views/setup_wizard.html", $params);
-    }
 
-    #[Post(sr: 'formadminInfo')]
-    public function formadminInfo() {
-        try {
             if (empty($this->request->post("username"))) {
                 throw new Exception(_EMPTY_USERNAME);
             }
@@ -105,9 +88,13 @@ class Installer_Controller extends Controller {
             return $this->view->render("/views/setup_wizard.html", $params);
         }
 
-        // Renderizar siempre para mostrar cambios o errores
         $params = $this->getDefaultParams();
-        $this->view->render("/views/setup_wizard.html", $params);
+        $params['mod_rewrite_enabled'] = $this->checkModRewrite();
+        $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
+        $params['btn_install'] = _INSTALL_BUTTON;
+        $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
+        $params['config_writeable'] = is_writable($configFilePath);
+        return $this->view->render("/views/setup_wizard.html", $params);
     }
 
     #[Post(sr: 'progressBar')]
