@@ -83,17 +83,13 @@ class Installer_Controller extends Controller {
             $this->configSettings->setPass($pwd);
 
         } catch (Exception $e) {
-            $params = $this->getDefaultParams();
-            $params['error_message'] = $e->getMessage();
+            $params = $this->getSetupWizardParams([
+                'error_message' => $e->getMessage()
+            ]);
             return $this->view->render("/views/setup_wizard.html", $params);
         }
 
-        $params = $this->getDefaultParams();
-        $params['mod_rewrite_enabled'] = $this->checkModRewrite();
-        $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
-        $params['btn_install'] = _INSTALL_BUTTON;
-        $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
-        $params['config_writeable'] = is_writable($configFilePath);
+        $params = $this->getSetupWizardParams();
         return $this->view->render("/views/setup_wizard.html", $params);
     }
 
@@ -159,6 +155,19 @@ class Installer_Controller extends Controller {
             'btn_save' => _INSTALLER_SAVE,
         ];
     }
+
+    private function getSetupWizardParams(array $extraParams = []): array {
+        $params = $this->getDefaultParams();
+        $params['mod_rewrite_enabled'] = $this->checkModRewrite();
+        $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
+        $params['btn_install'] = _INSTALL_BUTTON;
+        $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
+        $params['config_writeable'] = is_writable($configFilePath);
+
+        // Mezclamos cualquier parámetro extra que venga (como el mensaje de error)
+        return array_merge($params, $extraParams);
+    }
+
 
     private function checkModRewrite(): bool {
         if (function_exists('apache_get_modules')) {
