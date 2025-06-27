@@ -41,7 +41,7 @@ class Installer_Controller extends Controller {
     #[Get(sr: '')]
     public function main() {
         $params = $this->getDefaultParams();
-        $this->view->render("/views/setup_wizard.html", $params);
+        return $this->view->render("/views/setup_wizard.html", $params);
     }
 
     #[Post(sr: 'formDBInfo')]
@@ -59,7 +59,7 @@ class Installer_Controller extends Controller {
         }
 
         $params = $this->getDefaultParams();
-        $this->view->render("/views/setup_wizard.html", $params);
+        return $this->view->render("/views/setup_wizard.html", $params);
     }
 
     #[Post(sr: 'formSiteInfo')]
@@ -78,7 +78,7 @@ class Installer_Controller extends Controller {
         }
 
         $params = $this->getDefaultParams();
-        $this->view->render("/views/setup_wizard.html", $params);
+        return $this->view->render("/views/setup_wizard.html", $params);
     }
 
     #[Post(sr: 'formadminInfo')]
@@ -109,8 +109,7 @@ class Installer_Controller extends Controller {
             $this->check_admin = "";
             $params = $this->getDefaultParams();
             $params['error_message'] = $e->getMessage();
-            $this->view->render("/views/setup_wizard.html", $params);
-            return;
+            return $this->view->render("/views/setup_wizard.html", $params);
         }
 
         // Renderizar siempre para mostrar cambios o errores
@@ -182,5 +181,5 @@ class Installer_Controller extends Controller {
         ];
     }
 
-    
+
 }

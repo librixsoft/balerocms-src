@@ -30,18 +30,17 @@ class Controller {
                     if (($instance->sr === '' && $requestedSr === '') || $instance->sr === $requestedSr) {
                         $result = $this->{$method->getName()}(); // Ejecutar el método
 
-                        // 🔁 render automático si retorna una vista
                         if (is_string($result)) {
-                            $view = new View();
-                            $view->renderLayout($result);
+                            echo $result;
                             exit;
                         }
 
                         if (is_array($result) && isset($result['view'])) {
                             $view = new View();
-                            $view->renderLayout($result['view'], $result['params'] ?? []);
+                            echo $view->render($result['view'], $result['params'] ?? []);
                             exit;
                         }
+
 
                         return;
                     }
@@ -51,12 +50,6 @@ class Controller {
 
         $this->main();
     }
-
-    protected function view(string $layoutPath, array $params = []): array
-    {
-        return ['view' => $layoutPath, 'params' => $params];
-    }
-
 
     public function main() {
         echo "Método main() del Controller";

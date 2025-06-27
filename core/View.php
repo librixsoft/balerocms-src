@@ -28,17 +28,26 @@ class View
         ];
     }
 
-    function render(string $templatePath, array $params): void
+    function render(string $templatePath, array $params): string
     {
         $templateFullPath = LOCAL_DIR . $templatePath;
+
+        if (!file_exists($templateFullPath)) {
+            return "<b>Error:</b> plantilla no encontrada: $templateFullPath";
+        }
+
         $content = file_get_contents($templateFullPath);
+        if ($content === false) {
+            return "<b>Error:</b> no se pudo leer la plantilla: $templateFullPath";
+        }
 
         foreach ($params as $key => $value) {
             $content = str_replace('{' . $key . '}', htmlspecialchars($value), $content);
         }
 
-        echo $content;
+        return $content;
     }
+
 
     /**
      * @deprecated eliminar este metodo solo por renderLayout
