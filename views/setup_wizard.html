@@ -28,18 +28,31 @@
       border: 1px solid #ddd;
       padding: 8px 15px;
     }
+
+    /* ===== MODIFICACIÓN PARA QUE TABS Y CONTENIDO SE VEAN UNIDOS ===== */
+    .nav-tabs {
+      border: 1px solid #ddd;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      background-color: #f5f5f5;
+      margin-bottom: 0;
+      padding-left: 0;
+    }
     .nav-tabs > li > a {
       padding: 8px 15px;
       font-weight: 600;
+      border: none !important;
     }
     .tab-content {
       background: #fff;
-      margin-top: 20px;
+      margin-top: 0;
       border: 1px solid #ddd;
       border-top: none;
       padding: 20px;
       border-radius: 0 0 6px 6px;
     }
+    /* ===== FIN DE MODIFICACIÓN ===== */
+
   </style>
 
   <script src="themes/tundra/vendors/jquery-1.9.1.js"></script>
@@ -51,6 +64,15 @@
 
 <div id="wizard-container">
   <div class="row-fluid section">
+
+    <div class="block" style="margin-top: 20px;">
+      <div class="navbar navbar-inner block-header">
+        <div class="clearfix"></div>
+        <div class="padd-top" style="margin-top: 10px;">
+          <h3>{welcome}</h3>
+        </div>
+      </div>
+    </div>
 
     <!-- @if title -->
     <div class="block" style="margin-top: 20px;">

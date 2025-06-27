@@ -40,6 +40,7 @@ class Installer_Controller extends Controller {
     #[Get(sr: '')]
     public function main() {
         $params = $this->getDefaultParams();
+        $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
         $params['btn_install'] = _INSTALL_BUTTON;
         return $this->view->render("/views/setup_wizard.html", $params);
     }
