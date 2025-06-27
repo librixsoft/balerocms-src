@@ -64,13 +64,14 @@ class Installer_Controller extends Controller {
             $this->view->file_error($e->getMessage());
         }
 
+        // Normalmente haces redirect, pero si quisieras renderizar aquí:
         header("Location: index.php");
+        exit;
     }
 
 
     #[Post(sr: 'formSiteInfo')]
-    public function formSiteInfo()
-    {
+    public function formSiteInfo() {
         try {
             $this->configSettings->setTitle($this->request->post('title'));
             $this->configSettings->setUrl($this->request->post('url'));
@@ -81,12 +82,13 @@ class Installer_Controller extends Controller {
                 $this->configSettings->setBasepath($basepath);
             }
         } catch (Exception $e) {
-            // Opcional: manejar error aquí
+            // manejar excepción si quieres
         }
 
-        return $this->view("/themes/setup_wizard.html", ['content' => $this->view->content]);
-
+        $params = $this->getDefaultParams();
+        $this->view->renderLayout("/views/setup_wizard.html", $params);
     }
+
 
     #[Post(sr: 'formadminInfo')]
     public function formadminInfo() {
@@ -113,19 +115,38 @@ class Installer_Controller extends Controller {
             $this->configSettings->setPass($pwd);
 
             header("Location: index.php");
+            exit;
         } catch (Exception $e) {
             $this->view->check_admin = "";
             $this->view->form_field_error($e->getMessage());
-            $this->main();
+
+            // Renderizar con params para mostrar errores y mantener datos
+            $params = $this->getDefaultParams();
+            $this->view->renderLayout("/views/setup_wizard.html", $params);
         }
     }
 
 
     #[Get(sr: '')]
     public function main() {
-        $params = $this->view->getDefaultParams();
+        $params = $this->getDefaultParams();
+        $this->view->renderLayout("/views/setup_wizard.html", $params);
+    }
 
-        $params = [
+
+    #[Post(sr: 'progressBar')]
+    public function progressBar()
+    {
+        try {
+            $this->view->progressBar();
+            $this->model->install();
+        } catch (Exception $e) {
+            // Manejo opcional de error
+        }
+    }
+
+    protected function getDefaultParams(): array {
+        return [
             'title' => $this->configSettings->getTitle(),
             'page' => defined('_PAGE') ? _PAGE : '',
             'keywords' => $this->configSettings->getKeywords(),
@@ -172,20 +193,6 @@ class Installer_Controller extends Controller {
             'txt_email' => $this->configSettings->getEmail(),
             'btn_save' => _INSTALLER_SAVE
         ];
-
-        $this->view->renderLayout("/views/setup_wizard.html", $params);
-    }
-
-
-    #[Post(sr: 'progressBar')]
-    public function progressBar()
-    {
-        try {
-            $this->view->progressBar();
-            $this->model->install();
-        } catch (Exception $e) {
-            // Manejo opcional de error
-        }
     }
 
 }
