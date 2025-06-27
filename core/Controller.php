@@ -3,10 +3,12 @@
 
 class Controller {
 
+    protected View $view;
     protected RequestHelper $request;
 
     public function __construct(RequestHelper $request) {
         $this->request = $request;
+        $this->view = new View();
     }
 
     public function init() {

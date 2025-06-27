@@ -4,7 +4,6 @@ class Installer_Controller extends Controller {
 
     private installer_Model $model;
     private ConfigSettings $configSettings;
-    private View $view;  // instancia de la clase View o subclase
 
     private string $check_db = '';
     private string $check_site = '';
