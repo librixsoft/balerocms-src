@@ -5,11 +5,6 @@ class Installer_Controller extends Controller {
     private installer_Model $model;
     private ConfigSettings $configSettings;
 
-    private string $check_db = '';
-    private string $check_site = '';
-    private string $check_admin = '';
-    private string $check_icon = '<i class="icon-check"></i>';
-
     public function __construct() {
         $this->request = new RequestHelper();
         parent::__construct($this->request);
@@ -20,15 +15,8 @@ class Installer_Controller extends Controller {
         $this->configSettings = new ConfigSettings();
         $this->configSettings->LoadSettings();
 
-        $this->installButton();
-
         $this->initBasePath();
         $this->init();
-    }
-
-    protected function installButton(): void {
-        $this->check_site = $this->check_icon;
-        $this->check_admin = $this->check_icon;
     }
 
     public function initBasePath() {
@@ -138,10 +126,7 @@ class Installer_Controller extends Controller {
             'description' => $this->configSettings->getDescription(),
             'basepath' => $this->configSettings->getBasepath(),
 
-            'check_db' => $this->check_db,
-            'check_site' => $this->check_site,
-            'check_admin' => $this->check_admin,
-
+            
             // etiquetas y textos
             'lbl_dbconfig' => _DB_CONFIG,
             'lbl_dbhost' => _DB_HOST,
