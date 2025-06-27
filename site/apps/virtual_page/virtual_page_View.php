@@ -1,26 +1,39 @@
 <?php
 
-class virtual_page_View extends View {
+class virtual_page_View extends View
+{
     public string $theme;
     public array $rows = [];
     public string $content = "";
     public array $virtual_pages = [];
     public virtual_page_Model $objModel;
     public string $lang;
-    public string $page;
+    public string $page = "";
     public string $active = "class=\"active\"";
     public string $css_active = "";
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct("/themes/tundra/main.html");
 
         $this->objModel = new virtual_page_Model();
         $this->theme = $this->objModel->theme();
+
         $this->configSettings = new ConfigSettings();
         $this->configSettings->LoadSettings();
     }
 
-    public function virtual_pages_menu(): string {
+    public function renderView(): void
+    {
+        $this->renderLayout([
+            'content' => $this->content,
+            'virtual_pages' => $this->virtual_pages_menu(),
+            'page' => $this->page
+        ]);
+    }
+
+    public function virtual_pages_menu(): string
+    {
         $html = "<li $this->active><a href=\"./\">" . _HOME . "</a></li>";
 
         $this->objModel->lang = $this->lang;
@@ -51,7 +64,8 @@ class virtual_page_View extends View {
         return $html;
     }
 
-    public function print_virtual_page(array $db_array): string {
+    public function print_virtual_page(array $db_array): string
+    {
         $html = "";
 
         foreach ($db_array as $page) {
@@ -66,36 +80,16 @@ class virtual_page_View extends View {
         return $html;
     }
 
-    public function Render(): void {
-        $lang = new Language();
-        $lang->app = "virtual_page";
-        $lang->defaultLang = $this->objModel->getLang();
-
-        $data = [
-            'title' => $this->configSettings->getTitle(),
-            'url' => $this->configSettings->getUrl(),
-            'keywords' => $this->configSettings->getKeywords(),
-            'description' => $this->configSettings->getDescription(),
-            'content' => $this->content,
-            'virtual_pages' => $this->virtual_pages_menu(),
-            'basepath' => $this->configSettings->getBasepath(),
-            'page' => $this->page,
-            'langs' => ''
-        ];
-
-        $theme = new ThemeLoader(LOCAL_DIR . "/themes/{$this->theme}/main.html");
-        echo $theme->renderPage($data);
-    }
-
-    public function print_all_pages(): void {
+    public function print_all_pages(): void
+    {
         $this->content .= "<h3>" . _INDEXOF . "</h3>";
 
         foreach ($this->rows as $row) {
             try {
-                $this->content .= $row['virtual_title'];
+                $this->content .= $row['virtual_title'] . "<br>";
             } catch (Exception $e) {
-                // Ignorar errores individuales
+                // Silenciar error
             }
         }
     }
-} // fin clase
+}

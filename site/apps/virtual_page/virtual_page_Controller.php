@@ -46,6 +46,6 @@ class virtual_page_Controller extends Controller {
             $this->view->content .= $msgbox->Show();
         }
 
-        $this->view->Render();
+        $this->view->RenderView();
     }
 }
