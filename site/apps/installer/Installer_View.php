@@ -12,7 +12,7 @@ class Installer_View extends View
 
     public function __construct()
     {
-        parent::__construct("/themes/tundra/main.html");
+        parent::__construct("/themes/setup_wizard.html");
 
         $this->check_db = $this->check_icon;
         $this->check_site = $this->check_icon;
