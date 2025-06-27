@@ -113,6 +113,8 @@ class Installer_Controller extends Controller {
         } catch (Exception $e) {
             // Manejo opcional de error
         }
+        $params = $this->getDefaultParams();
+        return $this->view->render("/views/progressBar.html", $params);
     }
 
     protected function getDefaultParams(): array {
