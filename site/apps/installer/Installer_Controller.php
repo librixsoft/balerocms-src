@@ -84,7 +84,8 @@ class Installer_Controller extends Controller {
             // Opcional: manejar error aquí
         }
 
-        header("Location: index.php");
+        return $this->view("/themes/setup_wizard.html", ['content' => $this->view->content]);
+
     }
 
     #[Post(sr: 'formadminInfo')]
@@ -120,12 +121,61 @@ class Installer_Controller extends Controller {
     }
 
 
-    #[Get(sr: '')]  // ruta raíz para GET (ejemplo index.php?app=installer sin path)
+    #[Get(sr: '')]
     public function main() {
-        $this->view->is_mod_rewrite_enabled();
-        $this->view->wizard();
-        $this->view->renderView();
+        $params = $this->view->getDefaultParams();
+
+        $params = [
+            'title' => $this->configSettings->getTitle(),
+            'page' => defined('_PAGE') ? _PAGE : '',
+            'keywords' => $this->configSettings->getKeywords(),
+            'description' => $this->configSettings->getDescription(),
+            'basepath' => $this->configSettings->getBasepath(),
+
+            'check_db' => $this->view->check_db,
+            'check_site' => $this->view->check_site,
+            'check_admin' => $this->view->check_admin,
+            'lbl_dbconfig' => _DB_CONFIG,
+            'lbl_dbhost' => _DB_HOST,
+            'lbl_dbusername' => _DB_USER,
+            'lbl_dbpass' => _DB_PASS,
+            'lbl_dbname' => _DB_NAME,
+            'lbl_dbname_note' => _DB_IF_NOT_EXIST,
+            'lbl_siteinfo' => _SITE_INFO,
+            'lbl_basepath' => _BASEPATH,
+            'lbl_basepath_note' => _NOTE_BASEPATH,
+            'lbl_title' => _TITLE,
+            'lbl_url' => _URL,
+            'lbl_keywords' => _TAGS,
+            'lbl_description' => _DESCRIPTION,
+            'lbl_adminconfig' => _ADMIN_CONFIGURATION,
+            'lbl_administrator' => _ADMIN,
+            'lbl_pass' => _PASS,
+            'lbl_retype' => _RETYPE_PASS,
+            'lbl_firstname' => _NAME,
+            'lbl_lastname' => _LAST_NAME,
+            'lbl_email' => _EMAIL,
+            'txt_dbhost' => $this->configSettings->getDbhost(),
+            'txt_dbuser' => $this->configSettings->getDbuser(),
+            'txt_dbpass' => $this->configSettings->getDbpass(),
+            'txt_dbname' => $this->configSettings->getDbname(),
+            'txt_basepath' => $this->configSettings->getBasepath(),
+            'txt_title' => $this->configSettings->getTitle(),
+            'txt_url' => $this->configSettings->getUrl(),
+            'txt_keywords' => $this->configSettings->getKeywords(),
+            'txt_description' => $this->configSettings->getDescription(),
+            'txt_administrator' => $this->configSettings->getUser(),
+            'txt_pass' => '',
+            'txt_retype' => '',
+            'txt_firstname' => $this->configSettings->getFirstname(),
+            'txt_lastname' => $this->configSettings->getLastname(),
+            'txt_email' => $this->configSettings->getEmail(),
+            'btn_save' => _INSTALLER_SAVE
+        ];
+
+        $this->view->renderLayout("/views/setup_wizard.html", $params);
     }
+
 
     #[Post(sr: 'progressBar')]
     public function progressBar()

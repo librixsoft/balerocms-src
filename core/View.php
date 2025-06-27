@@ -8,14 +8,13 @@ class View
 
     protected ConfigSettings $configSettings;
 
-    public function __construct(string $layoutPath)
+    public function __construct()
     {
-        $this->layoutPath = LOCAL_DIR . $layoutPath;
         $this->configSettings = new ConfigSettings();
         $this->configSettings->LoadSettings();
     }
 
-    protected function getDefaultParams(): array
+    public function getDefaultParams(): array
     {
         return [
             'title' => $this->configSettings->getTitle(),
@@ -29,16 +28,26 @@ class View
         ];
     }
 
-    public function renderLayout(array $extraParams = []): void
+    function renderLayout(string $templatePath, array $params): void
     {
-        $params = array_merge($this->getDefaultParams(), $extraParams);
-        $params['content'] = $params['content'] ?? $this->content;
+        $templateFullPath = LOCAL_DIR . $templatePath;
+        $content = file_get_contents($templateFullPath);
 
-        $layout = new ThemeLoader($this->layoutPath);
-        echo $layout->renderPage($params);
+        foreach ($params as $key => $value) {
+            $content = str_replace('{' . $key . '}', htmlspecialchars($value), $content);
+        }
+
+        echo $content;
     }
 
-    protected function renderFragment(string $templatePath, array $params = []): string
+    /**
+     * @deprecated eliminar este metodo solo por renderLayout
+     * @param string $templatePath
+     * @param array $params
+     * @return string
+     * @throws Exception
+     */
+    public function renderFragment(string $templatePath, array $params = []): string
     {
         $loader = new ThemeLoader($templatePath);
         return $loader->renderPage($params);

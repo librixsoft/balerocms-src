@@ -27,13 +27,22 @@ class Controller {
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    if ($instance->sr === '' && $requestedSr === '') {
-                        $this->{$method->getName()}();
-                        return;
-                    }
+                    if (($instance->sr === '' && $requestedSr === '') || $instance->sr === $requestedSr) {
+                        $result = $this->{$method->getName()}(); // Ejecutar el método
 
-                    if ($instance->sr === $requestedSr) {
-                        $this->{$method->getName()}();
+                        // 🔁 render automático si retorna una vista
+                        if (is_string($result)) {
+                            $view = new View();
+                            $view->renderLayout($result);
+                            exit;
+                        }
+
+                        if (is_array($result) && isset($result['view'])) {
+                            $view = new View();
+                            $view->renderLayout($result['view'], $result['params'] ?? []);
+                            exit;
+                        }
+
                         return;
                     }
                 }
@@ -41,6 +50,11 @@ class Controller {
         }
 
         $this->main();
+    }
+
+    protected function view(string $layoutPath, array $params = []): array
+    {
+        return ['view' => $layoutPath, 'params' => $params];
     }
 
 
