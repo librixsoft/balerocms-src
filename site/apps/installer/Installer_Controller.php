@@ -40,8 +40,11 @@ class Installer_Controller extends Controller {
     #[Get(sr: '')]
     public function main() {
         $params = $this->getDefaultParams();
+        $params['mod_rewrite_enabled'] = $this->checkModRewrite();
         $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
         $params['btn_install'] = _INSTALL_BUTTON;
+        $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
+        $params['config_writeable'] = is_writable($configFilePath);
         return $this->view->render("/views/setup_wizard.html", $params);
     }
 
@@ -181,6 +184,16 @@ class Installer_Controller extends Controller {
             'btn_save' => _INSTALLER_SAVE,
         ];
     }
+
+    private function checkModRewrite(): bool {
+        if (function_exists('apache_get_modules')) {
+            $modules = apache_get_modules();
+            return in_array('mod_rewrite', $modules);
+        }
+        // En caso de que no se pueda verificar, asumir false o true según convenga
+        return false;
+    }
+
 
 
 }
