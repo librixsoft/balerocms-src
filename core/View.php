@@ -28,7 +28,7 @@ class View
         ];
     }
 
-    function renderLayout(string $templatePath, array $params): void
+    function render(string $templatePath, array $params): void
     {
         $templateFullPath = LOCAL_DIR . $templatePath;
         $content = file_get_contents($templateFullPath);

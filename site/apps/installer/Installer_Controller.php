@@ -1,52 +1,47 @@
 <?php
-// 3. Clase Installer_Controller con métodos y rutas personalizadas
 
 class Installer_Controller extends Controller {
 
     private installer_Model $model;
-    private installer_View $view;
-
     private ConfigSettings $configSettings;
+    private View $view;  // instancia de la clase View o subclase
+
+    private string $check_db = '';
+    private string $check_site = '';
+    private string $check_admin = '';
+    private string $check_icon = '<i class="icon-check"></i>';
 
     public function __construct() {
-        try {
-            $this->request = new RequestHelper();
-            parent::__construct($this->request);
+        $this->request = new RequestHelper();
+        parent::__construct($this->request);
 
-            $this->view = new installer_View();
-            $this->model = new installer_Model();
+        $this->view = new View();
+        $this->model = new installer_Model();
 
-            $this->configSettings = new ConfigSettings();
-            $this->configSettings->LoadSettings();
+        $this->configSettings = new ConfigSettings();
+        $this->configSettings->LoadSettings();
 
-            $this->view->installButton();
-        } catch (Exception $e) {
-            $this->view = new installer_View();
-
-            if (!is_writable($this->getCfgFile())) {
-                $MsgBox = new MsgBox(_ERROR, _CHMOD_ERROR);
-                $this->view->content .= $MsgBox->Show();
-            }
-
-            if (strpos($e->getMessage(), _UNKNOW_DATABASE)) {
-                $this->view->unknow_database_error();
-                $this->model->createDB();
-                $this->view->check_db = "";
-            } else {
-                $this->view->unknow_database_connect();
-                $this->view->check_db = "";
-            }
-        }
+        $this->installButton();
 
         $this->initBasePath();
-
         $this->init();
+    }
+
+    protected function installButton(): void {
+        $this->check_site = $this->check_icon;
+        $this->check_admin = $this->check_icon;
     }
 
     public function initBasePath() {
         if (empty($this->configSettings->getBasepath())) {
             $this->configSettings->setBasepath($this->configSettings->getFullBasepath());
         }
+    }
+
+    #[Get(sr: '')]
+    public function main() {
+        $params = $this->getDefaultParams();
+        $this->view->render("/views/setup_wizard.html", $params);
     }
 
     #[Post(sr: 'formDBInfo')]
@@ -57,18 +52,15 @@ class Installer_Controller extends Controller {
             $this->configSettings->setDbpass($this->request->post('dbpass'));
             $this->configSettings->setDbname($this->request->post('dbname'));
 
-            $this->view->check_db = $this->view->check_icon;
-
+            $this->check_db = $this->check_icon;
         } catch (Exception $e) {
-            $this->view->check_db = "";
-            $this->view->file_error($e->getMessage());
+            $this->check_db = "";
+            // opcional: puedes agregar mensaje de error
         }
 
-        // Normalmente haces redirect, pero si quisieras renderizar aquí:
-        header("Location: index.php");
-        exit;
+        $params = $this->getDefaultParams();
+        $this->view->render("/views/setup_wizard.html", $params);
     }
-
 
     #[Post(sr: 'formSiteInfo')]
     public function formSiteInfo() {
@@ -82,13 +74,12 @@ class Installer_Controller extends Controller {
                 $this->configSettings->setBasepath($basepath);
             }
         } catch (Exception $e) {
-            // manejar excepción si quieres
+            // opcional: manejar error
         }
 
         $params = $this->getDefaultParams();
-        $this->view->renderLayout("/views/setup_wizard.html", $params);
+        $this->view->render("/views/setup_wizard.html", $params);
     }
-
 
     #[Post(sr: 'formadminInfo')]
     public function formadminInfo() {
@@ -114,31 +105,22 @@ class Installer_Controller extends Controller {
             $pwd = $obj->genpwd($this->request->post('passwd'));
             $this->configSettings->setPass($pwd);
 
-            header("Location: index.php");
-            exit;
         } catch (Exception $e) {
-            $this->view->check_admin = "";
-            $this->view->form_field_error($e->getMessage());
-
-            // Renderizar con params para mostrar errores y mantener datos
+            $this->check_admin = "";
             $params = $this->getDefaultParams();
-            $this->view->renderLayout("/views/setup_wizard.html", $params);
+            $params['error_message'] = $e->getMessage();
+            $this->view->render("/views/setup_wizard.html", $params);
+            return;
         }
-    }
 
-
-    #[Get(sr: '')]
-    public function main() {
+        // Renderizar siempre para mostrar cambios o errores
         $params = $this->getDefaultParams();
-        $this->view->renderLayout("/views/setup_wizard.html", $params);
+        $this->view->render("/views/setup_wizard.html", $params);
     }
-
 
     #[Post(sr: 'progressBar')]
-    public function progressBar()
-    {
+    public function progressBar() {
         try {
-            $this->view->progressBar();
             $this->model->install();
         } catch (Exception $e) {
             // Manejo opcional de error
@@ -153,9 +135,11 @@ class Installer_Controller extends Controller {
             'description' => $this->configSettings->getDescription(),
             'basepath' => $this->configSettings->getBasepath(),
 
-            'check_db' => $this->view->check_db,
-            'check_site' => $this->view->check_site,
-            'check_admin' => $this->view->check_admin,
+            'check_db' => $this->check_db,
+            'check_site' => $this->check_site,
+            'check_admin' => $this->check_admin,
+
+            // etiquetas y textos
             'lbl_dbconfig' => _DB_CONFIG,
             'lbl_dbhost' => _DB_HOST,
             'lbl_dbusername' => _DB_USER,
@@ -176,6 +160,8 @@ class Installer_Controller extends Controller {
             'lbl_firstname' => _NAME,
             'lbl_lastname' => _LAST_NAME,
             'lbl_email' => _EMAIL,
+
+            // datos para inputs
             'txt_dbhost' => $this->configSettings->getDbhost(),
             'txt_dbuser' => $this->configSettings->getDbuser(),
             'txt_dbpass' => $this->configSettings->getDbpass(),
@@ -191,8 +177,10 @@ class Installer_Controller extends Controller {
             'txt_firstname' => $this->configSettings->getFirstname(),
             'txt_lastname' => $this->configSettings->getLastname(),
             'txt_email' => $this->configSettings->getEmail(),
-            'btn_save' => _INSTALLER_SAVE
+
+            'btn_save' => _INSTALLER_SAVE,
         ];
     }
 
+    
 }
