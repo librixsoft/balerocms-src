@@ -4,13 +4,12 @@ class Installer_Model extends Model
 {
     private ConfigSettings $configSettings;
 
-    public function __construct(ConfigSettings $configSettings = null)
+    public function __construct(ConfigSettings $configSettings)
     {
         try {
             parent::dbConnect();
-
-            $this->configSettings = $configSettings ?? new ConfigSettings();
-            $this->configSettings->LoadSettings(); // Cargar configuración
+            $this->configSettings = $configSettings;
+            $this->configSettings->LoadSettings();
         } catch (Throwable $e) {
             ErrorConsole::handleException(
                 new Exception("Error during Installer_Model construction: " . $e->getMessage(), 0, $e)
