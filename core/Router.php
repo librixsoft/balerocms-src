@@ -25,7 +25,8 @@ class Router
             $this->lang->init();
             $this->lang->init_apps_lang("virtual_page");
             $this->lang->app = "virtual_page";
-            new virtual_page_Controller();
+
+            Boot::safeResolve(virtual_page_Controller::class);
             exit;
         }
 
@@ -76,7 +77,8 @@ class Router
         $this->lang->app = $this->app;
 
         $dynamic = $this->app . "_Controller";
-        new $dynamic();
+
+        Boot::safeResolve($dynamic);
         unset($this->lang);
     }
 
@@ -99,7 +101,7 @@ class Router
             $admin_elements = new AdminElements();
             $title_mod_menu = $admin_elements->mods_menu();
 
-            new admin_Controller($title_mod_menu);
+            Boot::safeResolve(admin_Controller::class, [$title_mod_menu]);
             return;
         }
 
@@ -118,7 +120,7 @@ class Router
         $admin_elements = new AdminElements();
         $title_mod_menu = $admin_elements->mods_menu();
 
-        new $dynamicController($title_mod_menu);
+        Boot::safeResolve($dynamicController, [$title_mod_menu]);
     }
 
     public function installer()
@@ -135,7 +137,7 @@ class Router
                 $this->lang->init();
                 $this->lang->init_apps_lang("installer");
 
-                new installer_Controller();
+                Boot::safeResolve(installer_Controller::class);
                 exit;
             }
 

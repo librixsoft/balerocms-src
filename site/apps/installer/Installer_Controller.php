@@ -2,19 +2,20 @@
 
 class Installer_Controller extends Controller {
 
-    private installer_Model $model;
-    private ConfigSettings $configSettings;
+    public function __construct(
+        RequestHelper $request,
+        View $view,
+        installer_Model $model,
+        ConfigSettings $configSettings
+    ) {
+        $this->request = $request;
+        $this->view = $view;
+        $this->model = $model;
+        $this->configSettings = $configSettings;
 
-    public function __construct() {
-        $this->request = new RequestHelper();
-        parent::__construct($this->request);
-
-        $this->view = new View();
-        $this->model = new installer_Model();
-
-        $this->configSettings = new ConfigSettings();
         $this->configSettings->LoadSettings();
 
+        parent::__construct($this->request);
         $this->initBasePath();
         $this->init();
     }

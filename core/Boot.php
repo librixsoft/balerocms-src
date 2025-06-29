@@ -1,17 +1,19 @@
 <?php
 
-/**
- * boot.php
- * Autoloader central de Balero CMS
- * (c) lastprophet
- */
-
 class Boot
 {
+    public static Container $container;
+
     public function __construct()
     {
         spl_autoload_register([$this, "autoload"]);
+        self::$container = new Container();
+
+        self::$container->bind(View::class, function () {
+            return new View(LOCAL_DIR . '/views');
+        });
     }
+
 
     public function autoload($class)
     {
@@ -46,12 +48,35 @@ class Boot
         }
 
         if (preg_match('/^mod_(.+)_Controller$/', $class, $matches)) {
-            $mod = $matches[1]; // ahora sí será "virtual_page"
+            $mod = $matches[1];
             $modFile = MODS_DIR . "{$mod}/{$class}.php";
             if (file_exists($modFile)) {
                 require_once($modFile);
                 return;
             }
         }
+    }
+
+    /**
+     * Resolución segura con manejo de errores vía ErrorConsole.
+     */
+    public static function safeResolve(string $class, array $args = []): void
+    {
+        try {
+            self::$container->resolve($class, $args);
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error resolving controller '$class': " . $e->getMessage(), 0, $e)
+            );
+            exit;
+        }
+    }
+
+    /**
+     * Resolución directa sin manejo interno de errores.
+     */
+    public static function resolve(string $class, array $args = []): object
+    {
+        return self::$container->resolve($class, $args);
     }
 }
