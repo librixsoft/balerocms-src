@@ -2,19 +2,15 @@
 
 class Installer_Model extends Model
 {
-    private ConfigSettings $configSettings;
-
-    public function __construct(ConfigSettings $configSettings)
+    public function __construct()
     {
         try {
             parent::dbConnect();
-            $this->configSettings = $configSettings;
-            $this->configSettings->LoadSettings();
         } catch (Throwable $e) {
             ErrorConsole::handleException(
                 new Exception("Error during Installer_Model construction: " . $e->getMessage(), 0, $e)
             );
-            exit;
+            return;  // No exit, solo retornamos para evitar página en blanco
         }
     }
 
@@ -23,21 +19,23 @@ class Installer_Model extends Model
         try {
             $sqlFile = APPS_DIR . "installer/sql/tables.sql";
             if (!file_exists($sqlFile)) {
-                throw new Exception("SQL installation file not found: $sqlFile");
+                ErrorConsole::handleException(
+                    new Exception("SQL installation file not found: $sqlFile")
+                );
+                return;  // Salimos para evitar continuar con error
             }
 
             $query = file_get_contents($sqlFile);
-            $query = str_replace("{dbname}", $this->configSettings->getDbname(), $query);
+            $query = str_replace("{dbname}", $this->getDbname(), $query);
             $this->db->create($query);
 
-            $this->configSettings->setInstalled("yes");
+            $this->setInstalled("yes");
         } catch (Throwable $e) {
-            $this->configSettings->setInstalled("no");
-
+            $this->setInstalled("no");
             ErrorConsole::handleException(
                 new Exception("Installation failed: " . $e->getMessage(), 0, $e)
             );
-            exit;
+            return;
         }
     }
 }
