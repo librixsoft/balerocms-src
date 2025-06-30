@@ -1,25 +1,22 @@
 <?php
 
-define("_CORE_VERSION", "0.9");
+define("_CORE_VERSION", "1.0");
 
-$dir = dirname(__FILE__); // Windows Servers
+$dir = dirname(__FILE__);
 $dir = str_replace("\\", "/", $dir);
-
 define("LOCAL_DIR", $dir);
-define("APPS_DIR", LOCAL_DIR . "/site/apps/");
-define("MODS_DIR", LOCAL_DIR . "/site/apps/admin/mods/");
 
-require_once(LOCAL_DIR . "/core/ContainerConfigurator.php");
+require_once(LOCAL_DIR . "/core/Framework/ErrorConsole.php");
+require_once(LOCAL_DIR . "/core/Framework/Boot.php");
 
-require_once(LOCAL_DIR . "/core/ErrorConsole.php");
-ErrorConsole::register();
+use Framework\Boot;
+use Router\Router;
+use Http\CMSHeaders;
 
-require_once(LOCAL_DIR . "/core/Attributes.php");
-require_once(LOCAL_DIR . "/core/Boot.php");
 new Boot();
-Boot::$container->resolve(Router::class)->init();
 
-$objHeaders = new CMSHeaders();
-$objRouter = new Router();
-$objHeaders->cmsHeaders();
-$objRouter->init();
+$headers = new CMSHeaders();
+$headers->cmsHeaders();
+
+$router = Boot::resolve(Router::class);
+$router->init();
