@@ -26,7 +26,7 @@ class Installer_Controller extends Controller {
         }
     }
 
-    #[Get(sr: '')]
+    #[Get(sr: '/')]
     public function main() {
         try {
         $params = $this->getDefaultParams();
@@ -41,7 +41,7 @@ class Installer_Controller extends Controller {
         return $this->view->render("/views/setup_wizard.html", $params);
     }
 
-    #[Post(sr: '')]
+    #[Post(sr: '/')]
     public function install() {
         try {
 

@@ -1,5 +1,5 @@
 <?php
-// 2. Clase base Controller
+// Clase base Controller
 
 class Controller {
 
@@ -29,7 +29,11 @@ class Controller {
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    if (($instance->sr === '' && $requestedSr === '') || $instance->sr === $requestedSr) {
+                    if (
+                        ($instance->sr === '' && $requestedSr === '') ||
+                        ($instance->sr === '/' && ($requestedSr === '' || $requestedSr === '/')) ||
+                        $instance->sr === $requestedSr
+                    ) {
                         $result = $this->{$method->getName()}(); // Ejecutar el método
 
                         if (is_string($result)) {
@@ -42,7 +46,6 @@ class Controller {
                             echo $view->render($result['view'], $result['params'] ?? []);
                             exit;
                         }
-
 
                         return;
                     }
