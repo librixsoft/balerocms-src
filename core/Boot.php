@@ -7,13 +7,11 @@ class Boot
     public function __construct()
     {
         spl_autoload_register([$this, "autoload"]);
+
         self::$container = new Container();
 
-        self::$container->bind(View::class, function () {
-            return new View(LOCAL_DIR . '/views');
-        });
+        ContainerConfiguration::register(self::$container);
     }
-
 
     public function autoload($class)
     {
@@ -57,9 +55,6 @@ class Boot
         }
     }
 
-    /**
-     * Resolución segura con manejo de errores vía ErrorConsole.
-     */
     public static function safeResolve(string $class, array $args = []): void
     {
         try {
@@ -72,9 +67,6 @@ class Boot
         }
     }
 
-    /**
-     * Resolución directa sin manejo interno de errores.
-     */
     public static function resolve(string $class, array $args = []): object
     {
         return self::$container->resolve($class, $args);

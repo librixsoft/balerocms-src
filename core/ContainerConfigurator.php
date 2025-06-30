@@ -1,23 +1,15 @@
 <?php
 
-
-class ContainerConfigurator
+class ContainerConfiguration
 {
-    public static function configure(Container $container): void
+    public static function register(Container $container): void
     {
-        // Instancias singleton
-        $container->instance(ConfigSettings::class, new ConfigSettings());
-        $container->instance(Security::class, new Security());
 
-        // Instancia con dependencia inyectada
-        $container->instance(RequestHelper::class, new RequestHelper($container->make(Security::class)));
+        /**
+         * Solamente se registran constructores personalizados en singleton
+         *  todos los demas son automaticos
+         */
+        $container->singleton(View::class, new View(LOCAL_DIR . '/views'));
 
-        $container->instance(Language::class, new Language());
-        $container->instance(AdminElements::class, new AdminElements());
-
-        // Si quieres bindear con factory para casos más complejos
-        // $container->bind(SomeClass::class, function($c) {
-        //    return new SomeClass($c->make(Dependency::class));
-        // });
     }
 }

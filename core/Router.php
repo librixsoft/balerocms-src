@@ -8,11 +8,15 @@ class Router
     private ConfigSettings $configSettings;
     private string $app;
 
-    public function __construct()
-    {
-        $this->configSettings = new ConfigSettings();
-        $this->security = new Security();
-        $this->request = new RequestHelper($this->security);
+    public function __construct(
+        ConfigSettings $configSettings,
+        Security $security,
+        RequestHelper $request
+    ) {
+        $this->configSettings = $configSettings;
+        $this->security = $security;
+        $this->request = $request;
+
         $this->installer();
     }
 
