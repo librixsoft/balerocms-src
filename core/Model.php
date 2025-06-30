@@ -1,23 +1,31 @@
 <?php
 
-class Model extends ConfigSettings
+class Model
 {
     protected MySQL $db;
+    protected ConfigSettings $configSettings;
+
+    public function __construct(ConfigSettings $configSettings)
+    {
+        $this->configSettings = $configSettings;
+    }
 
     public function dbConnect()
     {
-        parent::__construct();
 
         try {
-            $this->db = new MySQL($this->getDbhost(), $this->getDbuser(), $this->getDbpass());
+            $this->db = new MySQL(
+                $this->configSettings->getDbhost(),
+                $this->configSettings->getDbuser(),
+                $this->configSettings->getDbpass());
 
             if ($this->db->isStatus()) {
-                $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->getDbname() . ";");
+                $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->configSettings->getDbname() . ";");
                 $this->db = new MySQL(
-                    $this->getDbhost(),
-                    $this->getDbuser(),
-                    $this->getDbpass(),
-                    $this->getDbname()
+                    $this->configSettings->getDbhost(),
+                    $this->configSettings->getDbuser(),
+                    $this->configSettings->getDbpass(),
+                    $this->configSettings->getDbname()
                 );
             } else {
                 throw new Exception("Failed to connect to the database.");
