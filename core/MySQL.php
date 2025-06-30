@@ -4,21 +4,21 @@ class errorConnection extends Exception {}
 
 class MySQL {
 
-    private $host;
-    private $user;
-    private $pass;
-    private $db;
+    private string $host;
+    private string $user;
+    private string $pass;
+    private string $db;
 
     private mysqli $conn;
-    private $result;
+    private ?mysqli_result $result = null;
 
-    private bool $error = false;
-    private $rows;
-    private $row;
+    private bool|String $error = false;  // Aquí error parece string o bool, mejor usar string|null
+    private array $rows = [];
+    private ?array $row = null;
 
     private bool $status = false;
 
-    public function __construct($host = "", $user = "", $pass = "", $db = "") {
+    public function __construct(string $host = "", string $user = "", string $pass = "", string $db = "") {
         try {
             $this->conn = new mysqli($host, $user, $pass, $db);
             $this->status = true;
@@ -35,7 +35,7 @@ class MySQL {
         }
     }
 
-    public function query($query) {
+    public function query(string $query): void {
         try {
             $this->result = $this->conn->query($query);
 
@@ -48,7 +48,7 @@ class MySQL {
         }
     }
 
-    public function get() {
+    public function get(): void {
         try {
             if (!$this->result) {
                 throw new Exception("No result set available for fetching.");
@@ -68,7 +68,7 @@ class MySQL {
         return $this->result ? $this->result->num_rows : 0;
     }
 
-    public function create($query) {
+    public function create(string $query): void {
         try {
             $success = mysqli_multi_query($this->conn, $query);
 
@@ -82,42 +82,44 @@ class MySQL {
         }
     }
 
-    public function queryArray() {
+    public function queryArray(): array {
         return $this->rows;
     }
 
-    public function mySQLError() {
+    public function mySQLError(): string|bool {
         return $this->error;
     }
 
     // Getters and setters
 
-    public function getHost() { return $this->host; }
-    public function setHost($host): void { $this->host = $host; }
+    public function getHost(): string { return $this->host; }
+    public function setHost(string $host): void { $this->host = $host; }
 
-    public function getUser() { return $this->user; }
-    public function setUser($user): void { $this->user = $user; }
+    public function getUser(): string { return $this->user; }
+    public function setUser(string $user): void { $this->user = $user; }
 
-    public function getPass() { return $this->pass; }
-    public function setPass($pass): void { $this->pass = $pass; }
+    public function getPass(): string { return $this->pass; }
+    public function setPass(string $pass): void { $this->pass = $pass; }
 
-    public function getDb() { return $this->db; }
-    public function setDb($db): void { $this->db = $db; }
+    public function getDb(): string { return $this->db; }
+    public function setDb(string $db): void { $this->db = $db; }
 
     public function getConn(): mysqli { return $this->conn; }
     public function setConn(mysqli $conn): void { $this->conn = $conn; }
 
-    public function getResult() { return $this->result; }
-    public function setResult($result): void { $this->result = $result; }
+    public function getResult(): ?mysqli_result { return $this->result; }
+    public function setResult(?mysqli_result $result): void { $this->result = $result; }
 
-    public function isError(): bool { return $this->error; }
-    public function setError(bool $error): void { $this->error = $error; }
+    public function isError(): bool {
+        return (bool) $this->error;
+    }
+    public function setError(bool|string $error): void { $this->error = $error; }
 
-    public function getRows() { return $this->rows; }
-    public function setRows($rows): void { $this->rows = $rows; }
+    public function getRows(): array { return $this->rows; }
+    public function setRows(array $rows): void { $this->rows = $rows; }
 
-    public function getRow() { return $this->row; }
-    public function setRow($row): void { $this->row = $row; }
+    public function getRow(): ?array { return $this->row; }
+    public function setRow(?array $row): void { $this->row = $row; }
 
     public function isStatus(): bool { return $this->status; }
     public function setStatus(bool $status): void { $this->status = $status; }
