@@ -36,8 +36,6 @@ class InstallerController extends Controller
         $this->configSettings = $configSettings;
 
         $this->configSettings->LoadSettings();
-
-        parent::__construct($this->request);
         $this->initBasePath();
         $this->init();
     }
@@ -54,7 +52,7 @@ class InstallerController extends Controller
     {
         try {
             $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
-            return $this->view->render("resources/views/setup_wizard.html", $params);
+            return $this->view->render("setup_wizard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -90,7 +88,7 @@ class InstallerController extends Controller
 
         $params = InstallerViewModel::getSetupWizardParams($this->configSettings, $params);
 
-        return $this->view->render("resources/views/setup_wizard.html", $params);
+        return $this->view->render("setup_wizard.html", $params);
     }
 
 
@@ -104,7 +102,7 @@ class InstallerController extends Controller
         }
 
         $params = InstallerViewModel::getDefaultParams($this->configSettings);
-        return $this->view->render("resources/views/progressBar.html", $params);
+        return $this->view->render("progressBar.html", $params);
     }
 
 }

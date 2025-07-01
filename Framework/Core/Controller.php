@@ -4,23 +4,17 @@ namespace Framework\Core;
 
 use Framework\Http\Get;
 use Framework\Http\Post;
-
+use Framework\Http\RequestHelper;
 use ReflectionClass;
 use ReflectionMethod;
 
-use Framework\Http\RequestHelper;
-
-class Controller {
-
+class Controller
+{
     protected View $view;
     protected RequestHelper $request;
 
-    public function __construct(RequestHelper $request) {
-        $this->request = $request;
-        $this->view = new View();
-    }
-
-    public function init() {
+    public function init(): void
+    {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $requestedSr = $this->request->get('sr') ?? '';
 
@@ -43,7 +37,7 @@ class Controller {
                         ($instance->sr === '/' && ($requestedSr === '' || $requestedSr === '/')) ||
                         $instance->sr === $requestedSr
                     ) {
-                        $result = $this->{$method->getName()}(); // Ejecutar el método
+                        $result = $this->{$method->getName()}();
 
                         if (is_string($result)) {
                             echo $result;
@@ -51,8 +45,7 @@ class Controller {
                         }
 
                         if (is_array($result) && isset($result['view'])) {
-                            $view = new View();
-                            echo $view->render($result['view'], $result['params'] ?? []);
+                            echo $this->view->render($result['view'], $result['params'] ?? []);
                             exit;
                         }
 
@@ -62,10 +55,11 @@ class Controller {
             }
         }
 
-        $this->main();
-    }
-
-    public function main() {
-        echo "Método main() del Controller";
+        // Fallback
+        if (method_exists($this, 'main')) {
+            echo $this->main();
+        } else {
+            echo "No se encontró un método coincidente en el controlador.";
+        }
     }
 }

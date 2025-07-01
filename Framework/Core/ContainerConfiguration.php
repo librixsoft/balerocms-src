@@ -8,6 +8,6 @@ class ContainerConfiguration
 {
     public static function register(Container $container): void
     {
-        $container->singleton(View::class, new View(LOCAL_DIR . '/views'));
+        $container->singleton(View::class, new View(LOCAL_DIR . '/resources/views'));
     }
 }
