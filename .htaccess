@@ -1,18 +1,8 @@
-# BALERO CMS
-# ========================================================================
-# NOTES (19-OCT-2013)
-# ========================================================================
-# IF YOU HAVING PROBLEMS WITH .HTACCESS FILES READ THIS:
-# ========================================================================
-# http://docs.balerocms.com/cgi-bin/moin.cgi/.htaccess%20files [EN]
-# http://docs.balerocms.com/cgi-bin/moin.cgi/archivos%20.htaccess [ES]
-# ========================================================================
-
 # :::: Redir admin ::::
 Options +FollowSymLinks
 RewriteEngine on
 
-# :::: Off "Index Of /" :::: 
+# :::: Off "Index Of /" ::::
 Options -Indexes
 IndexIgnore *
 
@@ -47,7 +37,6 @@ RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)-([a-zA-Z0-9_-]+)
 
 RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)-([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)-([a-zA-Z0-9_-]+)/$ index.php?app=$1&sr=$2&$3=$4&$5=$6
 
-# ::::::: EXAMPLE :::::::
-# index.php?app=admin&sr=edit_post&mod=blog&id=1
-# or
-# /admin/edit_post/mod-blog/id-1
+# public assets
+
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
