@@ -6,10 +6,11 @@ use Framework\Core\View;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 use Framework\Http\RequestHelper;
+use Modules\Installer\Mapper\InstallerMapper;
 use Modules\Installer\Models\InstallerModel;
 use Framework\Core\Controller;
-use Framework\Core\Blowfish;
 use Exception;
+use Modules\Installer\DTO\InstallerDTO;
 
 use Framework\Http\Get;
 use Framework\Http\Post;
@@ -69,49 +70,33 @@ class InstallerController extends Controller
     public function install()
     {
         try {
-            $this->configSettings->setDbhost($this->request->post('dbhost'));
-            $this->configSettings->setDbuser($this->request->post('dbuser'));
-            $this->configSettings->setDbpass($this->request->post('dbpass'));
-            $this->configSettings->setDbname($this->request->post('dbname'));
+            $data = InstallerDTO::fromRequest($this->request);
 
-            $this->configSettings->setTitle($this->request->post('title'));
-            $this->configSettings->setUrl($this->request->post('url'));
-            $this->configSettings->setDescription($this->request->post('description'));
-            $this->configSettings->setKeywords($this->request->post('keywords'));
-
-            $basepath = $this->request->post("basepath");
-            if ($basepath !== null) {
-                $this->configSettings->setBasepath($basepath);
+            /**
+            if (empty($data->username)) {
+                throw new Exception("Empty username");
             }
 
-            if (empty($this->request->post("username"))) {
-                throw new Exception(_EMPTY_USERNAME);
+            if (empty($data->passwd)) {
+                throw new Exception("Empty password");
             }
 
-            if (empty($this->request->post("passwd"))) {
-                throw new Exception(_EMPTY_PASSWORD);
+            if ($data->passwd !== $data->passwd2) {
+                throw new Exception("Passwords not match");
             }
 
-            if ($this->request->post("passwd") !== $this->request->post("passwd2")) {
-                throw new Exception(_PASSWORDS_DONT_MATCH);
+            if (!filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
+                throw new Exception("Invalid email");
             }
+             * */
 
-            if (!filter_var($this->request->post("email"), FILTER_VALIDATE_EMAIL)) {
-                throw new Exception(_INDALID_EMAIL);
-            }
-
-            $this->configSettings->setLastname($this->request->post('lastname'));
-            $this->configSettings->setUser($this->request->post('username'));
-            $this->configSettings->setEmail($this->request->post('email'));
-
-            $obj = new Blowfish();
-            $pwd = $obj->genpwd($this->request->post('passwd'));
-            $this->configSettings->setPass($pwd);
+            InstallerMapper::map($data, $this->configSettings);
 
             $params = $this->getSetupWizardParams();
         } catch (Exception $e) {
+            ErrorConsole::handleException($e);
             $params = $this->getSetupWizardParams([
-                'error_message' => $e->getMessage()
+                'error_message' => $e->getMessage(),
             ]);
         }
 
@@ -189,7 +174,7 @@ class InstallerController extends Controller
         $params = $this->getDefaultParams();
         $params['mod_rewrite_enabled'] = $this->checkModRewrite();
         $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
-        $params['btn_install'] = _INSTALL_BUTTON;
+        $params['btn_install'] = "Instalar";
         $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
         $params['config_writeable'] = is_writable($configFilePath);
 
