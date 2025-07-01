@@ -106,14 +106,5 @@ class InstallerController extends Controller
         $params = InstallerViewModel::getDefaultParams($this->configSettings);
         return $this->view->render("resources/views/progressBar.html", $params);
     }
-
-    private function checkModRewrite(): bool
-    {
-        if (function_exists('apache_get_modules')) {
-            $modules = apache_get_modules();
-            return in_array('mod_rewrite', $modules);
-        }
-
-        return false;
-    }
+    
 }
