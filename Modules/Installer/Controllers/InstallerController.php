@@ -2,6 +2,7 @@
 
 namespace Modules\Installer\Controllers;
 
+use Framework\Core\Validator;
 use Framework\Core\View;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
@@ -52,14 +53,7 @@ class InstallerController extends Controller
     public function main()
     {
         try {
-            $params = InstallerViewModel::getDefaultParams($this->configSettings);
-            $params['mod_rewrite_enabled'] = $this->checkModRewrite();
-            $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
-            $params['btn_install'] = "Instalar";
-
-            $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
-            $params['config_writeable'] = is_writable($configFilePath);
-
+            $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
             return $this->view->render("resources/views/setup_wizard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
@@ -70,48 +64,31 @@ class InstallerController extends Controller
     #[Post(sr: '/')]
     public function install()
     {
-        $errors = [];
+        $params = [];
 
         try {
             $installerDTO = InstallerDTO::fromRequest($this->request);
+            $input = (array) $installerDTO;
 
-            // Validaciones suaves sin excepciones
-            if (empty($installerDTO->username)) {
-                $errors['username'] = 'El nombre de usuario no puede estar vacío.';
+            $validator = Validator::make($input)
+                ->required('username', 'El nombre de usuario no puede estar vacío.')
+                ->required('passwd', 'La contraseña no puede estar vacía.')
+                ->match('passwd', 'passwd2', 'Las contraseñas no coinciden.')
+                ->email('email', 'El correo electrónico no es válido.');
+
+            if ($validator->fails()) {
+                $params = [
+                    'errors' => $validator->errors()
+                ];
+            } else {
+                InstallerMapper::map($installerDTO, $this->configSettings);
             }
-            /**
-            if (empty($installerDTO->passwd)) {
-                $errors['passwd'] = 'La contraseña no puede estar vacía.';
-            } elseif ($installerDTO->passwd !== $installerDTO->passwd2) {
-                $errors['passwd2'] = 'Las contraseñas no coinciden.';
-            }
-
-            if (!filter_var($installerDTO->email, FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = 'El email ingresado no es válido.';
-            }}**/
-
-            if (!empty($errors)) {
-                // Vista con errores + datos para repoblar
-                $params = InstallerViewModel::getSetupWizardParams($this->configSettings, [
-                    'errors' => $errors,
-                    'form_data' => (array) $installerDTO,
-                ]);
-
-                return $this->view->render("resources/views/setup_wizard.html", $params);
-            }
-
-            // Si todo está bien
-            InstallerMapper::map($installerDTO, $this->configSettings);
-
-            $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
-
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
-
-            $params = InstallerViewModel::getSetupWizardParams($this->configSettings, [
-                'error_message' => $e->getMessage(),
-            ]);
+            $params['error_message'] = $e->getMessage();
         }
+
+        $params = InstallerViewModel::getSetupWizardParams($this->configSettings, $params);
 
         return $this->view->render("resources/views/setup_wizard.html", $params);
     }
