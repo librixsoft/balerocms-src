@@ -9,6 +9,6 @@ class Post {
     public string $sr;
 
     public function __construct(string $sr = '') {
-        $this->sr = $sr;
+        $this->sr = trim($sr, '/');
     }
 }

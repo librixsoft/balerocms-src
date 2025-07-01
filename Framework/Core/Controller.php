@@ -13,10 +13,16 @@ class Controller
     protected View $view;
     protected RequestHelper $request;
 
+    public function __construct(RequestHelper $request, View $view)
+    {
+        $this->request = $request;
+        $this->view = $view;
+    }
+
     public function init(): void
     {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $requestedSr = $this->request->get('sr') ?? '';
+        $requestedSr = trim($this->request->get('sr') ?? '', '/');
 
         $reflection = new ReflectionClass($this);
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
@@ -33,9 +39,9 @@ class Controller
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
                     if (
+                        $instance->sr === $requestedSr ||
                         ($instance->sr === '' && $requestedSr === '') ||
-                        ($instance->sr === '/' && ($requestedSr === '' || $requestedSr === '/')) ||
-                        $instance->sr === $requestedSr
+                        ($instance->sr === '/' && $requestedSr === '')
                     ) {
                         $result = $this->{$method->getName()}();
 
@@ -55,5 +61,11 @@ class Controller
             }
         }
 
+        // Fallback
+        if (method_exists($this, 'main')) {
+            echo $this->main();
+        } else {
+            echo "No se encontró un método coincidente en el controlador.";
+        }
     }
 }

@@ -1,42 +1,27 @@
-# :::: Redir admin ::::
 Options +FollowSymLinks
-RewriteEngine on
+RewriteEngine On
 
-# :::: Off "Index Of /" ::::
+# Desactiva "Index Of /"
 Options -Indexes
 IndexIgnore *
 
-# ::::::::::::::::::::
-# :::: Pretty URL ::::
-# ::::::::::::::::::::
-
-# Excludes
-
-# Add slash / to get parameters app, subroutine or page-or-id
-
-RewriteRule ^([a-zA-Z0-9_-]+)$ $1/
-RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)$ $1/$2/
-RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)$ $1/$2/$3/
-RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)$ $1/$2/$3/$4/
-
-# :::: App parameter :::::
-# Ex: index.php?app=blog
-
-RewriteRule ^([a-zA-Z0-9_-]+)/$ index.php?app=$1
-
-# :::: Subroutine parameter ::::
-# Ex: index.php?app=blog&sr=action
-
-RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/$ index.php?app=$1&sr=$2
-
-# $param1
-
-RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)-([a-zA-Z0-9_-]+)/$ index.php?app=$1&sr=$2&$3=$4
-
-# $param2
-
-RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)-([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)-([a-zA-Z0-9_-]+)/$ index.php?app=$1&sr=$2&$3=$4&$5=$6
-
-# public assets
-
+# :::::::::::::::::::::
+# :: Activos públicos ::
+# :::::::::::::::::::::
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+# :::::::::::::::::::::::::::::::::
+# :: Continuar solo si NO es archivo real o carpeta ::
+# :::::::::::::::::::::::::::::::::
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# :::::::::::::::::::::::::::::::
+# :: Routing vía index.php ::
+# :::::::::::::::::::::::::::::::
+
+# /modulo → index.php?app=modulo
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [L]
+
+# /modulo/sr → index.php?app=modulo&sr=lo-que-sea
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [L]
