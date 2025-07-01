@@ -47,7 +47,7 @@ class InstallerController extends Controller
         }
     }
 
-    #[Get(sr: '/')]
+    #[Get('/')]
     public function home()
     {
         try {
@@ -59,7 +59,7 @@ class InstallerController extends Controller
         }
     }
 
-    #[Post(sr: '/')]
+    #[Post('/')]
     public function install()
     {
         $params = [];
@@ -92,7 +92,7 @@ class InstallerController extends Controller
     }
 
 
-    #[Post(sr: 'progressBar')]
+    #[Post('progressBar')]
     public function progressBar()
     {
         try {
