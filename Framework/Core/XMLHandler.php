@@ -2,6 +2,8 @@
 
 namespace Framework\Core;
 
+use Exception;
+
 class XMLHandler
 {
     public $file;

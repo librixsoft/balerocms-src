@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Core;
+namespace Framework;
 
 use Framework\Core\XMLHandler;
 

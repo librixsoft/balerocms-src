@@ -55,10 +55,10 @@ class InstallerController extends Controller
             $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
             $params['btn_install'] = "Instalar";
 
-            $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
+            $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
             $params['config_writeable'] = is_writable($configFilePath);
 
-            return $this->view->render("views/setup_wizard.html", $params);
+            return $this->view->render("resources/views/setup_wizard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -115,7 +115,7 @@ class InstallerController extends Controller
             ]);
         }
 
-        return $this->view->render("views/setup_wizard.html", $params);
+        return $this->view->render("resources/views/setup_wizard.html", $params);
     }
 
     #[Post(sr: 'progressBar')]
@@ -128,7 +128,7 @@ class InstallerController extends Controller
         }
 
         $params = $this->getDefaultParams();
-        return $this->view->render("views/progressBar.html", $params);
+        return $this->view->render("resources/views/progressBar.html", $params);
     }
 
     protected function getDefaultParams(): array
@@ -190,7 +190,7 @@ class InstallerController extends Controller
         $params['mod_rewrite_enabled'] = $this->checkModRewrite();
         $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
         $params['btn_install'] = _INSTALL_BUTTON;
-        $configFilePath = LOCAL_DIR . '/site/etc/balero.config.xml';
+        $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
         $params['config_writeable'] = is_writable($configFilePath);
 
         return array_merge($params, $extraParams);
