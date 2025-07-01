@@ -48,7 +48,7 @@ class InstallerController extends Controller
     }
 
     #[Get(sr: '/')]
-    public function main()
+    public function home()
     {
         try {
             $params = InstallerViewModel::getSetupWizardParams($this->configSettings);

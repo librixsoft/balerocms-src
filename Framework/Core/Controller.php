@@ -55,11 +55,5 @@ class Controller
             }
         }
 
-        // Fallback
-        if (method_exists($this, 'main')) {
-            echo $this->main();
-        } else {
-            echo "No se encontró un método coincidente en el controlador.";
-        }
     }
 }
