@@ -4,6 +4,15 @@ CHANGELOG
 
 ==========
 
+    v.1.0
+  * Dependency Injection Container
+  * Use of namespaces
+  * Core update (it requires php 8.0+)
+  * UX / UI Design updates
+  * Template Engine
+  * Load template system
+  * Dynamic loading core
+  
     v.0.8.3
   * Rich Text Editor Fixes
   * Public Folder
