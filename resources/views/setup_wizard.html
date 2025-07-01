@@ -150,6 +150,13 @@
     </div>
     <!-- @endif -->
 
+    <!-- @if errors.username -->
+    <div class="alert alert-danger alert-dismissible" style="margin-top: 15px;">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+      {errors.username}.
+    </div>
+    <!-- @endif -->
+
     <div class="block">
       <div class="block-content collapse in">
         <div class="span12">
@@ -247,37 +254,37 @@
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="username">{lbl_administrator}</label>
                       <div class="col-sm-10">
-                        <input name="username" class="form-control" id="username" type="text" value="{txt_administrator}" required>
+                        <input name="username" class="form-control" id="username" type="text" value="{username}">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="passwd">{lbl_pass}</label>
                       <div class="col-sm-10">
-                        <input name="passwd" class="form-control" id="passwd" type="password" required>
+                        <input name="passwd" class="form-control" id="passwd" type="password">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="passwd2">{lbl_retype}</label>
                       <div class="col-sm-10">
-                        <input name="passwd2" class="form-control" id="passwd2" type="password" required>
+                        <input name="passwd2" class="form-control" id="passwd2" type="password">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="firstname">{lbl_firstname}</label>
                       <div class="col-sm-10">
-                        <input name="firstname" class="form-control" id="firstname" type="text" value="{txt_firstname}" required>
+                        <input name="firstname" class="form-control" id="firstname" type="text" value="{txt_firstname}">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="lastname">{lbl_lastname}</label>
                       <div class="col-sm-10">
-                        <input name="lastname" class="form-control" id="lastname" type="text" value="{txt_lastname}" required>
+                        <input name="lastname" class="form-control" id="lastname" type="text" value="{txt_lastname}">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="email">{lbl_email}</label>
                       <div class="col-sm-10">
-                        <input name="email" class="form-control" id="email" type="email" value="{txt_email}" required>
+                        <input name="email" class="form-control" id="email" type="email" value="{txt_email}">
                       </div>
                     </div>
                     <div class="form-group">

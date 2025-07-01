@@ -5,8 +5,6 @@ namespace Framework\Core;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 
-use Framework\Core\TemplateEngine;
-
 class View extends TemplateEngine
 {
     protected string $baseDir;
@@ -47,16 +45,10 @@ class View extends TemplateEngine
 
             $params = array_merge($this->getDefaultParams(), $params);
 
-            foreach ($params as $key => $value) {
-                $safeValue = htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                $content = str_replace('{' . $key . '}', $safeValue, $content);
-            }
-
             return $this->processTemplate($content, $params);
         } catch (\Throwable $e) {
-            // Aquí usamos ErrorConsole para mostrar el error con consola negra
             ErrorConsole::handleException($e);
-            return ''; // En caso de que ErrorConsole no salga (por si acaso)
+            return '';
         }
     }
 }

@@ -11,6 +11,7 @@ use Modules\Installer\Models\InstallerModel;
 use Framework\Core\Controller;
 use Exception;
 use Modules\Installer\DTO\InstallerDTO;
+use Modules\Installer\Views\InstallerViewModel;
 
 use Framework\Http\Get;
 use Framework\Http\Post;
@@ -51,7 +52,7 @@ class InstallerController extends Controller
     public function main()
     {
         try {
-            $params = $this->getDefaultParams();
+            $params = InstallerViewModel::getDefaultParams($this->configSettings);
             $params['mod_rewrite_enabled'] = $this->checkModRewrite();
             $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
             $params['btn_install'] = "Instalar";
@@ -69,39 +70,52 @@ class InstallerController extends Controller
     #[Post(sr: '/')]
     public function install()
     {
+        $errors = [];
+
         try {
-            $data = InstallerDTO::fromRequest($this->request);
+            $installerDTO = InstallerDTO::fromRequest($this->request);
 
+            // Validaciones suaves sin excepciones
+            if (empty($installerDTO->username)) {
+                $errors['username'] = 'El nombre de usuario no puede estar vacío.';
+            }
             /**
-            if (empty($data->username)) {
-                throw new Exception("Empty username");
+            if (empty($installerDTO->passwd)) {
+                $errors['passwd'] = 'La contraseña no puede estar vacía.';
+            } elseif ($installerDTO->passwd !== $installerDTO->passwd2) {
+                $errors['passwd2'] = 'Las contraseñas no coinciden.';
             }
 
-            if (empty($data->passwd)) {
-                throw new Exception("Empty password");
+            if (!filter_var($installerDTO->email, FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'El email ingresado no es válido.';
+            }}**/
+
+            if (!empty($errors)) {
+                // Vista con errores + datos para repoblar
+                $params = InstallerViewModel::getSetupWizardParams($this->configSettings, [
+                    'errors' => $errors,
+                    'form_data' => (array) $installerDTO,
+                ]);
+
+                return $this->view->render("resources/views/setup_wizard.html", $params);
             }
 
-            if ($data->passwd !== $data->passwd2) {
-                throw new Exception("Passwords not match");
-            }
+            // Si todo está bien
+            InstallerMapper::map($installerDTO, $this->configSettings);
 
-            if (!filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
-                throw new Exception("Invalid email");
-            }
-             * */
+            $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
 
-            InstallerMapper::map($data, $this->configSettings);
-
-            $params = $this->getSetupWizardParams();
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
-            $params = $this->getSetupWizardParams([
+
+            $params = InstallerViewModel::getSetupWizardParams($this->configSettings, [
                 'error_message' => $e->getMessage(),
             ]);
         }
 
         return $this->view->render("resources/views/setup_wizard.html", $params);
     }
+
 
     #[Post(sr: 'progressBar')]
     public function progressBar()
@@ -112,73 +126,8 @@ class InstallerController extends Controller
             ErrorConsole::handleException($e);
         }
 
-        $params = $this->getDefaultParams();
+        $params = InstallerViewModel::getDefaultParams($this->configSettings);
         return $this->view->render("resources/views/progressBar.html", $params);
-    }
-
-    protected function getDefaultParams(): array
-    {
-        return [
-            'title' => $this->configSettings->getTitle(),
-            'page' => defined('_PAGE') ? _PAGE : '',
-            'keywords' => $this->configSettings->getKeywords(),
-            'description' => $this->configSettings->getDescription(),
-            'basepath' => $this->configSettings->getBasepath(),
-
-// etiquetas
-            'lbl_dbconfig' => 'Database Configuration',
-            'lbl_dbhost' => 'Database Host',
-            'lbl_dbusername' => 'Database User',
-            'lbl_dbpass' => 'Database Password',
-            'lbl_dbname' => 'Database Name',
-            'lbl_dbname_note' => 'If database does not exist, it will be created',
-            'lbl_siteinfo' => 'Site Information',
-            'lbl_basepath' => 'Base Path',
-            'lbl_basepath_note' => 'Note about base path',
-            'lbl_title' => 'Site Title',
-            'lbl_url' => 'Site URL',
-            'lbl_keywords' => 'Keywords',
-            'lbl_description' => 'Description',
-            'lbl_adminconfig' => 'Administrator Configuration',
-            'lbl_administrator' => 'Administrator',
-            'lbl_pass' => 'Password',
-            'lbl_retype' => 'Retype Password',
-            'lbl_firstname' => 'First Name',
-            'lbl_lastname' => 'Last Name',
-            'lbl_email' => 'Email Address',
-
-
-            // valores
-            'txt_dbhost' => $this->configSettings->getDbhost(),
-            'txt_dbuser' => $this->configSettings->getDbuser(),
-            'txt_dbpass' => $this->configSettings->getDbpass(),
-            'txt_dbname' => $this->configSettings->getDbname(),
-            'txt_basepath' => $this->configSettings->getBasepath(),
-            'txt_title' => $this->configSettings->getTitle(),
-            'txt_url' => $this->configSettings->getUrl(),
-            'txt_keywords' => $this->configSettings->getKeywords(),
-            'txt_description' => $this->configSettings->getDescription(),
-            'txt_administrator' => $this->configSettings->getUser(),
-            'txt_pass' => '',
-            'txt_retype' => '',
-            'txt_firstname' => $this->configSettings->getFirstname(),
-            'txt_lastname' => $this->configSettings->getLastname(),
-            'txt_email' => $this->configSettings->getEmail(),
-
-            'btn_save' => "Guardar",
-        ];
-    }
-
-    private function getSetupWizardParams(array $extraParams = []): array
-    {
-        $params = $this->getDefaultParams();
-        $params['mod_rewrite_enabled'] = $this->checkModRewrite();
-        $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
-        $params['btn_install'] = "Instalar";
-        $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
-        $params['config_writeable'] = is_writable($configFilePath);
-
-        return array_merge($params, $extraParams);
     }
 
     private function checkModRewrite(): bool
