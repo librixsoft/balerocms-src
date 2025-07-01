@@ -106,5 +106,5 @@ class InstallerController extends Controller
         $params = InstallerViewModel::getDefaultParams($this->configSettings);
         return $this->view->render("resources/views/progressBar.html", $params);
     }
-    
+
 }

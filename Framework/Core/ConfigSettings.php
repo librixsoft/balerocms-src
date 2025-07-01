@@ -16,7 +16,7 @@ class ConfigSettings
     private string $dbname;
 
     // Admin
-    private string $user;
+    private string $username;
     private string $pass;
     private string $email;
     private string $firstname;
@@ -58,7 +58,7 @@ class ConfigSettings
             $this->dbpass     = $xml->Child("database", "dbpass");
             $this->dbname     = $xml->Child("database", "dbname");
 
-            $this->user       = $xml->Child("admin", "username");
+            $this->username       = $xml->Child("admin", "username");
             $this->pass       = $xml->Child("admin", "passwd");
             $this->email      = $xml->Child("admin", "email");
             $this->firstname  = $xml->Child("admin", "firstname");
@@ -105,9 +105,9 @@ class ConfigSettings
         $this->xml->editChild("/config/database/dbname", $value);
     }
 
-    public function getUser(): string { return $this->user; }
-    public function setUser(string $value): void {
-        $this->user = $value;
+    public function getUsername(): string { return $this->username; }
+    public function setUsername(string $value): void {
+        $this->username = $value;
         $this->xml->editChild("/config/admin/username", $value);
     }
 

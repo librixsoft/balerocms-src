@@ -47,7 +47,7 @@ class InstallerViewModel
             'txt_url' => $config->getUrl(),
             'txt_keywords' => $config->getKeywords(),
             'txt_description' => $config->getDescription(),
-            'username' => $config->getUser(),
+            'username' => $config->getUsername(),
             'txt_pass' => '',
             'txt_retype' => '',
             'txt_firstname' => $config->getFirstname(),

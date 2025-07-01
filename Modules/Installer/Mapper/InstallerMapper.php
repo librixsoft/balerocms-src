@@ -20,7 +20,7 @@ class InstallerMapper
         $config->setBasepath($dto->basepath ?: $config->getFullBasepath());
         $config->setLastname($dto->lastname);
         $config->setFirstname($dto->firstname);
-        $config->setUser($dto->username);
+        $config->setUsername($dto->username);
         $config->setEmail($dto->email);
 
         $pwd = (new Blowfish())->genpwd($dto->passwd);
