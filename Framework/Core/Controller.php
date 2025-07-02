@@ -5,9 +5,6 @@ namespace Framework\Core;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
-use ReflectionClass;
-use ReflectionMethod;
-use Framework\Core\ErrorConsole;
 
 class Controller
 {
