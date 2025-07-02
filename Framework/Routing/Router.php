@@ -97,7 +97,8 @@ class Router
             if ($this->configSettings->getInstalled() === "no") {
                 $currentApp = $this->request->get('app');
                 if ($currentApp !== 'installer') {
-                    header('Location: ' . $this->configSettings->getBasePath() . '/installer');
+                    $base = rtrim($this->configSettings->getBasePath(), '/');
+                    header('Location: ' . $base . '/installer/');
                     exit;
                 }
             }

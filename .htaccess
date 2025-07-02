@@ -5,7 +5,10 @@ RewriteBase /balerocms-src/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Reescribe URLs: /installer/wizard/home => index.php?app=installer&sr=wizard/home
+# Reescribe /module => index.php?app=module
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [QSA,L]
+
+# Reescribe /module/controller/path => index.php?app=module&sr=controller/path
 RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [QSA,L]
 
 # Sirve assets directo
