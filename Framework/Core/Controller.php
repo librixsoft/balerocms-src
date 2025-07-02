@@ -4,7 +4,6 @@ namespace Framework\Core;
 
 use Framework\Http\Get;
 use Framework\Http\Post;
-use Framework\Http\Route;
 use Framework\Http\RequestHelper;
 use ReflectionClass;
 use ReflectionMethod;
@@ -27,20 +26,6 @@ class Controller
         $requestedSr = $this->request->get('sr') ?? '';
 
         $reflection = new \ReflectionClass($this);
-
-        // Obtener ruta base (Route de clase), sin trim para no perder barras internas
-        $classRouteAttr = $reflection->getAttributes(\Framework\Http\Route::class);
-        $baseRoute = '';
-
-        foreach ($classRouteAttr as $attr) {
-            $instance = $attr->newInstance();
-            error_log("Clase tiene atributo Route con sr: '{$instance->sr}'");
-        }
-
-        if (!empty($classRouteAttr)) {
-            $baseRoute = $classRouteAttr[0]->newInstance()->sr;
-        }
-
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
@@ -52,22 +37,15 @@ class Controller
 
                 // Solo Get o Post
                 if (
-                    ($attrName === \Framework\Http\Get::class && $httpMethod === 'GET') ||
-                    ($attrName === \Framework\Http\Post::class && $httpMethod === 'POST')
+                    ($attrName === Get::class && $httpMethod === 'GET') ||
+                    ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    // Concatenar ruta base y método, evitando dobles barras
-                    $methodSr = $instance->sr;
+                    $methodSr = trim($instance->sr, '/');
 
-                    if ($baseRoute !== '') {
-                        $fullRoute = rtrim($baseRoute, '/') . '/' . ltrim($methodSr, '/');
-                    } else {
-                        $fullRoute = $methodSr;
-                    }
+                    // Normalizar para comparar
+                    $requested = trim($requestedSr, '/');
 
-                    error_log($fullRoute );
-
-                    // Comparar exactamente con la ruta solicitada
-                    if ($fullRoute === $requestedSr || ($fullRoute === '' && ($requestedSr === '' || $requestedSr === '/'))) {
+                    if ($methodSr === $requested || ($methodSr === '' && $requested === '')) {
                         $this->runMethod($method->getName());
                         return;
                     }
@@ -76,9 +54,8 @@ class Controller
         }
 
         // Si nada coincide, error
-        \Framework\Core\ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedSr}'"));
+        ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedSr}'"));
     }
-
 
     private function runMethod(string $methodName): void
     {

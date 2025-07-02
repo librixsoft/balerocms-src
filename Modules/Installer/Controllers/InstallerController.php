@@ -14,12 +14,9 @@ use Exception;
 use Modules\Installer\DTO\InstallerDTO;
 use Modules\Installer\Views\InstallerViewModel;
 
-use Framework\Http\Route;
-
 use Framework\Http\Get;
 use Framework\Http\Post;
 
-#[Route('wizard')]
 class InstallerController extends Controller
 {
     protected View $view;
@@ -50,7 +47,7 @@ class InstallerController extends Controller
         }
     }
 
-    #[Get('home')]
+    #[Get('/')]
     public function home()
     {
         try {
