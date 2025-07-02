@@ -24,7 +24,9 @@ class Controller
     {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $requestedSr = $this->request->get('sr') ?? '';
-        $requestedSr = ltrim($requestedSr, '/'); // dejamos '/' internos para permitir rutas como home/setup
+
+        // Normalizar la ruta recibida: quitar barra inicial y final
+        $requestedSr = trim($requestedSr, '/');
 
         $reflection = new \ReflectionClass($this);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -36,12 +38,12 @@ class Controller
                 $attrName = $attribute->getName();
                 $instance = $attribute->newInstance();
 
-                // Solo Get o Post
                 if (
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    $methodSr = ltrim($instance->sr, '/');
+                    // Normalizar ruta declarada: quitar barras al inicio y final
+                    $methodSr = trim($instance->sr, '/');
 
                     if ($methodSr === $requestedSr || ($methodSr === '' && $requestedSr === '')) {
                         $this->runMethod($method->getName());
@@ -51,9 +53,9 @@ class Controller
             }
         }
 
-        // Si nada coincide, error
         ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedSr}'"));
     }
+
 
     private function runMethod(string $methodName): void
     {
