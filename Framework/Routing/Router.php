@@ -14,7 +14,6 @@ use Exception;
 
 class Router
 {
-
     private Security $security;
     private RequestHelper $request;
     private ConfigSettings $configSettings;
@@ -29,70 +28,56 @@ class Router
         $this->security = $security;
         $this->request = $request;
 
-        $this->installer();
+        $this->checkInstallerRedirect();
     }
 
     public function init(): void
     {
         $app = $this->request->get('app');
 
-        if ($app === null) {
+        if (!$app) {
             Boot::safeResolve('Modules\\VirtualPage\\Controllers\\VirtualPageController');
             exit;
         }
 
-        switch ($app) {
-            case 'admin':
-                $this->login();
-                break;
-
-            case 'logout':
-                LoginManager::logout();
-                break;
-
-            default:
-                $this->app = ucfirst($app);
-                $this->init_app();
-                break;
-        }
+        match ($app) {
+            'admin'  => $this->handleAdmin(),
+            'logout' => LoginManager::logout(),
+            default  => $this->initApp(ucfirst($app)),
+        };
     }
 
-    private function login(): void
+    private function handleAdmin(): void
     {
-
         $loginManager = new LoginManager($this->security);
-        $isAuthenticated = $loginManager->handleLogin();
 
-        if ($isAuthenticated) {
-            $this->init_mod();
+        if ($loginManager->handleLogin()) {
+            $this->initAdminModule();
         } else {
             $loginManager->showLoginForm();
         }
     }
 
-    private function init_app(): void
+    private function initApp(string $appName): void
     {
-        $controllerClass = "Modules\\{$this->app}\\Controllers\\{$this->app}Controller";
+        $this->app = $appName;
+        $controllerClass = "Modules\\{$appName}\\Controllers\\{$appName}Controller";
 
         if (!class_exists($controllerClass)) {
             ErrorConsole::handleException(new Exception("Controller class not found: $controllerClass"));
         }
 
-
         Boot::safeResolve($controllerClass);
-
     }
 
-    private function init_mod(): void
+    private function initAdminModule(): void
     {
         $mod = $this->request->get("mod");
+        $adminElements = new AdminElements();
+        $menuData = $adminElements->mods_menu();
 
-        if ($mod === null) {
-
-            $admin_elements = new AdminElements();
-            $title_mod_menu = $admin_elements->mods_menu();
-
-            Boot::safeResolve('Modules\\Admin\\Controllers\\AdminController', [$title_mod_menu]);
+        if (!$mod) {
+            Boot::safeResolve('Modules\\Admin\\Controllers\\AdminController', [$menuData]);
             return;
         }
 
@@ -103,23 +88,21 @@ class Router
             ErrorConsole::handleException(new Exception("Module controller class not found: $controllerClass"));
         }
 
-        $admin_elements = new AdminElements();
-        $title_mod_menu = $admin_elements->mods_menu();
-
-        Boot::safeResolve($controllerClass, [$title_mod_menu]);
+        Boot::safeResolve($controllerClass, [$menuData]);
     }
 
-    private function installer(): void
+    private function checkInstallerRedirect(): void
     {
         try {
             if ($this->configSettings->getInstalled() === "no") {
-                Boot::safeResolve('Modules\\Installer\\Controllers\\InstallerController');
-                exit;
+                $currentApp = $this->request->get('app');
+                if ($currentApp !== 'installer') {
+                    header('Location: ' . $this->configSettings->getBasePath() . '/installer');
+                    exit;
+                }
             }
-
         } catch (Throwable $e) {
             ErrorConsole::handleException($e);
         }
     }
-
 }
