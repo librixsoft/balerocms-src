@@ -24,6 +24,7 @@ class Controller
     {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $requestedSr = $this->request->get('sr') ?? '';
+        $requestedSr = ltrim($requestedSr, '/'); // dejamos '/' internos para permitir rutas como home/setup
 
         $reflection = new \ReflectionClass($this);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -40,12 +41,9 @@ class Controller
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    $methodSr = trim($instance->sr, '/');
+                    $methodSr = ltrim($instance->sr, '/');
 
-                    // Normalizar para comparar
-                    $requested = trim($requestedSr, '/');
-
-                    if ($methodSr === $requested || ($methodSr === '' && $requested === '')) {
+                    if ($methodSr === $requestedSr || ($methodSr === '' && $requestedSr === '')) {
                         $this->runMethod($method->getName());
                         return;
                     }
