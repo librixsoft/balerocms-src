@@ -11,7 +11,6 @@ require_once(LOCAL_DIR . "/Framework/Core/Boot.php");
 
 use Framework\Core\Boot;
 use Framework\Routing\Router;
-use Http\CMSHeaders;
 
 new Boot();
 

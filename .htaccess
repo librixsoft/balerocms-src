@@ -1,27 +1,12 @@
-Options +FollowSymLinks
 RewriteEngine On
+RewriteBase /balerocms-src/
 
-# Desactiva "Index Of /"
-Options -Indexes
-IndexIgnore *
-
-# :::::::::::::::::::::
-# :: Activos públicos ::
-# :::::::::::::::::::::
-RewriteRule ^assets/(.*)$ public/assets/$1 [L]
-
-# :::::::::::::::::::::::::::::::::
-# :: Continuar solo si NO es archivo real o carpeta ::
-# :::::::::::::::::::::::::::::::::
+# Ignorar si es archivo o carpeta real
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# :::::::::::::::::::::::::::::::
-# :: Routing vía index.php ::
-# :::::::::::::::::::::::::::::::
+# Reescribe URLs: /installer/wizard/home => index.php?app=installer&sr=wizard/home
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [QSA,L]
 
-# /modulo → index.php?app=modulo
-RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [L]
-
-# /modulo/sr → index.php?app=modulo&sr=lo-que-sea
-RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [L]
+# Sirve assets directo
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]

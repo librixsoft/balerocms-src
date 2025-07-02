@@ -11,6 +11,6 @@ class Get
 
     public function __construct(string $sr = '')
     {
-        $this->sr = trim($sr, '/');
+        $this->sr = $sr;
     }
 }
