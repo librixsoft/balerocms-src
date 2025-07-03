@@ -2,6 +2,8 @@
 
 namespace Framework\Core;
 
+use Framework\I18n\LangManager;
+
 class TemplateEngine
 {
     protected function processTemplate(string $content, array $params): string
@@ -59,6 +61,15 @@ class TemplateEngine
                 $value = $flatParams[$key] ?? null;
 
                 return (!empty($value)) ? $ifBlock : $elseBlock;
+            },
+            $content
+        );
+
+        // Reemplazo de claves de idioma: {lang.welcome}
+        $content = preg_replace_callback(
+            '/\{lang\.([a-zA-Z0-9_]+)\}/',
+            function ($matches) {
+                return LangManager::get($matches[1], $matches[1]); // fallback: clave original
             },
             $content
         );

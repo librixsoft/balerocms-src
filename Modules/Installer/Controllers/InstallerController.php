@@ -13,6 +13,7 @@ use Framework\Core\Controller;
 use Exception;
 use Modules\Installer\DTO\InstallerDTO;
 use Modules\Installer\Views\InstallerViewModel;
+use Framework\I18n\LangSelector;
 
 use Framework\Http\Get;
 use Framework\Http\Post;
@@ -52,6 +53,7 @@ class InstallerController extends Controller
     {
         try {
             $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
+            $params += LangSelector::getParams();
             return $this->view->render("setup_wizard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
@@ -86,6 +88,7 @@ class InstallerController extends Controller
             $params['error_message'] = $e->getMessage();
         }
 
+        $params += LangSelector::getParams();
         $params = InstallerViewModel::getSetupWizardParams($this->configSettings, $params);
 
         return $this->view->render("setup_wizard.html", $params);

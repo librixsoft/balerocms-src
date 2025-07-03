@@ -1,6 +1,6 @@
 <?php
 
-define("_CORE_VERSION", "1.0");
+const _CORE_VERSION = "1.0";
 
 $dir = dirname(__FILE__);
 $dir = str_replace("\\", "/", $dir);

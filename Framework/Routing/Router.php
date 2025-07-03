@@ -12,6 +12,8 @@ use Modules\Admin\AdminElements;
 use Throwable;
 use Exception;
 
+use Framework\I18n\LangManager;
+
 class Router
 {
     private Security $security;
@@ -33,6 +35,22 @@ class Router
 
     public function init(): void
     {
+
+        // Aquí cargamos helpers
+        require_once LOCAL_DIR . '/Framework/I18n/lang_helper.php';
+
+        // Detectar idioma y cargar traducciones
+        $lang = $_GET['lang'] ?? $_SESSION['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
+        $supported = ['en', 'es'];
+
+        if (!in_array($lang, $supported)) {
+            $lang = 'en';
+        }
+
+        $_SESSION['lang'] = $lang;
+
+        LangManager::load($lang, LOCAL_DIR . '/resources/lang');
+
         $app = $this->request->get('app');
 
         if (!$app) {
