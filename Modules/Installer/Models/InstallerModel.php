@@ -10,8 +10,12 @@ use Throwable;
 
 class InstallerModel extends Model
 {
+
+    protected ConfigSettings $configSettings;
+
     public function __construct(ConfigSettings $configSettings)
     {
+        $this->configSettings = $configSettings;
         try {
             parent::__construct($configSettings);
             $this->dbConnect(); // conecta a la base de datos al instanciar
@@ -25,7 +29,7 @@ class InstallerModel extends Model
     public function install(): void
     {
         try {
-            $sqlFile = LOCAL_DIR . "/site/apps/installer/sql/tables.sql";
+            $sqlFile = LOCAL_DIR . "/Modules/Installer/sql/tables.sql";
 
             if (!file_exists($sqlFile)) {
                 throw new Exception("SQL installation file not found: $sqlFile");
@@ -38,9 +42,9 @@ class InstallerModel extends Model
 
             $query = str_replace("{dbname}", $this->configSettings->getDbname(), $query);
             $this->db->create($query);
-            $this->setInstalled("yes");
+            $this->configSettings->setInstalled("yes");
         } catch (Throwable $e) {
-            $this->setInstalled("no");
+            $this->configSettings->setInstalled("no");
             ErrorConsole::handleException(
                 new Exception("Installation failed: " . $e->getMessage(), 0, $e)
             );

@@ -1,15 +1,15 @@
 RewriteEngine On
-RewriteBase /balerocms-src/
 
-# Ignorar si es archivo o carpeta real
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# Reescribe /module => index.php?app=module
-RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [QSA,L]
-
-# Reescribe /module/controller/path => index.php?app=module&sr=controller/path
-RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [QSA,L]
-
-# Sirve assets directo
+# 1) Si la URL empieza con assets/ y el archivo existe en public/assets, sirve el archivo directamente
+RewriteCond %{REQUEST_URI} ^/assets/
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+# 2) Si el archivo o carpeta existe en la raíz, no reescribir
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 3) Reglas para enrutar al index.php
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [QSA,L]
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [QSA,L]
