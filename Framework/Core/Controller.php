@@ -10,11 +10,28 @@ class Controller
 {
     protected View $view;
     protected RequestHelper $request;
+    protected ConfigSettings $configSettings;
 
-    public function __construct(RequestHelper $request, View $view)
+    public function __construct(RequestHelper $request, View $view, ConfigSettings $configSettings)
     {
         $this->request = $request;
         $this->view = $view;
+        $this->configSettings = $configSettings;
+
+        // Carga configuración y realiza inicializaciones comunes
+        $this->configSettings->LoadSettings();
+        $this->initBasePath();
+        $this->init();
+    }
+
+    /**
+     * Inicializa basepath si no está seteado.
+     */
+    private function initBasePath(): void
+    {
+        if (empty($this->configSettings->getBasepath())) {
+            $this->configSettings->setBasepath($this->configSettings->getFullBasepath());
+        }
     }
 
     public function init(): void
@@ -22,7 +39,6 @@ class Controller
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $requestedSr = $this->request->get('sr') ?? '';
 
-        // Normalizar la ruta recibida: quitar barra inicial y final
         $requestedSr = trim($requestedSr, '/');
 
         $reflection = new \ReflectionClass($this);
@@ -39,7 +55,6 @@ class Controller
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    // Normalizar ruta declarada: quitar barras al inicio y final
                     $methodSr = trim($instance->sr, '/');
 
                     if ($methodSr === $requestedSr || ($methodSr === '' && $requestedSr === '')) {
@@ -52,7 +67,6 @@ class Controller
 
         ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedSr}'"));
     }
-
 
     private function runMethod(string $methodName): void
     {

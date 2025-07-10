@@ -22,7 +22,6 @@ class InstallerController extends Controller
 {
 
     protected InstallerModel $model;
-    protected ConfigSettings $configSettings;
 
     public function __construct(
         RequestHelper $request,
@@ -30,14 +29,8 @@ class InstallerController extends Controller
         InstallerModel $model,
         ConfigSettings $configSettings
     ) {
-        parent::__construct($request, $view);
-
-        $this->model = $model;
-        $this->configSettings = $configSettings;
-
-        $this->configSettings->LoadSettings();
-        $this->initBasePath();
-        $this->init();
+        $this->model = $model; // Asignar primero para que esté listo en tódo momento
+        parent::__construct($request, $view, $configSettings);
     }
 
     private function initBasePath(): void
