@@ -33,13 +33,6 @@ class InstallerController extends Controller
         parent::__construct($request, $view, $configSettings);
     }
 
-    private function initBasePath(): void
-    {
-        if (empty($this->configSettings->getBasepath())) {
-            $this->configSettings->setBasepath($this->configSettings->getFullBasepath());
-        }
-    }
-
     #[Get('/')]
     public function home()
     {
