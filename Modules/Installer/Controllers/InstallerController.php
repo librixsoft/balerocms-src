@@ -20,8 +20,7 @@ use Framework\Http\Post;
 
 class InstallerController extends Controller
 {
-    protected View $view;
-    protected RequestHelper $request;
+
     protected InstallerModel $model;
     protected ConfigSettings $configSettings;
 
@@ -31,6 +30,7 @@ class InstallerController extends Controller
         InstallerModel $model,
         ConfigSettings $configSettings
     ) {
+        parent::__construct($request, $view);
         $this->request = $request;
         $this->view = $view;
         $this->model = $model;

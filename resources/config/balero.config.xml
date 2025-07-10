@@ -14,12 +14,10 @@
 		<!-- admin god -->
 		<username>admin</username>
 		<!-- pwd encrypt -->
-		<passwd>$2a$07$RG4kMS3uTIQRmWk1KhuaFOI0vz10LxmP3bKGjDMemw6SI6jEa1vpu</passwd>
+		<passwd>$2a$07$E07QnyJH2loQVwJ2Siki3OJcpyuAoGom/U24nFy7pF6spjjrLmwVK</passwd>
 		<!-- admin data -->
 		<firstname>Balero</firstname>
 		<lastname>CMS</lastname>
-		<!-- newsletter -->
-		<newsletter>yes</newsletter>
 		<email>hola@librixsoft.com</email>
 	</admin>
 	<system>
