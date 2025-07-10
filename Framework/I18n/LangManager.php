@@ -9,18 +9,32 @@ class LangManager
 
     public static function load(string $lang, string $path): void
     {
-        $file = rtrim($path, '/') . "/$lang.php";
+        self::$translations = [];
+        self::$currentLang = $lang;
+        $dir = rtrim($path, '/') . "/$lang";
 
-        if (file_exists($file)) {
-            self::$translations = require $file;
-            self::$currentLang = $lang;
-        } else {
-            self::$translations = []; // fallback vacío
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        foreach (glob("$dir/*.php") as $file) {
+            $filename = basename($file, '.php');
+            $translations = require $file;
+            if (is_array($translations)) {
+                self::$translations[$filename] = $translations;
+            }
         }
     }
 
     public static function get(string $key, string $default = ''): string
     {
+        $parts = explode('.', $key, 2);
+
+        if (count($parts) === 2) {
+            [$fileKey, $nestedKey] = $parts;
+            return self::$translations[$fileKey][$nestedKey] ?? $default;
+        }
+
         return self::$translations[$key] ?? $default;
     }
 

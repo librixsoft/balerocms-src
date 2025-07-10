@@ -54,7 +54,7 @@ class InstallerController extends Controller
         try {
             $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
             $params += LangSelector::getParams();
-            return $this->view->render("setup_wizard.html", $params);
+            return $this->view->render("installer/setup_wizard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -91,7 +91,7 @@ class InstallerController extends Controller
         $params += LangSelector::getParams();
         $params = InstallerViewModel::getSetupWizardParams($this->configSettings, $params);
 
-        return $this->view->render("setup_wizard.html", $params);
+        return $this->view->render("installer/setup_wizard.html", $params);
     }
 
 
@@ -105,7 +105,7 @@ class InstallerController extends Controller
         }
 
         $params = InstallerViewModel::getDefaultParams($this->configSettings);
-        return $this->view->render("progressBar.html", $params);
+        return $this->view->render("installer/progressBar.html", $params);
     }
 
 }

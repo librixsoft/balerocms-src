@@ -35,13 +35,12 @@ class Router
 
     public function init(): void
     {
-
-        // Aquí cargamos helpers
+        // Cargar helpers
         require_once LOCAL_DIR . '/Framework/I18n/lang_helper.php';
 
-        // Detectar idioma y cargar traducciones
+        // Detectar idioma y validar
         $lang = $_GET['lang'] ?? $_SESSION['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
-        $supported = ['en', 'es'];
+        $supported = ['en', 'es']; // Agrega más si es necesario
 
         if (!in_array($lang, $supported)) {
             $lang = 'en';
@@ -49,8 +48,10 @@ class Router
 
         $_SESSION['lang'] = $lang;
 
+        // ✅ Nuevo esquema: cargamos múltiples archivos desde carpeta
         LangManager::load($lang, LOCAL_DIR . '/resources/lang');
 
+        // Resolver aplicación
         $app = $this->request->get('app');
 
         if (!$app) {

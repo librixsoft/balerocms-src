@@ -74,6 +74,21 @@ class TemplateEngine
             $content
         );
 
+        // Reemplazo de {installer.welcome}, {auth.login}, etc.
+        $content = preg_replace_callback(
+            '/\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\}/',
+            function ($matches) use ($flatParams) {
+                $fullKey = $matches[1] . '.' . $matches[2];
+
+                if (array_key_exists($fullKey, $flatParams)) {
+                    return $flatParams[$fullKey];
+                }
+
+                return LangManager::get($fullKey, $matches[0]);
+            },
+            $content
+        );
+
         return $content;
     }
 
