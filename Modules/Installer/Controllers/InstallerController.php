@@ -31,8 +31,7 @@ class InstallerController extends Controller
         ConfigSettings $configSettings
     ) {
         parent::__construct($request, $view);
-        $this->request = $request;
-        $this->view = $view;
+
         $this->model = $model;
         $this->configSettings = $configSettings;
 
