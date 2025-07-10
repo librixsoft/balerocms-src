@@ -1,15 +1,16 @@
 RewriteEngine On
 
-# 1) Si la URL empieza con assets/ y el archivo existe en public/assets, sirve el archivo directamente
-RewriteCond %{REQUEST_URI} ^/assets/
-RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f
+# 1) Redirigir /assets/... → /public/assets/... (relativo, sin carpeta fija)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/public/assets/$1 -f
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]
 
-# 2) Si el archivo o carpeta existe en la raíz, no reescribir
+# 2) No reescribir si archivo o carpeta real
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# 3) Reglas para enrutar al index.php
+# 3) Rutas limpias: /app y /app/route
 RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [QSA,L]
 RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [QSA,L]
