@@ -70,10 +70,17 @@
 
 <main>
 
-  <!-- @foreach virtual_pages as page -->
-  <h2>{page.virtual_title}</h2>
-  <p>{page.virtual_content}</p>
-  <!-- @endforeach -->
+  <h1>{page.virtual_title}</h1>
+  <p><em>{page.date}</em></p>
+
+  <!-- @if page.virtual_content -->
+  <div class="vp-content">
+    {page.virtual_content}
+  </div>
+  <!-- @else -->
+  <p>No hay contenido disponible.</p>
+  <!-- @endif -->
+
 
 </main>
 

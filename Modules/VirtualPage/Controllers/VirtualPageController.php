@@ -45,4 +45,32 @@ class VirtualPageController extends Controller
         }
     }
 
+    #[Get('/welcome')]
+    public function show()
+    {
+        try {
+            $page = $this->model->getVirtualPageBySlug('welcome');
+
+            if (empty($page)) {
+                throw new Exception("Página no encontrada");
+            }
+
+            $params = [
+                'page' => $page
+            ];
+
+            return $this->view->render("layouts/detail.html", $params);
+
+        } catch (Exception $e) {
+            ErrorConsole::handleException($e);
+
+            $params = [
+                'error_message' => "La página solicitada no existe."
+            ];
+
+            return $this->view->render("layouts/detail.html", $params);
+        }
+    }
+
+
 }

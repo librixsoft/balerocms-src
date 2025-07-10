@@ -48,14 +48,37 @@ class MySQL
         }
     }
 
-    public function query(string $query): void
+    public function query(string $query, array $params = []): void
     {
         try {
-            $res = $this->conn->query($query);
-            if ($res === false) {
-                throw new Exception("SQL syntax error in query: " . $query);
+            if (empty($params)) {
+                // Consulta simple sin parámetros
+                $res = $this->conn->query($query);
+                if ($res === false) {
+                    throw new Exception("SQL syntax error in query: " . $query);
+                }
+                $this->result = $res;
+            } else {
+                // Consulta preparada con parámetros
+                $stmt = $this->conn->prepare($query);
+                if (!$stmt) {
+                    throw new Exception("Failed to prepare statement: " . $this->conn->error);
+                }
+
+                // Asumimos que todos los parámetros son strings para simplificar, puedes mejorarlo
+                $types = str_repeat('s', count($params));
+
+                // Bind de parámetros, usando referencias
+                $stmt->bind_param($types, ...$params);
+
+                if (!$stmt->execute()) {
+                    throw new Exception("Failed to execute statement: " . $stmt->error);
+                }
+
+                $this->result = $stmt->get_result();
+
+                $stmt->close();
             }
-            $this->result = $res;
         } catch (Throwable $e) {
             ErrorConsole::handleException($e);
         }
@@ -72,10 +95,15 @@ class MySQL
             while ($row = $this->result->fetch_array(MYSQLI_ASSOC)) {
                 $this->rows[] = $row;
             }
+
+            // Agrega esta línea para llenar $row
+            $this->row = $this->rows[0] ?? null;
+
         } catch (Throwable $e) {
             ErrorConsole::handleException(new Exception("Error while fetching query result: " . $e->getMessage(), 0, $e));
         }
     }
+
 
     public function num_rows(): int
     {

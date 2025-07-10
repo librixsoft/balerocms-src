@@ -32,7 +32,17 @@ class VirtualPageModel extends Model
             $sql = "SELECT * FROM virtual_page WHERE active = 1 AND visible = 1 ORDER BY id ASC";
             $this->db->query($sql);
             $this->db->get();
-            return $this->db->getRows() ?? [];
+
+            $rows = $this->db->getRows() ?? [];
+
+            // Generar URL estática para cada página virtual
+            foreach ($rows as &$row) {
+
+                $slug = $this->slugify($row['static_url']);
+                $row['url'] = "{$slug}";
+            }
+
+            return $rows;
         } catch (Throwable $e) {
             ErrorConsole::handleException(
                 new Exception("Error al obtener páginas virtuales: " . $e->getMessage(), 0, $e)
@@ -41,5 +51,40 @@ class VirtualPageModel extends Model
         }
     }
 
+    public function getVirtualPageBySlug(string $slug): array
+    {
+        try {
+            $sql = "SELECT * FROM virtual_page WHERE static_url = ? AND active = 1 AND visible = 1 LIMIT 1";
+            $params = [$slug];
+            $this->db->query($sql, $params);
+            $this->db->get();
+
+            return $this->db->getRow() ?? [];
+
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al obtener página virtual por slug: " . $e->getMessage(), 0, $e)
+            );
+            return [];
+        }
+    }
+
+
+
+    /**
+     * Genera un slug amigable para URLs basado en el título (opcional)
+     */
+    private function slugify(string $text): string
+    {
+        // Pasos básicos para crear un slug
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text); // Reemplaza espacios y no letras por guion
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text); // Transliterar caracteres
+        $text = preg_replace('~[^-\w]+~', '', $text); // Eliminar caracteres no deseados
+        $text = trim($text, '-');
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtolower($text);
+
+        return $text ?: 'page';
+    }
 
 }
