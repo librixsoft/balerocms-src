@@ -1,31 +1,72 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Installing...</title>
-        <link rel="shortcut icon" href="{basepath}favicon.ico">
-        <script type="text/javascript" src="{basepath}public/assets/installer/js/jquery.js"></script>
-        <script type="text/javascript" src="{basepath}public/assets/installer/js/progressbar.js"></script>
-        <link rel="stylesheet" type="text/css" href="{basepath}public/assets/installer/skins/tiny-blue/progressbar.css">
+    <meta charset="UTF-8">
+    <title>Installing...</title>
+    <link rel="shortcut icon" href="{basepath}favicon.ico">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f0f4fb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+
+        .cloud {
+            width: 220px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .progress-container {
+            width: 260px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #007BFF;
+            animation: load 5s linear forwards;
+        }
+
+        @keyframes load {
+            to {
+                width: 100%;
+            }
+        }
+
+        .message {
+            color: #444;
+            font-size: 1.2rem;
+        }
+    </style>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = "../index.php";
+        }, 5000);
+    </script>
 </head>
 <body>
 
-<div class="cloud">
+<img src="{basepath}public/assets/installer/images/cloud.png" alt="Cloud" class="cloud">
+
+<div class="progress-container">
+    <div class="progress-bar"></div>
 </div>
-<div id="progressBar" class="tiny-blue">
-	<div></div>
-</div>
-<div class="message">
-	Mounting System...
-</div>
-        <script>
-                progressBar(100, $('#progressBar'));
-        </script>
-   <script type="text/javascript">
-                   var pagina = "../index.php";
-                   function redireccionar() {
-                           location.href=pagina;
-                   }
-                   setTimeout ("redireccionar()", 5000);
-   </script>
+
+<div class="message">Mounting system...</div>
+
 </body>
 </html>
