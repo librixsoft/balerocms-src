@@ -94,20 +94,6 @@ class InstallerController extends Controller
         return $this->view->render("installer/setup_wizard.html", $params);
     }
 
-
-    #[Get('progressBar')]
-    public function view()
-    {
-        try {
-            $this->model->install();
-        } catch (Exception $e) {
-            ErrorConsole::handleException($e);
-        }
-
-        $params = InstallerViewModel::getDefaultParams($this->configSettings);
-        return $this->view->render("installer/progressBar.html", $params);
-    }
-
     #[Post('progressBar')]
     public function progressBar()
     {
