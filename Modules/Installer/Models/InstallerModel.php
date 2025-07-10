@@ -11,11 +11,8 @@ use Throwable;
 class InstallerModel extends Model
 {
 
-    protected ConfigSettings $configSettings;
-
     public function __construct(ConfigSettings $configSettings)
     {
-        $this->configSettings = $configSettings;
         try {
             parent::__construct($configSettings);
             $this->dbConnect(); // conecta a la base de datos al instanciar
