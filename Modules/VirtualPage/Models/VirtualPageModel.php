@@ -59,6 +59,9 @@ class VirtualPageModel extends Model
             $this->db->query($sql, $params);
             $this->db->get();
 
+            // Debug: loguea las filas obtenidas
+            error_log("Rows obtenidas en getVirtualPageBySlug para slug '{$slug}': " . print_r($this->db->getRows(), true));
+
             return $this->db->getRow() ?? [];
 
         } catch (Throwable $e) {
@@ -68,6 +71,7 @@ class VirtualPageModel extends Model
             return [];
         }
     }
+
 
 
 

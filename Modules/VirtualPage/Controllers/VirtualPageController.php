@@ -45,11 +45,11 @@ class VirtualPageController extends Controller
         }
     }
 
-    #[Get('/welcome')]
-    public function show()
+    #[Get('/{slug}')]
+    public function show(string $slug)
     {
         try {
-            $page = $this->model->getVirtualPageBySlug('welcome');
+            $page = $this->model->getVirtualPageBySlug($slug);
 
             if (empty($page)) {
                 throw new Exception("Página no encontrada");

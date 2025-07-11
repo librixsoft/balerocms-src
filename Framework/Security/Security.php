@@ -7,7 +7,7 @@ class Security {
 	private string $var;
 
     /**
-     * Anti-XSS Method
+     * Anti-XSS Method for tech rich editor
      * @param $val Input String
      * @param int $rich Is Rich Text?
      * @return Proccesed String
@@ -54,6 +54,12 @@ class Security {
                 }
             }
         }
+        return $val;
+    }
+
+    public function sanitizeUrlSlug(string $val): string {
+        $val = preg_replace('/[^a-z0-9-_]/', '', $val);
+        $val = htmlspecialchars($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         return $val;
     }
 

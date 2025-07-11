@@ -38,7 +38,6 @@ class Controller
     {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $requestedSr = $this->request->get('sr') ?? '';
-
         $requestedSr = trim($requestedSr, '/');
 
         $reflection = new \ReflectionClass($this);
@@ -55,10 +54,17 @@ class Controller
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    $methodSr = trim($instance->sr, '/');
+                    $routePattern = trim($instance->sr, '/');
 
-                    if ($methodSr === $requestedSr || ($methodSr === '' && $requestedSr === '')) {
-                        $this->runMethod($method->getName());
+                    // Soporta rutas dinámicas: /pagina/{slug}
+                    $regex = preg_replace('#\{([^}]+)\}#', '(?P<$1>[^/]+)', $routePattern);
+                    $regex = '#^' . $regex . '$#';
+
+                    if (preg_match($regex, $requestedSr, $matches)) {
+                        // Filtrar solo claves con nombre (no índices numéricos)
+                        $params = array_filter($matches, fn($key) => !is_int($key), ARRAY_FILTER_USE_KEY);
+
+                        $this->runMethod($method->getName(), $params);
                         return;
                     }
                 }
@@ -68,9 +74,9 @@ class Controller
         ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedSr}'"));
     }
 
-    private function runMethod(string $methodName): void
+    private function runMethod(string $methodName, array $params = []): void
     {
-        $result = $this->{$methodName}();
+        $result = $this->{$methodName}(...$params);
 
         if (is_string($result)) {
             echo $result;
@@ -82,4 +88,6 @@ class Controller
             exit;
         }
     }
+
+
 }

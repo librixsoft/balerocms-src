@@ -25,5 +25,5 @@ CREATE TABLE IF NOT EXISTS `virtual_page` (
 
 INSERT INTO `virtual_page` (`id`, `virtual_title`, `static_url`, `virtual_content`, `date`, `active`, `visible`)
 VALUES
-(1, 'Welcome Title', 'welcome', 'Welcome content ...', '2025-07-04', 1, 1);
+(1, 'Welcome Title', 'welcome-title', 'Welcome content ...', '2025-07-04', 1, 1);
 

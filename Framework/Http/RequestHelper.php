@@ -38,7 +38,9 @@ class RequestHelper
         if (is_string($value)) {
             $value = trim($value);
             if ($this->security && method_exists($this->security, 'antiXSS')) {
-                return $this->security->antiXSS($value);
+                //return $this->security->sanitizeUrlSlug($value);
+                // TODO: Agregar sanitizer
+                return $value;
             }
             return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
         }
