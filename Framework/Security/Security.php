@@ -58,7 +58,6 @@ class Security {
     }
 
     public function sanitizeUrlSlug(string $val): string {
-        $val = preg_replace('/[^a-z0-9-_]/', '', $val);
         $val = htmlspecialchars($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         return $val;
     }
