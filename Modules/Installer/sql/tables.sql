@@ -27,3 +27,7 @@ INSERT INTO `page` (`id`, `virtual_title`, `static_url`, `virtual_content`, `dat
 VALUES
 (1, 'Welcome Title', 'welcome-title', 'Welcome content ...', '2025-07-04', 1, 1);
 
+INSERT INTO `page` (`id`, `virtual_title`, `static_url`, `virtual_content`, `date`, `active`, `visible`)
+VALUES
+(2, 'Another Example', 'another-example-page-demo', 'Hello there ...', '2025-07-04', 1, 1);
+
