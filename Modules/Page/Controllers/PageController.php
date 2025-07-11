@@ -33,8 +33,9 @@ class PageController extends Controller
 
             $params = [
                 'virtual_pages' => $this->model->getVirtualPages(),
-                'title' => 'Páginas virtuales'
             ];
+
+            $params += PageViewModel::getDefaultParams($this->configSettings);
 
             return $this->view->render("layouts/main.html", $params);
 
@@ -58,6 +59,8 @@ class PageController extends Controller
                 'virtual_pages' => $this->model->getVirtualPages(),
                 'page' => $page
             ];
+
+            $params += PageViewModel::getDefaultParams($this->configSettings);
 
             return $this->view->render("layouts/detail.html", $params);
 

@@ -10,7 +10,6 @@ class InstallerViewModel
     {
         return [
             'title' => $config->getTitle(),
-            'page' => defined('_PAGE') ? _PAGE : '',
             'keywords' => $config->getKeywords(),
             'description' => $config->getDescription(),
             'basepath' => $config->getBasepath(),

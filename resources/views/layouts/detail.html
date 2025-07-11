@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title} - {page}</title>
+  <title>{title} - {page.virtual_title}</title>
   <meta name="description" content="{description}" />
   <meta name="keywords" content="{keywords}" />
   <link rel="stylesheet" href="{basepath}/assets/css/style.css" />
@@ -62,7 +62,7 @@
   <nav>
     <!-- @foreach virtual_pages as page -->
     <ul>
-      <a href="page/{page.url}">{page.virtual_title}</a><br>
+      <a href="{page.url}">{page.virtual_title}</a><br>
     </ul>
     <!-- @endforeach -->
   </nav>
