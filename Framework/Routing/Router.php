@@ -60,7 +60,6 @@ class Router
         }
 
         match ($app) {
-            'admin'  => $this->handleAdmin(),
             'logout' => LoginManager::logout(),
             default  => $this->initApp(ucfirst($app)),
         };
