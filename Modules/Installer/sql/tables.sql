@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `custom_settings` (
 INSERT INTO `custom_settings` (`id`, `theme`, `url_friendly`, `pagination`) VALUES
 (1, 'tundra', 1, 5);
 
-CREATE TABLE IF NOT EXISTS `virtual_page` (
+CREATE TABLE IF NOT EXISTS `page` (
     `id` int(10) NOT NULL AUTO_INCREMENT,
     `virtual_title` varchar(250) CHARACTER SET latin1 NOT NULL,
     `static_url` varchar(255) CHARACTER SET latin1 NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `virtual_page` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
 
-INSERT INTO `virtual_page` (`id`, `virtual_title`, `static_url`, `virtual_content`, `date`, `active`, `visible`)
+INSERT INTO `page` (`id`, `virtual_title`, `static_url`, `virtual_content`, `date`, `active`, `visible`)
 VALUES
 (1, 'Welcome Title', 'welcome-title', 'Welcome content ...', '2025-07-04', 1, 1);
 

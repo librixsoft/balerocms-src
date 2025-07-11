@@ -62,7 +62,7 @@
   <nav>
     <!-- @foreach virtual_pages as page -->
     <ul>
-      <a href="index.php?app=virtualPage&sr={page.url}">{page.virtual_title}</a><br>
+      <a href="page/{page.url}">{page.virtual_title}</a><br>
     </ul>
     <!-- @endforeach -->
   </nav>
@@ -71,7 +71,6 @@
 <main>
 
   <h1>{page.virtual_title}</h1>
-  <p><em>{page.date}</em></p>
 
   <!-- @if page.virtual_content -->
   <div class="vp-content">

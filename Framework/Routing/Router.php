@@ -55,7 +55,7 @@ class Router
         $app = $this->request->get('app');
 
         if (!$app) {
-            Boot::safeResolve('Modules\\VirtualPage\\Controllers\\VirtualPageController');
+            Boot::safeResolve('Modules\\Page\\Controllers\\PageController');
             exit;
         }
 
