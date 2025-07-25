@@ -7,25 +7,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
-<script src="site/apps/admin/panel/bootstrap/js/html5shiv.js"></script>
+<script src="public/assets/js/html5shiv.js"></script>
 <![endif]-->
 <!-- bootstrap -->
-<link href="site/apps/admin/panel/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="site/apps/admin/panel/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-<link href="site/apps/admin/panel/assets/styles.css" rel="stylesheet" media="screen">
+<link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="public/assets/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<link href="public/assets/css/styles.css" rel="stylesheet" media="screen">
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
-<script src="site/apps/admin/panel/js/html5.js"></script>
+<script src="public/assets/js/html5.js"></script>
 <![endif]-->
-<script src="site/apps/admin/panel/vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script src="public/assets/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico">
 <!-- add library -->
-<script src="site/apps/admin/panel/js/jquery-1.9.1.min.js"></script>
-<script src="site/apps/admin/panel/bootstrap/js/bootstrap.min.js"></script>
-<link href="site/apps/admin/panel/vendors/summernote/font-awesome.css" rel="stylesheet">
+<script src="public/assets/js/jquery-1.9.1.min.js"></script>
+<script src="public/assets/js/bootstrap.min.js"></script>
+<link href="public/assets/css/font-awesome.css" rel="stylesheet">
 <!-- add summernote -->
-<link href="site/apps/admin/panel/vendors/summernote/summernote.css" rel="stylesheet">
-<script src="site/apps/admin/panel/vendors/summernote/summernote.js"></script>
+<link href="public/assets/css/summernote.css" rel="stylesheet">
+<script src="public/assets/js/summernote.js"></script>
 </head>
     <body>
         <div class="navbar navbar-fixed-top">
@@ -48,7 +48,7 @@
                                 </ul>
                             </li>
                         </ul>
-                        <ul class="nav">               
+                        <ul class="nav">
                             <li>
                                 <a href="./admin">Dashboard</a>
                             </li>
@@ -71,55 +71,106 @@
             <div class="row-fluid">
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li>
+                        <li class="active">
                             <a href="./admin"><i class="icon-chevron-right"></i> Dashboard</a>
                         </li>
-                        {mod_menu}
+                        <li>
+                            <a href="./admin/main/mod-{entry}"><i class="icon-chevron-right"></i> <span class="badge badge-important pull-right">0</span>Pages</a>
+                        </li>
                     </ul>
                 </div>
                 <!--/span-->
                 <div class="span9" id="content">
+
                     <div class="row-fluid">
-                        	<div class="navbar">                        	
-                            	<div class="navbar-inner">                            	
-	                                <ul class="breadcrumb">
-	                                    <i class="icon-chevron-left hide-sidebar"><a href='./admin#' title="Hide Sidebar" rel='tooltip'></a></i>
-	                                    <i class="icon-chevron-right show-sidebar" style="display:none;"><a href='./admin#' title="Show Sidebar" rel='tooltip'></a></i>
-	                                    <li>
-	                                        <a href="./admin">Dashboard</a> <span class="divider">/</span>	
-	                                    </li>
-	                                    <li class="active">{mod_name}</li>
-	                                </ul>
-                            	</div>
-                        	</div>
-                    	</div>
-                    <div class="row-fluid">
-                    {content}     
+
+                        <!-- dashboard dinamic content -->
+                        <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">
+                                    <ul class="breadcrumb">
+                                        <i class="icon-chevron-left hide-sidebar"><a href='./admin#' title="Hide Sidebar" rel='tooltip'></a></i>
+                                        <i class="icon-chevron-right show-sidebar" style="display:none;"><a href='./admin#' title="Show Sidebar" rel='tooltip'></a></i>
+                                        <li>
+                                            <a href="./admin">Dashboard</a> <span class="divider">/</span>
+                                        </li>
+                                        <li class="active">{mod_name}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="row-fluid padd-bottom">
+                                    <!--  content -->
+                                    <div class="span12">
+                                        <form class="form-horizontal" method="POST" action="./admin">
+                                            <fieldset>
+                                                <legend>{lbl_settings}</legend>
+                                                <div class="control-group">
+                                                    <label class="control-label" for="select01">Core</label>
+                                                    <div class="controls">
+                                                        <input type="text" name="core" value="{core_version}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label" for="theme">{lbl_theme}</label>
+                                                    <div class="controls">
+                                                        <select class="span6" id="theme" name="theme">
+                                                            <option value="default" {selected_default}>Default</option>
+                                                            <option value="dark" {selected_dark}>Dark</option>
+                                                            <option value="light" {selected_light}>Light</option>
+                                                            <option value="modern" {selected_modern}>Modern</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label" for="select01">{lbl_title}</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="span6" id="typeahead"  data-provide="typeahead" value="{txt_title}" name="title">
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label" for="multiSelect">{lbl_keywords}</label>
+                                                    <div class="controls">
+                                                        <!--
+                                                          <select multiple="multiple" id="multiSelect" class="chzn-select span4" name="keywords">
+                                                            <option>Blog</option><option>Software</option><option>Tech</option><option>Social</option><option>Media</option><option>Video</option><option>Hacking</option><option>News</option><option>E-Commerce</option><option>Development</option><option>Portal</option><option>Services</option><option>Programming</option><option>Books</option><option>Articles</option><option>Magazine</option><option>Web</option><option>Solutions</option><option>Other</option>
+                                                          </select>
+                                                        -->
+                                                        <input type="text" class="span6" value="{txt_keywords}" name="keywords">
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label" for="textarea2">{lbl_description}</label>
+                                                    <div class="controls">
+                                                        <textarea class="input-xlarge" placeholder="{lbl_insert}" style="width: 710px; height: 200px" name="description">{txt_description}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-actions">
+                                                    <input type="submit" class="btn btn-primary" value="Save changes" name="submit">
+                                                    <input type="reset" class="btn" value="Cancel" name="cancel">
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                    <!--  /content -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                        <!-- end dashboard dinamic content --->
+
                     </div>
                 </div>
             </div>
             <hr>
             <footer>
-                <p>Powered by <a href="http://www.balerocms.com/">Balero CMS</a>.</p>
+                <p>Powered by <a href="#">Balero CMS</a>.</p>
             </footer>
         </div>
         <!--/.fluid-container-->
 
-        <link href="site/apps/admin/panel/vendors/datepicker.css" rel="stylesheet" media="screen">
-        <link href="site/apps/admin/panel/vendors/uniform.default.css" rel="stylesheet" media="screen">
-        <link href="site/apps/admin/panel/vendors/chosen.min.css" rel="stylesheet" media="screen">
-        <link href="site/apps/admin/panel/vendors/wysiwyg/bootstrap-wysihtml5.css" rel="stylesheet" media="screen">
-
-        <script src="site/apps/admin/panel/vendors/jquery.uniform.min.js"></script>
-        <script src="site/apps/admin/panel/vendors/chosen.jquery.min.js"></script>
-        <script src="site/apps/admin/panel/vendors/bootstrap-datepicker.js"></script>
-
-        <script src="site/apps/admin/panel/vendors/wysiwyg/wysihtml5-0.3.0.js"></script>
-        <script src="site/apps/admin/panel/vendors/wysiwyg/bootstrap-wysihtml5.js"></script>
-
-        <script src="site/apps/admin/panel/vendors/wizard/jquery.bootstrap.wizard.min.js"></script>
-
-        <script src="site/apps/admin/panel/assets/scripts.js"></script>
+        <script src="public/assets/js/scripts.js"></script>
 
         <script>
         $(function() {

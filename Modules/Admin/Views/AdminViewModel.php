@@ -10,22 +10,19 @@ class AdminViewModel
     public static function getDefaultParams(ConfigSettings $config): array
     {
         return [
-            'title' => $config->getTitle(),
-            'keywords' => $config->getKeywords(),
-            'description' => $config->getDescription(),
-            'basepath' => $config->getBasepath(),
 
-            // Etiquetas
-            'lbl_virtual_pages' => 'Virtual Pages',
-            'lbl_home' => 'Home',
-            'lbl_no_pages' => 'No virtual pages available.',
+            'core_version' => _CORE_VERSION,
+            'lbl_theme' => "Theme",
 
-            // Valores configurables
+            'lbl_settings' => __('admin.settings'),
+            'lbl_title' => 'Title',
+            'lbl_keywords' => 'Keywords',
+            'lbl_description' => 'Description',
+
             'txt_title' => $config->getTitle(),
             'txt_keywords' => $config->getKeywords(),
             'txt_description' => $config->getDescription(),
 
-            // Botones o textos varios
             'btn_refresh' => 'Refresh',
         ];
     }

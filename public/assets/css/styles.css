@@ -96,10 +96,11 @@ body {
 }
 
 .block {
-	border: 1px solid #ccc;
-	background: white;
-	margin: 1em 0em;
-	border-top: none;
+    border: 1px solid #ccc;
+    background: white;
+    margin-top: 0;
+    margin-bottom: 1em;
+    border-top: none;
 }
 
 .block-content {
@@ -260,3 +261,6 @@ footer {
 }
 
 /** fin de pag-bar **/
+
+
+
