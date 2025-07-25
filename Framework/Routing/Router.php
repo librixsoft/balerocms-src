@@ -16,6 +16,12 @@ use Framework\I18n\LangManager;
 
 class Router
 {
+
+    /**
+     * Load default app controller
+     */
+    private const DEFAULT_APP = 'Page';
+
     private Security $security;
     private RequestHelper $request;
     private ConfigSettings $configSettings;
@@ -51,13 +57,12 @@ class Router
         // ✅ Nuevo esquema: cargamos múltiples archivos desde carpeta
         LangManager::load($lang, LOCAL_DIR . '/resources/lang');
 
-        // Resolver aplicación
+        // Resolver application
         $app = $this->request->get('app');
 
         // Default app load, before swtich case
         if (!$app) {
-            // TODO: Just reutilize call init app "page controller"
-            Boot::safeResolve('Modules\\Page\\Controllers\\PageController');
+            $this->initApp(self::DEFAULT_APP);
             exit;
         }
 
@@ -66,18 +71,6 @@ class Router
             'logout' => LoginManager::logout(), // TODO: Move to admin controller login endpoint
             default  => $this->initApp(ucfirst($app)),
         };
-    }
-
-    // TODO: Move to admin controller login endpoint
-    private function handleAdmin(): void
-    {
-        $loginManager = new LoginManager($this->security);
-
-        if ($loginManager->handleLogin()) {
-            $this->initAdminModule();
-        } else {
-            $loginManager->showLoginForm();
-        }
     }
 
     private function initApp(string $appName): void
@@ -90,6 +83,18 @@ class Router
         }
 
         Boot::safeResolve($controllerClass);
+    }
+
+    // TODO: Move to admin controller login endpoint
+    private function handleAdmin(): void
+    {
+        $loginManager = new LoginManager($this->security);
+
+        if ($loginManager->handleLogin()) {
+            $this->initAdminModule();
+        } else {
+            $loginManager->showLoginForm();
+        }
     }
 
     // TODO: Move to admin controller login endpoint
