@@ -54,17 +54,21 @@ class Router
         // Resolver aplicación
         $app = $this->request->get('app');
 
+        // Default app load, before swtich case
         if (!$app) {
+            // TODO: Just reutilize call init app "page controller"
             Boot::safeResolve('Modules\\Page\\Controllers\\PageController');
             exit;
         }
 
+        // before swtich case
         match ($app) {
-            'logout' => LoginManager::logout(),
+            'logout' => LoginManager::logout(), // TODO: Move to admin controller login endpoint
             default  => $this->initApp(ucfirst($app)),
         };
     }
 
+    // TODO: Move to admin controller login endpoint
     private function handleAdmin(): void
     {
         $loginManager = new LoginManager($this->security);
@@ -88,6 +92,8 @@ class Router
         Boot::safeResolve($controllerClass);
     }
 
+    // TODO: Move to admin controller login endpoint
+    // TODO: Delete this method logic because  admin controlers modules will be integrated as admin controllers
     private function initAdminModule(): void
     {
         $mod = $this->request->get("mod");

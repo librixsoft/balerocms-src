@@ -10,6 +10,7 @@ use Framework\Core\ErrorConsole;
 use Modules\Admin\Models\AdminModel;
 use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
+use Framework\Http\Post;
 use Exception;
 
 class AdminController extends Controller
@@ -45,5 +46,37 @@ class AdminController extends Controller
         }
     }
 
+    #[Post('/')]
+    public function login()
+    {
+        // TODO: Admin login logic
+        $loggedIn = true;
+        if($loggedIn) {
+            header("Location: " . $this->configSettings->getBasepath() . "/admin/dashboard");
+        } else {
+            // TODO: Render login view with error login message
+        }
+    }
+
+
+    // TODO: It needs validate secure login when accesing protected endpoints
+    #[Get('/dashboard')]
+    public function dashboard()
+    {
+        try {
+
+            $params = [
+                //'virtual_pages' => $this->model->getVirtualPages(),
+            ];
+
+            $params += AdminViewModel::getDefaultParams($this->configSettings);
+
+            return $this->view->render("admin/dashboard.html", $params);
+
+        } catch (Exception $e) {
+            ErrorConsole::handleException($e);
+            return '';
+        }
+    }
 
 }
