@@ -35,7 +35,7 @@
                      <span class="icon-bar"></span>
                      <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="http://www.balerocms.com/"><img src="{basepath}site/apps/admin/panel/images/logo_top.png"></a>
+                    <a class="brand" href="http://www.balerocms.com/"><img src="public/assets/images/admin/logo_top.png"></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
@@ -103,7 +103,7 @@
                                 <div class="row-fluid padd-bottom">
                                     <!--  content -->
                                     <div class="span12">
-                                        <form class="form-horizontal" method="POST" action="./admin">
+                                        <form class="form-horizontal" method="POST" action="./admin/settings">
                                             <fieldset>
                                                 <legend>{lbl_settings}</legend>
                                                 <div class="control-group">
@@ -116,10 +116,13 @@
                                                     <label class="control-label" for="theme">{lbl_theme}</label>
                                                     <div class="controls">
                                                         <select class="span6" id="theme" name="theme">
-                                                            <option value="default" {selected_default}>Default</option>
-                                                            <option value="dark" {selected_dark}>Dark</option>
-                                                            <option value="light" {selected_light}>Light</option>
-                                                            <option value="modern" {selected_modern}>Modern</option>
+                                                            <!-- @foreach themes as t -->
+                                                            <!-- @if defaultTheme == t.value -->
+                                                            <option value="{t.value}" selected>{t.label}</option>
+                                                            <!-- @else -->
+                                                            <option value="{t.value}">{t.label}</option>
+                                                            <!-- @endif -->
+                                                            <!-- @endforeach -->
                                                         </select>
                                                     </div>
                                                 </div>

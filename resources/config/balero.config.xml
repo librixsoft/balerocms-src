@@ -35,6 +35,6 @@
 		<basepath>http://localhost/balerocms-src/</basepath>
 		<!-- multilanguage support -->
 		<multilang>no</multilang>
-		<editor>summernote</editor>
+		<theme>Dark</theme>
 	</site>
 </config>

@@ -58,8 +58,8 @@ class TemplateEngine
         return preg_replace_callback(
             '/<!--\s*@foreach\s+(\w+)\s+as\s+(\w+)\s*-->(.*?)<!--\s*@endforeach\s*-->/is',
             function ($matches) use ($params) {
-                $arrayKey = $matches[1];    // ej: 'virtual_pages'
-                $itemKey  = $matches[2];    // ej: 'page'
+                $arrayKey = $matches[1];    // ej: 'virtual_pages' o 'themes'
+                $itemKey  = $matches[2];    // ej: 'page' o 't'
                 $block    = $matches[3];    // contenido dentro del foreach
 
                 if (!isset($params[$arrayKey]) || !is_array($params[$arrayKey])) {
@@ -68,17 +68,28 @@ class TemplateEngine
 
                 $result = '';
                 foreach ($params[$arrayKey] as $item) {
-                    // Aplana el array del ítem con el prefijo del itemKey
                     $flatItem = $this->flattenParams([$itemKey => $item]);
 
-                    // Reemplazar {page.virtual_title}, etc.
                     $blockCopy = $block;
                     foreach ($flatItem as $k => $v) {
                         $safeValue = htmlspecialchars((string)$v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $blockCopy = str_replace('{' . $k . '}', $safeValue, $blockCopy);
                     }
+
+                    // FIX corregido con clave completa
+                    $blockCopy = preg_replace_callback(
+                        '/<!--\s*@if\s+defaultTheme\s*==\s*t\.value\s*-->/i',
+                        function() use ($flatItem, $itemKey) {
+                            $val = $flatItem[$itemKey . '.value'] ?? '';
+                            $val = htmlspecialchars($val, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            return "<!-- @if defaultTheme == '{$val}' -->";
+                        },
+                        $blockCopy
+                    );
+
                     $result .= $blockCopy;
                 }
+
 
                 return $result;
             },
@@ -86,23 +97,31 @@ class TemplateEngine
         );
     }
 
-    /**
-     * Procesa los bloques condicionales @if, @else, @endif
-     */
     private function processIfBlocks(string $content, array $flatParams): string
     {
-        // @if var == 'value' ... @else ... @endif
+        // @if var == var2 o var == 'string' ... @else ... @endif
         $content = preg_replace_callback(
-            '/<!--\s*@if\s+([\w\.]+)\s*==\s*[\'"]([^\'"]+)[\'"]\s*-->(.*?)'
+            '/<!--\s*@if\s+([\w\.]+)\s*==\s*([\'"]?)([\w\.]+)\2\s*-->(.*?)'
             . '(?:<!--\s*@else\s*-->(.*?))?<!--\s*@endif\s*-->/is',
             function ($matches) use ($flatParams) {
-                $var       = $matches[1] ?? null;
-                $expected  = $matches[2] ?? null;
-                $ifBlock   = $matches[3] ?? '';
-                $elseBlock = $matches[4] ?? '';
+                $var1 = $matches[1] ?? null;        // Ej: theme
+                $quote = $matches[2] ?? '';         // Comilla simple/doble o vacío
+                $var2orVal = $matches[3] ?? null;  // Ej: t.value o 'dark'
+                $ifBlock = $matches[4] ?? '';
+                $elseBlock = $matches[5] ?? '';
 
-                $actual = $flatParams[$var] ?? null;
-                return ($actual == $expected) ? $ifBlock : $elseBlock;
+                $val1 = $flatParams[$var1] ?? null;
+
+                if ($quote !== '') {
+                    // var2orVal es un string literal (entre comillas)
+                    $val2 = $var2orVal;
+                } else {
+                    // var2orVal es una variable (sin comillas), buscar su valor
+                    $val2 = $flatParams[$var2orVal] ?? null;
+                }
+
+                // Comparación insensible a mayúsculas/minúsculas
+                return (strcasecmp((string)$val1, (string)$val2) === 0) ? $ifBlock : $elseBlock;
             },
             $content
         );
@@ -141,6 +160,7 @@ class TemplateEngine
 
         return $content;
     }
+
 
     /**
      * Aplana un array multidimensional para claves como 'errors.username'

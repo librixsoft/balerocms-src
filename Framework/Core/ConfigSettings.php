@@ -31,6 +31,7 @@ class ConfigSettings
     private string $url;
     private string $keywords;
     private string $basepath;
+    private string $theme;
 
     // Options
     private string $multilang;
@@ -71,6 +72,7 @@ class ConfigSettings
             $this->description= $xml->Child("site", "description");
             $this->keywords   = $xml->Child("site", "keywords");
             $this->basepath   = $xml->Child("site", "basepath");
+            $this->theme   = $xml->Child("site", "theme");
             $this->multilang  = $xml->Child("site", "multilang");
             $this->editor     = $xml->Child("site", "editor");
 
@@ -145,6 +147,12 @@ class ConfigSettings
     public function setBasepath(string $value): void {
         $this->basepath = $value;
         $this->xml->editChild("/config/site/basepath", $value);
+    }
+
+    public function getTheme(): string { return $this->theme; }
+    public function setTheme(string $value): void {
+        $this->theme = $value;
+        $this->xml->editChild("/config/site/theme", $value);
     }
 
     public function getEditor(): string { return $this->editor; }
