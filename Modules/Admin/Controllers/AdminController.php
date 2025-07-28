@@ -92,18 +92,19 @@ class AdminController extends Controller
     {
         try {
             $this->configSettings->setTitle($this->request->post("title"));
-            $this->configSettings->setUrl($this->request->post("url"));
             $this->configSettings->setDescription($this->request->post("description"));
             $this->configSettings->setKeywords($this->request->post("keywords"));
             $this->configSettings->setTheme($this->request->post("theme"));
 
             $params = [
-                'theme' => $this->configSettings->getTheme(),
+                'virtual_pages' => $this->model->getVirtualPages(),
+                'defaultTheme' => $this->configSettings->getTheme(),
+                // TODO: Load templates from folder layouts or themes
                 'themes' => [
-                    ['value' => 'default', 'label' => 'Default'],
-                    ['value' => 'dark',    'label' => 'Dark'],
-                    ['value' => 'light',   'label' => 'Light'],
-                    ['value' => 'modern',  'label' => 'Modern'],
+                    ['value' => 'Default', 'label' => 'Default'],
+                    ['value' => 'Dark',    'label' => 'Dark'],
+                    ['value' => 'Light',   'label' => 'Light'],
+                    ['value' => 'Modern',  'label' => 'Modern'],
                 ],
             ];
 
