@@ -29,20 +29,7 @@ class PageController extends Controller
     #[Get('/')]
     public function home()
     {
-        try {
-
-            $params = [
-                'virtual_pages' => $this->model->getVirtualPages(),
-            ];
-
-            $params += PageViewModel::getDefaultParams($this->configSettings);
-
-            return $this->view->render("layouts/main.html", $params);
-
-        } catch (Exception $e) {
-            ErrorConsole::handleException($e);
-            return '';
-        }
+        return $this->render("layouts/main.html", PageViewModel::getHomeParams($this->model));
     }
 
     #[Get('/{staticUrl}')]
@@ -55,25 +42,12 @@ class PageController extends Controller
                 throw new Exception("Página no encontrada");
             }
 
-            $params = [
-                'virtual_pages' => $this->model->getVirtualPages(),
-                'page' => $page
-            ];
-
-            $params += PageViewModel::getDefaultParams($this->configSettings);
-
-            return $this->view->render("layouts/detail.html", $params);
+            return $this->render("layouts/detail.html", PageViewModel::getDetailParams($this->model, $page));
 
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
 
-            $params = [
-                'error_message' => "La página solicitada no existe."
-            ];
-
-            return $this->view->render("layouts/detail.html", $params);
+            return $this->render("layouts/detail.html", PageViewModel::getNotFoundParams());
         }
     }
-
-
 }

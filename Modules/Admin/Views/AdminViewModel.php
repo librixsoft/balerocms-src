@@ -3,17 +3,35 @@
 namespace Modules\Admin\Views;
 
 use Framework\Core\ConfigSettings;
+use Modules\Admin\Models\AdminModel;
 
 class AdminViewModel
 {
-
-    public static function getDefaultParams(ConfigSettings $config, $model): array
+    public static function getLoginParams(): array
     {
         return [
-
             'core_version' => _CORE_VERSION,
-            'lbl_theme' => "Theme",
+            'lbl_theme' => 'Theme',
+        ];
+    }
 
+    public static function getSettingsParams(ConfigSettings $config, AdminModel $model): array
+    {
+        return [
+            'virtual_pages' => $model->getVirtualPages(),
+            'defaultTheme' => $config->getTheme(),
+
+            'themes' => [
+                ['value' => 'Default', 'label' => 'Default'],
+                ['value' => 'Dark',    'label' => 'Dark'],
+                ['value' => 'Light',   'label' => 'Light'],
+                ['value' => 'Modern',  'label' => 'Modern'],
+            ],
+
+            'activeMenu' => 'settings',
+
+            // Etiquetas y campos específicos
+            'lbl_theme' => "Theme",
             'lbl_settings' => __('admin.settings'),
             'lbl_title' => 'Title',
             'lbl_keywords' => 'Keywords',
@@ -24,27 +42,13 @@ class AdminViewModel
             'txt_description' => $config->getDescription(),
 
             'btn_refresh' => 'Refresh',
-
-            'virtual_pages' => $model->getVirtualPages(),
-            'defaultTheme' => $config->getTheme(),
-            // TODO: Load templates from folder layouts or themes
-            'themes' => [
-                ['value' => 'Default', 'label' => 'Default'],
-                ['value' => 'Dark',    'label' => 'Dark'],
-                ['value' => 'Light',   'label' => 'Light'],
-                ['value' => 'Modern',  'label' => 'Modern'],
-            ],
-            'activeMenu' => 'settings',
-
         ];
     }
 
-    public static function getPagesParams(ConfigSettings $config, $model): array
+    public static function getPagesParams(): array
     {
         return [
-            // TODO: Add pages params
             'activeMenu' => 'pages',
         ];
     }
-
 }

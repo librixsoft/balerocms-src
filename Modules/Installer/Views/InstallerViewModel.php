@@ -9,12 +9,7 @@ class InstallerViewModel
     public static function getDefaultParams(ConfigSettings $config): array
     {
         return [
-            'title' => $config->getTitle(),
-            'keywords' => $config->getKeywords(),
-            'description' => $config->getDescription(),
-            'basepath' => $config->getBasepath(),
-
-            // etiquetas
+            // Etiquetas
             'lbl_dbconfig' => 'Database Configuration',
             'lbl_dbhost' => 'Database Host',
             'lbl_dbusername' => 'Database User',
@@ -36,16 +31,13 @@ class InstallerViewModel
             'lbl_lastname' => 'Last Name',
             'lbl_email' => 'Email Address',
 
-            // valores
+            // Valores configurables (solo lo que no está ya en el controlador base)
             'txt_dbhost' => $config->getDbhost(),
             'txt_dbuser' => $config->getDbuser(),
             'txt_dbpass' => $config->getDbpass(),
             'txt_dbname' => $config->getDbname(),
             'txt_basepath' => $config->getBasepath(),
-            'txt_title' => $config->getTitle(),
             'txt_url' => $config->getUrl(),
-            'txt_keywords' => $config->getKeywords(),
-            'txt_description' => $config->getDescription(),
             'username' => $config->getUsername(),
             'txt_pass' => '',
             'txt_retype' => '',
@@ -53,6 +45,7 @@ class InstallerViewModel
             'txt_lastname' => $config->getLastname(),
             'txt_email' => $config->getEmail(),
 
+            // Botones
             'btn_save' => "Guardar",
         ];
     }
@@ -60,9 +53,11 @@ class InstallerViewModel
     public static function getSetupWizardParams(ConfigSettings $config, array $extra = []): array
     {
         $params = self::getDefaultParams($config);
+
         $params['mod_rewrite_enabled'] = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
         $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
         $params['btn_install'] = "Instalar";
+
         $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
         $params['config_writeable'] = is_writable($configFilePath);
 

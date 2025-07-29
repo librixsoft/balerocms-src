@@ -84,10 +84,27 @@ class Controller
         }
 
         if (is_array($result) && isset($result['view'])) {
-            echo $this->view->render($result['view'], $result['params'] ?? []);
+            echo $this->render($result['view'], $result['params'] ?? []);
             exit;
         }
     }
 
+    /**
+     * Renderiza una vista e inyecta parámetros comunes automáticamente.
+     */
+    protected function render(string $template, array $params = []): string
+    {
+        // Define global model view parameters to pass al view/controllers
+        $common = [
+            'title' => $this->configSettings->getTitle(),
+            'keywords' => $this->configSettings->getKeywords(),
+            'description' => $this->configSettings->getDescription(),
+            'basepath' => $this->configSettings->getBasepath(),
+        ];
 
+        // El controlador puede sobreescribir cualquier valor común
+        $params = array_merge($common, $params);
+
+        return $this->view->render($template, $params);
+    }
 }

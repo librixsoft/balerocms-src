@@ -31,15 +31,7 @@ class AdminController extends Controller
     public function home()
     {
         try {
-
-            $params = [
-                //'virtual_pages' => $this->model->getVirtualPages(),
-            ];
-
-            $params += AdminViewModel::getDefaultParams($this->configSettings, $this->model);
-
-            return $this->view->render("admin/login.html", $params);
-
+            return $this->render("admin/login.html", AdminViewModel::getLoginParams());
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -51,10 +43,12 @@ class AdminController extends Controller
     {
         // TODO: Admin login logic
         $loggedIn = true;
-        if($loggedIn) {
+
+        if ($loggedIn) {
             header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
         } else {
             // TODO: Render login view with error login message
+            // Podrías usar: return $this->render("admin/login.html", [...])
         }
     }
 
@@ -64,13 +58,11 @@ class AdminController extends Controller
         header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
     }
 
-    // TODO: It needs validate secure login when accesing protected endpoints
     #[Get('/settings')]
     public function getSettings()
     {
         try {
-            $params = AdminViewModel::getDefaultParams($this->configSettings, $this->model);
-            return $this->view->render("admin/dashboard.html", $params);
+            return $this->render("admin/dashboard.html", AdminViewModel::getSettingsParams($this->configSettings, $this->model));
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -99,12 +91,10 @@ class AdminController extends Controller
     public function getPages()
     {
         try {
-            $params = AdminViewModel::getPagesParams($this->configSettings, $this->model);
-            return $this->view->render("admin/dashboard.html", $params);
+            return $this->render("admin/dashboard.html", AdminViewModel::getPagesParams());
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
         }
     }
-
 }

@@ -14,13 +14,11 @@ use Exception;
 use Modules\Installer\DTO\InstallerDTO;
 use Modules\Installer\Views\InstallerViewModel;
 use Framework\I18n\LangSelector;
-
 use Framework\Http\Get;
 use Framework\Http\Post;
 
 class InstallerController extends Controller
 {
-
     protected InstallerModel $model;
 
     public function __construct(
@@ -29,7 +27,7 @@ class InstallerController extends Controller
         InstallerModel $model,
         ConfigSettings $configSettings
     ) {
-        $this->model = $model; // Asignar primero para que esté listo en tódo momento
+        $this->model = $model;
         parent::__construct($request, $view, $configSettings);
     }
 
@@ -37,9 +35,11 @@ class InstallerController extends Controller
     public function home()
     {
         try {
-            $params = InstallerViewModel::getSetupWizardParams($this->configSettings);
-            $params += LangSelector::getParams();
-            return $this->view->render("installer/setup_wizard.html", $params);
+            $params = array_merge(
+                InstallerViewModel::getSetupWizardParams($this->configSettings),
+                LangSelector::getParams()
+            );
+            return $this->render("installer/setup_wizard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -62,9 +62,7 @@ class InstallerController extends Controller
                 ->email('email', 'El correo electrónico no es válido.');
 
             if ($validator->fails()) {
-                $params = [
-                    'errors' => $validator->errors()
-                ];
+                $params['errors'] = $validator->errors();
             } else {
                 InstallerMapper::map($installerDTO, $this->configSettings);
             }
@@ -73,10 +71,12 @@ class InstallerController extends Controller
             $params['error_message'] = $e->getMessage();
         }
 
-        $params += LangSelector::getParams();
-        $params = InstallerViewModel::getSetupWizardParams($this->configSettings, $params);
+        $params = array_merge(
+            InstallerViewModel::getSetupWizardParams($this->configSettings, $params),
+            LangSelector::getParams()
+        );
 
-        return $this->view->render("installer/setup_wizard.html", $params);
+        return $this->render("installer/setup_wizard.html", $params);
     }
 
     #[Post('progressBar')]
@@ -88,8 +88,6 @@ class InstallerController extends Controller
             ErrorConsole::handleException($e);
         }
 
-        $params = InstallerViewModel::getDefaultParams($this->configSettings);
-        return $this->view->render("installer/progressBar.html", $params);
+        return $this->render("installer/progressBar.html", InstallerViewModel::getDefaultParams($this->configSettings));
     }
-
 }

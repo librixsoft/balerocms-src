@@ -14,7 +14,7 @@
 		<!-- admin god -->
 		<username>admin</username>
 		<!-- pwd encrypt -->
-		<passwd>$2a$07$LWZ5v6aubEXXlxKCs8QsLeKd2lWzdS6ayfZr9oBIa0Z3DD6w2lRx2</passwd>
+		<passwd>$2a$07$p3RNtiP2Qub0zgd3wC9yPeE844.yLl1Fuj2krfUfJheTGCLvOcpe.</passwd>
 		<!-- admin data -->
 		<firstname>Balero</firstname>
 		<lastname>CMS</lastname>
@@ -26,15 +26,13 @@
 	</system>
 	<site>
 		<!-- title page -->
-		<title>Balero CMS</title>
+		<title>{txt_title}</title>
 		<!-- Direccion -->
 		<url>http://www.balerocms.com/</url>
-		<description>Powered by Balero CMS.</description>
-		<keywords>content, management, system</keywords>
+		<description>{txt_description}</description>
+		<keywords>{txt_keywords}</keywords>
 		<!-- basepath for url friendly -->
 		<basepath>http://localhost/balerocms-src/</basepath>
-		<!-- multilanguage support -->
-		<multilang>no</multilang>
 		<theme>Dark</theme>
 	</site>
 </config>
