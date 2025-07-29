@@ -4,7 +4,6 @@ namespace Modules\Installer\Controllers;
 
 use Framework\Core\Validator;
 use Framework\Core\View;
-use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 use Framework\Http\RequestHelper;
 use Modules\Installer\Mapper\InstallerMapper;
