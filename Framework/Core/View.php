@@ -7,12 +7,14 @@ use Framework\Core\ErrorConsole;
 
 class View extends TemplateEngine
 {
+    private const VIEWS_FOLDER = '/resources/views';
+
     protected string $baseDir;
     protected ConfigSettings $configSettings;
 
-    public function __construct(string $baseDir = LOCAL_DIR)
+    public function __construct()
     {
-        $this->baseDir = rtrim($baseDir, '/') . '/';
+        $this->baseDir = $this->normalizePath(LOCAL_DIR . self::VIEWS_FOLDER);
         $this->configSettings = new ConfigSettings();
         $this->configSettings->LoadSettings();
     }
@@ -51,4 +53,13 @@ class View extends TemplateEngine
             return '';
         }
     }
+
+    /**
+     * Normaliza un path para que termine con exactamente una sola barra.
+     */
+    private function normalizePath(string $path): string
+    {
+        return rtrim($path, '/') . '/';
+    }
+
 }

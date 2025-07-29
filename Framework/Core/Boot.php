@@ -30,8 +30,6 @@ class Boot
         // Crear instancia del contenedor de dependencias
         self::$container = new Container();
 
-        // Registrar servicios y singletons en el contenedor
-        ContainerConfiguration::register(self::$container);
     }
 
     public function autoload($class)
