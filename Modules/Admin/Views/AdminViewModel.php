@@ -48,6 +48,13 @@ class AdminViewModel
     public static function getPagesParams(): array
     {
         return [
+            'lbl_title' => 'Title',
+            'lbl_active' => 'Active',
+            'enabled' => 'Enabled',
+            'disabled' => 'disabled',
+            'lbl_message' => 'Content',
+            'btn_add' => 'Create',
+            'new_page' => 'New page',
             'activeMenu' => 'pages',
         ];
     }

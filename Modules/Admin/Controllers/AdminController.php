@@ -94,7 +94,7 @@ class AdminController extends Controller
     public function getPages()
     {
         try {
-            return $this->render("admin/dashboard.html", AdminViewModel::getPagesParams());
+            return $this->render("admin/pages.html", AdminViewModel::getPagesParams());
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
