@@ -7,13 +7,23 @@ use Modules\Page\Models\PageModel;
 
 class PageViewModel
 {
+
+    private PageModel $model;
+    private ConfigSettings $config;
+
+    public function __construct(PageModel $model)
+    {
+        $this->config = ConfigSettings::getInstance();
+        $this->model = $model;
+    }
+
     /**
      * Diccionario específico para la vista principal.
      */
-    public static function getHomeParams(PageModel $model): array
+    public function getHomeParams(): array
     {
         return [
-            'virtual_pages' => $model->getVirtualPages(),
+            'virtual_pages' => $this->model->getVirtualPages(),
 
             // Etiquetas
             'lbl_virtual_pages' => 'Virtual Pages',
@@ -28,10 +38,10 @@ class PageViewModel
     /**
      * Diccionario para página individual.
      */
-    public static function getDetailParams(PageModel $model, array $page): array
+    public function getDetailParams(array $page): array
     {
         return [
-            'virtual_pages' => $model->getVirtualPages(),
+            'virtual_pages' => $this->model->getVirtualPages(),
             'page' => $page,
 
             // Etiquetas
@@ -43,7 +53,7 @@ class PageViewModel
     /**
      * Diccionario para error de página no encontrada.
      */
-    public static function getNotFoundParams(): array
+    public function getNotFoundParams(): array
     {
         return [
             'error_message' => "La página solicitada no existe.",
