@@ -7,6 +7,7 @@ use Framework\Core\View;
 use Framework\Http\RequestHelper;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
+use Framework\IO\Uploader;
 use Modules\Admin\Models\AdminModel;
 use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
@@ -16,15 +17,19 @@ use Framework\Core\Redirect;
 
 class AdminController extends Controller
 {
+
     protected AdminModel $model;
+    private Uploader $uploader;
 
     public function __construct(
         RequestHelper $request,
         View $view,
         AdminModel $model,
-        ConfigSettings $configSettings
+        ConfigSettings $configSettings,
+        Uploader $uploader
     ) {
         $this->model = $model;
+        $this->uploader = $uploader;
         Redirect::init($configSettings);
         parent::__construct($request, $view, $configSettings);
     }
@@ -100,4 +105,21 @@ class AdminController extends Controller
             return '';
         }
     }
+
+    #[Post('/uploader')]
+    public function postUploader()
+    {
+        try {
+            if(!isset($_FILES['file'])) {
+                throw new Exception("input file not exist");
+            }
+            echo $this->uploader->image(
+                $_FILES['file'],
+                LOCAL_DIR);
+        } catch (Exception $e) {
+            ErrorConsole::handleException($e);
+            return '';
+        }
+    }
+
 }
