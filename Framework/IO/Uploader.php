@@ -3,41 +3,69 @@
 namespace Framework\IO;
 
 use Exception;
-
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 
-class Uploader {
-
+class Uploader
+{
     private ConfigSettings $configSettings;
 
     private const UPLOADS_FOLDER = '/public/assets/images/uploads/';
+    private const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+    private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
-    public function __construct(
-        ConfigSettings $configSettings
-    ) {
+    public function __construct(ConfigSettings $configSettings)
+    {
         $this->configSettings = $configSettings;
     }
 
-    public function image($file, $path) {
-        if (!$file['error']) {
-            if (!$file['error']) {
-                $name = md5(rand(100, 200));
-                $ext = explode('.', $file['name']);
-                $filename = $name . '.' . $ext[1];
-                if(!is_writable($path . self::UPLOADS_FOLDER)) {
-                    ErrorConsole::handleException(new Exception("Directory " . $path . self::UPLOADS_FOLDER . " is not writable.
-                    Set chmod permissions to 777."));
-                }
-                $destination = $path . self::UPLOADS_FOLDER . $filename; //change this directory
-                $location = $file["tmp_name"];
-                move_uploaded_file($location, $destination);
-            } else {
-                ErrorConsole::handleException(new Exception("Ooops!  Your upload triggered
-                the following error:  " . $file['error']));
+    public function image($file, $path)
+    {
+        try {
+            if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception("File upload error. Code: " . $file['error']);
             }
-        }
-        return $this->configSettings->getBasepath($path) . self::UPLOADS_FOLDER . $filename;
-    }
 
+            // Verify it's a valid image
+            $imageInfo = getimagesize($file['tmp_name']);
+            if ($imageInfo === false) {
+                throw new Exception("The uploaded file is not a valid image.");
+            }
+
+            $mimeType = $imageInfo['mime'];
+            if (!in_array($mimeType, self::ALLOWED_MIME_TYPES)) {
+                throw new Exception("Unsupported image type: $mimeType. Allowed types: JPEG, PNG, GIF.");
+            }
+
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
+                throw new Exception("Unsupported file extension: .$extension. Allowed extensions: .jpg, .jpeg, .png, .gif.");
+            }
+
+            // Ensure upload directory exists
+            $uploadDir = rtrim($path . self::UPLOADS_FOLDER, '/') . '/';
+            if (!is_dir($uploadDir)) {
+                if (!mkdir($uploadDir, 0777, true)) {
+                    throw new Exception("Failed to create upload directory: $uploadDir");
+                }
+            }
+
+            if (!is_writable($uploadDir)) {
+                throw new Exception("Upload directory is not writable: $uploadDir. Set permissions to 777.");
+            }
+
+            $filename = md5(uniqid(rand(), true)) . '.' . $extension;
+            $destination = $uploadDir . $filename;
+
+            if (!move_uploaded_file($file['tmp_name'], $destination)) {
+                throw new Exception("Failed to move uploaded file to destination.");
+            }
+
+            return $this->configSettings->getBasepath($path) . self::UPLOADS_FOLDER . $filename;
+
+        } catch (Exception $e) {
+            ErrorConsole::handleException($e);
+            return '';
+        }
+    }
 }
