@@ -7,18 +7,25 @@ class Redirect
     private static ?self $instance = null;
     private ConfigSettings $config;
 
-    private function __construct(ConfigSettings $config)
+    private function __construct()
     {
-        $this->config = $config;
+        // Tomar instancia global sin inyectar
+        $this->config = ConfigSettings::getInstance();
     }
 
-    public static function init(ConfigSettings $config): void
+    /**
+     * Inicializa Redirect singleton (solo si aún no existe)
+     */
+    public static function init(): void
     {
         if (self::$instance === null) {
-            self::$instance = new self($config);
+            self::$instance = new self();
         }
     }
 
+    /**
+     * Redirecciona a una ruta relativa (usando basepath del config)
+     */
     public static function to(string $url): void
     {
         if (self::$instance === null) {
@@ -28,6 +35,9 @@ class Redirect
         self::$instance->redirect($url);
     }
 
+    /**
+     * Redirección interna usando basepath
+     */
     private function redirect(string $url): void
     {
         $basepath = rtrim($this->config->getBasepath(), '/');
@@ -35,7 +45,7 @@ class Redirect
 
         $combinedUrl = $basepath . '/' . $url;
 
-        // Normalizar URL para quitar dobles barras (excepto protocolo)
+        // Elimina dobles slashes (excepto después de protocolo)
         $normalizedUrl = $this->removeDoubleSlashes($combinedUrl);
 
         header("Location: " . $normalizedUrl);
@@ -43,8 +53,7 @@ class Redirect
     }
 
     /**
-     * Elimina dobles (o múltiples) barras consecutivas en la URL,
-     * excepto después de '://' para no romper el protocolo.
+     * Elimina dobles slashes pero respeta http:// o https://
      */
     private function removeDoubleSlashes(string $url): string
     {

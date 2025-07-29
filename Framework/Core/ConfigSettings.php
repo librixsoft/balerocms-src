@@ -37,6 +37,8 @@ class ConfigSettings
     private string $multilang;
     private string $editor;
 
+    private static ?self $instance = null;
+
     public function __construct()
     {
         $this->cfgFile = LOCAL_DIR . "/resources/config/balero.config.xml";
@@ -47,6 +49,23 @@ class ConfigSettings
         } catch (Throwable $e) {
             ErrorConsole::handleException($e);
         }
+    }
+
+    // Método para inicializar singleton (solo se llama una vez)
+    public static function init(): void
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+    }
+
+    // Método para obtener instancia singleton
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            throw new Exception("ConfigSettings no ha sido inicializado. Llama a ConfigSettings::init() primero.");
+        }
+        return self::$instance;
     }
 
     public function LoadSettings(): void

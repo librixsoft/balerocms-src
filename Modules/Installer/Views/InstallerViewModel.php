@@ -6,9 +6,16 @@ use Framework\Core\ConfigSettings;
 
 class InstallerViewModel
 {
-    public static function getDefaultParams(ConfigSettings $config): array
+    private ConfigSettings $config;
+
+    public function __construct()
     {
-        return [
+        $this->config = ConfigSettings::getInstance();
+    }
+
+    public function getInstallerParams(): array
+    {
+        $params = [
             // Etiquetas
             'lbl_dbconfig' => 'Database Configuration',
             'lbl_dbhost' => 'Database Host',
@@ -31,36 +38,30 @@ class InstallerViewModel
             'lbl_lastname' => 'Last Name',
             'lbl_email' => 'Email Address',
 
-            // Valores configurables (solo lo que no está ya en el controlador base)
-            'txt_dbhost' => $config->getDbhost(),
-            'txt_dbuser' => $config->getDbuser(),
-            'txt_dbpass' => $config->getDbpass(),
-            'txt_dbname' => $config->getDbname(),
-            'txt_basepath' => $config->getBasepath(),
-            'txt_url' => $config->getUrl(),
-            'username' => $config->getUsername(),
+            // Valores configurables
+            'txt_dbhost' => $this->config->getDbhost(),
+            'txt_dbuser' => $this->config->getDbuser(),
+            'txt_dbpass' => $this->config->getDbpass(),
+            'txt_dbname' => $this->config->getDbname(),
+            'txt_basepath' => $this->config->getBasepath(),
+            'txt_url' => $this->config->getUrl(),
+            'username' => $this->config->getUsername(),
             'txt_pass' => '',
             'txt_retype' => '',
-            'txt_firstname' => $config->getFirstname(),
-            'txt_lastname' => $config->getLastname(),
-            'txt_email' => $config->getEmail(),
+            'txt_firstname' => $this->config->getFirstname(),
+            'txt_lastname' => $this->config->getLastname(),
+            'txt_email' => $this->config->getEmail(),
 
             // Botones
             'btn_save' => "Guardar",
+
+            // Setup Wizard
+            'mod_rewrite_enabled' => function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()),
+            'welcome' => "Welcome to Balero CMS Setup Wizard.",
+            'btn_install' => "Instalar",
+            'config_writeable' => is_writable(LOCAL_DIR . '/resources/config/balero.config.xml'),
         ];
-    }
 
-    public static function getSetupWizardParams(ConfigSettings $config, array $extra = []): array
-    {
-        $params = self::getDefaultParams($config);
-
-        $params['mod_rewrite_enabled'] = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
-        $params['welcome'] = "Welcome to Balero CMS Setup Wizard.";
-        $params['btn_install'] = "Instalar";
-
-        $configFilePath = LOCAL_DIR . '/resources/config/balero.config.xml';
-        $params['config_writeable'] = is_writable($configFilePath);
-
-        return array_merge($params, $extra);
+        return $params;
     }
 }

@@ -7,7 +7,24 @@ use Modules\Admin\Models\AdminModel;
 
 class AdminViewModel
 {
-    public static function getLoginParams(): array
+    private AdminModel $model;
+    private ConfigSettings $config;
+
+    public function __construct(AdminModel $model)
+    {
+        $this->model = $model;
+        $this->config = ConfigSettings::getInstance();
+    }
+
+    public function updateSettings(array $data): void
+    {
+        $this->config->setTitle($data['title'] ?? '');
+        $this->config->setDescription($data['description'] ?? '');
+        $this->config->setKeywords($data['keywords'] ?? '');
+        $this->config->setTheme($data['theme'] ?? '');
+    }
+
+    public function getLoginParams(): array
     {
         return [
             'core_version' => _CORE_VERSION,
@@ -15,11 +32,11 @@ class AdminViewModel
         ];
     }
 
-    public static function getSettingsParams(ConfigSettings $config, AdminModel $model): array
+    public function getSettingsParams(): array
     {
         return [
-            'virtual_pages' => $model->getVirtualPages(),
-            'defaultTheme' => $config->getTheme(),
+            'virtual_pages' => $this->model->getVirtualPages(),
+            'defaultTheme' => $this->config->getTheme(),
 
             'themes' => [
                 ['value' => 'Default', 'label' => 'Default'],
@@ -30,22 +47,21 @@ class AdminViewModel
 
             'activeMenu' => 'settings',
 
-            // Etiquetas y campos específicos
             'lbl_theme' => "Theme",
             'lbl_settings' => __('admin.settings'),
             'lbl_title' => 'Title',
             'lbl_keywords' => 'Keywords',
             'lbl_description' => 'Description',
 
-            'txt_title' => $config->getTitle(),
-            'txt_keywords' => $config->getKeywords(),
-            'txt_description' => $config->getDescription(),
+            'txt_title' => $this->config->getTitle(),
+            'txt_keywords' => $this->config->getKeywords(),
+            'txt_description' => $this->config->getDescription(),
 
             'btn_refresh' => 'Refresh',
         ];
     }
 
-    public static function getPagesParams(): array
+    public function getPagesParams(): array
     {
         return [
             'lbl_title' => 'Title',

@@ -17,6 +17,13 @@ class Boot
         // Registrar manejador de errores personalizado
         ErrorConsole::register();
 
+        // Define global instance register here
+
+        ConfigSettings::init();
+        Redirect::init();
+
+        // End global registers
+
         // Crear instancia del contenedor de dependencias
         self::$container = new Container();
 
@@ -47,19 +54,10 @@ class Boot
             }
         }
 
-        // Si no se encontró la clase, lanzar excepción y mostrar en consola
         $message = "No se pudo cargar la clase <code>$class</code><br>Ruta esperada: <code>$relativePath</code>";
         ErrorConsole::handleException(new \Exception($message));
     }
 
-
-
-    /**
-     * Resolver una clase con manejo seguro de excepciones
-     *
-     * @param string $class Nombre completo con namespace
-     * @param array $args Argumentos para el constructor (opcional)
-     */
     public static function safeResolve(string $class, array $args = []): void
     {
         try {
@@ -72,13 +70,6 @@ class Boot
         }
     }
 
-    /**
-     * Resolver una clase a través del contenedor de dependencias
-     *
-     * @param string $class Nombre completo con namespace
-     * @param array $args Argumentos para el constructor (opcional)
-     * @return object Instancia creada
-     */
     public static function resolve(string $class, array $args = []): object
     {
         return self::$container->resolve($class, $args);

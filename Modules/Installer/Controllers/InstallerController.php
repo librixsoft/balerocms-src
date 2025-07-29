@@ -19,16 +19,19 @@ use Framework\Http\Post;
 
 class InstallerController extends Controller
 {
+
     protected InstallerModel $model;
+    protected InstallerViewModel $installerViewModel;
 
     public function __construct(
         RequestHelper $request,
         View $view,
         InstallerModel $model,
-        ConfigSettings $configSettings
+        InstallerViewModel $installerViewModel
     ) {
         $this->model = $model;
-        parent::__construct($request, $view, $configSettings);
+        $this->installerViewModel = $installerViewModel;
+        parent::__construct($request, $view);
     }
 
     #[Get('/')]
@@ -36,7 +39,7 @@ class InstallerController extends Controller
     {
         try {
             $params = array_merge(
-                InstallerViewModel::getSetupWizardParams($this->configSettings),
+                $this->installerViewModel->getInstallerParams(),
                 LangSelector::getParams()
             );
             return $this->render("installer/setup_wizard.html", $params);
@@ -72,7 +75,8 @@ class InstallerController extends Controller
         }
 
         $params = array_merge(
-            InstallerViewModel::getSetupWizardParams($this->configSettings, $params),
+            $params,
+            $this->installerViewModel->getInstallerParams(),
             LangSelector::getParams()
         );
 
@@ -88,6 +92,6 @@ class InstallerController extends Controller
             ErrorConsole::handleException($e);
         }
 
-        return $this->render("installer/progressBar.html", InstallerViewModel::getDefaultParams($this->configSettings));
+        return $this->render("installer/progressBar.html", $this->getInstallerParams());
     }
 }

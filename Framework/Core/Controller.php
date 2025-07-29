@@ -12,21 +12,25 @@ class Controller
     protected RequestHelper $request;
     protected ConfigSettings $configSettings;
 
-    public function __construct(RequestHelper $request, View $view, ConfigSettings $configSettings)
+    public function __construct(RequestHelper $request, View $view)
     {
         $this->request = $request;
         $this->view = $view;
-        $this->configSettings = $configSettings;
 
-        // Carga configuración y realiza inicializaciones comunes
-        $this->configSettings->LoadSettings();
+        /**
+         * ConfigSettings se obtiene desde su instancia singleton.
+         * Esto garantiza que toda la aplicación comparta una única fuente
+         * de configuración centralizada y previamente cargada desde XML.
+         *
+         * No se necesita volver a llamar a LoadSettings() ni inyectar manualmente
+         * porque la instancia ya fue creada e inicializada en Boot.
+         */
+        $this->configSettings = ConfigSettings::getInstance();
+
         $this->initBasePath();
         $this->init();
     }
 
-    /**
-     * Inicializa basepath si no está seteado.
-     */
     private function initBasePath(): void
     {
         if (empty($this->configSettings->getBasepath())) {
@@ -37,8 +41,7 @@ class Controller
     public function init(): void
     {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $requestedSr = $this->request->get('sr') ?? '';
-        $requestedSr = trim($requestedSr, '/');
+        $requestedSr = trim($this->request->get('sr') ?? '', '/');
 
         $reflection = new \ReflectionClass($this);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -56,14 +59,11 @@ class Controller
                 ) {
                     $routePattern = trim($instance->sr, '/');
 
-                    // Soporta rutas dinámicas: /pagina/{slug}
                     $regex = preg_replace('#\{([^}]+)\}#', '(?P<$1>[^/]+)', $routePattern);
                     $regex = '#^' . $regex . '$#';
 
                     if (preg_match($regex, $requestedSr, $matches)) {
-                        // Filtrar solo claves con nombre (no índices numéricos)
                         $params = array_filter($matches, fn($key) => !is_int($key), ARRAY_FILTER_USE_KEY);
-
                         $this->runMethod($method->getName(), $params);
                         return;
                     }
@@ -89,12 +89,8 @@ class Controller
         }
     }
 
-    /**
-     * Renderiza una vista e inyecta parámetros comunes automáticamente.
-     */
     protected function render(string $template, array $params = []): string
     {
-        // Define global model view parameters to pass al view/controllers
         $common = [
             'title' => $this->configSettings->getTitle(),
             'keywords' => $this->configSettings->getKeywords(),
@@ -102,9 +98,6 @@ class Controller
             'basepath' => $this->configSettings->getBasepath(),
         ];
 
-        // El controlador puede sobreescribir cualquier valor común
-        $params = array_merge($common, $params);
-
-        return $this->view->render($template, $params);
+        return $this->view->render($template, array_merge($common, $params));
     }
 }
