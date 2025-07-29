@@ -36,7 +36,7 @@ class AdminController extends Controller
                 //'virtual_pages' => $this->model->getVirtualPages(),
             ];
 
-            $params += AdminViewModel::getDefaultParams($this->configSettings);
+            $params += AdminViewModel::getDefaultParams($this->configSettings, $this->model);
 
             return $this->view->render("admin/login.html", $params);
 
@@ -69,23 +69,8 @@ class AdminController extends Controller
     public function getSettings()
     {
         try {
-
-            $params = [
-                'virtual_pages' => $this->model->getVirtualPages(),
-                'defaultTheme' => $this->configSettings->getTheme(),
-                // TODO: Load templates from folder layouts or themes
-                'themes' => [
-                    ['value' => 'Default', 'label' => 'Default'],
-                    ['value' => 'Dark',    'label' => 'Dark'],
-                    ['value' => 'Light',   'label' => 'Light'],
-                    ['value' => 'Modern',  'label' => 'Modern'],
-                ],
-            ];
-
-            $params = array_merge(AdminViewModel::getDefaultParams($this->configSettings), $params);
-
+            $params = AdminViewModel::getDefaultParams($this->configSettings, $this->model);
             return $this->view->render("admin/dashboard.html", $params);
-
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -104,6 +89,18 @@ class AdminController extends Controller
             header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
             return "";
 
+        } catch (Exception $e) {
+            ErrorConsole::handleException($e);
+            return '';
+        }
+    }
+
+    #[Get('/pages')]
+    public function getPages()
+    {
+        try {
+            $params = AdminViewModel::getPagesParams($this->configSettings, $this->model);
+            return $this->view->render("admin/dashboard.html", $params);
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
             return '';

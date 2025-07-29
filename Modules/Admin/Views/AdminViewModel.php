@@ -7,7 +7,7 @@ use Framework\Core\ConfigSettings;
 class AdminViewModel
 {
 
-    public static function getDefaultParams(ConfigSettings $config): array
+    public static function getDefaultParams(ConfigSettings $config, $model): array
     {
         return [
 
@@ -24,6 +24,26 @@ class AdminViewModel
             'txt_description' => $config->getDescription(),
 
             'btn_refresh' => 'Refresh',
+
+            'virtual_pages' => $model->getVirtualPages(),
+            'defaultTheme' => $config->getTheme(),
+            // TODO: Load templates from folder layouts or themes
+            'themes' => [
+                ['value' => 'Default', 'label' => 'Default'],
+                ['value' => 'Dark',    'label' => 'Dark'],
+                ['value' => 'Light',   'label' => 'Light'],
+                ['value' => 'Modern',  'label' => 'Modern'],
+            ],
+            'activeMenu' => 'settings',
+
+        ];
+    }
+
+    public static function getPagesParams(ConfigSettings $config, $model): array
+    {
+        return [
+            // TODO: Add pages params
+            'activeMenu' => 'pages',
         ];
     }
 

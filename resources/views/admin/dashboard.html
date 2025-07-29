@@ -71,11 +71,22 @@
             <div class="row-fluid">
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+                        <!-- @if activeMenu == "settings" -->
                         <li class="active">
-                            <a href="./admin"><i class="icon-chevron-right"></i> Dashboard</a>
-                        </li>
+                            <!-- @else -->
                         <li>
-                            <a href="./admin/main/mod-{entry}"><i class="icon-chevron-right"></i> <span class="badge badge-important pull-right">0</span>Pages</a>
+                            <!-- @endif -->
+                            <a href="./admin/settings"><i class="icon-chevron-right"></i> Dashboard</a>
+                        </li>
+
+                        <!-- @if activeMenu == "pages" -->
+                        <li class="active">
+                            <!-- @else -->
+                        <li>
+                            <!-- @endif -->
+                            <a href="./admin/pages"><i class="icon-chevron-right"></i>
+                                <span class="badge badge-important pull-right">0</span>Pages
+                            </a>
                         </li>
                     </ul>
                 </div>
