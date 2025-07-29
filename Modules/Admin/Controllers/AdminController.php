@@ -12,6 +12,7 @@ use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Exception;
+use Framework\Core\Redirect;
 
 class AdminController extends Controller
 {
@@ -24,6 +25,7 @@ class AdminController extends Controller
         ConfigSettings $configSettings
     ) {
         $this->model = $model;
+        Redirect::init($configSettings);
         parent::__construct($request, $view, $configSettings);
     }
 
@@ -45,7 +47,7 @@ class AdminController extends Controller
         $loggedIn = true;
 
         if ($loggedIn) {
-            header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
+            Redirect::to('/admin/settings');
         } else {
             // TODO: Render login view with error login message
             // Podrías usar: return $this->render("admin/login.html", [...])
@@ -55,7 +57,7 @@ class AdminController extends Controller
     #[Get('/dashboard')]
     public function dashboard()
     {
-        header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
+        Redirect::to('/admin/settings');
     }
 
     #[Get('/settings')]
@@ -78,7 +80,8 @@ class AdminController extends Controller
             $this->configSettings->setKeywords($this->request->post("keywords"));
             $this->configSettings->setTheme($this->request->post("theme"));
 
-            header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
+            Redirect::to('/admin/settings');
+
             return "";
 
         } catch (Exception $e) {
