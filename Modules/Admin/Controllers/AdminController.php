@@ -46,22 +46,27 @@ class AdminController extends Controller
         }
     }
 
-    #[Post('/')]
+    #[Post('/login')]
     public function login()
     {
         // TODO: Admin login logic
         $loggedIn = true;
         if($loggedIn) {
-            header("Location: " . $this->configSettings->getBasepath() . "/admin/dashboard");
+            header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
         } else {
             // TODO: Render login view with error login message
         }
     }
 
-
-    // TODO: It needs validate secure login when accesing protected endpoints
     #[Get('/dashboard')]
     public function dashboard()
+    {
+        header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
+    }
+
+    // TODO: It needs validate secure login when accesing protected endpoints
+    #[Get('/settings')]
+    public function getSettings()
     {
         try {
 
@@ -88,7 +93,7 @@ class AdminController extends Controller
     }
 
     #[Post('/settings')]
-    public function settings()
+    public function postSettings()
     {
         try {
             $this->configSettings->setTitle($this->request->post("title"));
@@ -96,21 +101,8 @@ class AdminController extends Controller
             $this->configSettings->setKeywords($this->request->post("keywords"));
             $this->configSettings->setTheme($this->request->post("theme"));
 
-            $params = [
-                'virtual_pages' => $this->model->getVirtualPages(),
-                'defaultTheme' => $this->configSettings->getTheme(),
-                // TODO: Load templates from folder layouts or themes
-                'themes' => [
-                    ['value' => 'Default', 'label' => 'Default'],
-                    ['value' => 'Dark',    'label' => 'Dark'],
-                    ['value' => 'Light',   'label' => 'Light'],
-                    ['value' => 'Modern',  'label' => 'Modern'],
-                ],
-            ];
-
-            $params = array_merge(AdminViewModel::getDefaultParams($this->configSettings), $params);
-
-            return $this->view->render("admin/dashboard.html", $params);
+            header("Location: " . $this->configSettings->getBasepath() . "/admin/settings");
+            return "";
 
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
