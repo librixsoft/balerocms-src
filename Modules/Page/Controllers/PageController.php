@@ -3,8 +3,6 @@
 namespace Modules\Page\Controllers;
 
 use Framework\Core\Controller;
-use Framework\Core\View;
-use Framework\Http\RequestHelper;
 use Framework\Core\ErrorConsole;
 use Modules\Page\Models\PageModel;
 use Modules\Page\Views\PageViewModel;
@@ -18,14 +16,11 @@ class PageController extends Controller
     protected PageModel $model;
 
     public function __construct(
-        RequestHelper $request,
-        View $view,
         PageModel $model,
         PageViewModel $viewModel
     ) {
         $this->model = $model;
         $this->viewModel = $viewModel;
-        parent::__construct($request, $view);
     }
 
     #[Get('/')]

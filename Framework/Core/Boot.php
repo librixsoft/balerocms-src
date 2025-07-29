@@ -2,6 +2,9 @@
 
 namespace Framework\Core;
 
+use Framework\Http\RequestHelper;
+use Framework\Core\View;
+
 use Throwable;
 use Exception;
 
@@ -72,6 +75,19 @@ class Boot
 
     public static function resolve(string $class, array $args = []): object
     {
-        return self::$container->resolve($class, $args);
+        $instance = self::$container->resolve($class, $args);
+
+        // Si la instancia tiene init(), la llamas aquí (antes o después del constructor)
+        // Se agrega esta parte para no instanciar manualmente desde el controller
+        if (method_exists($instance, 'init')) {
+            $request = self::$container->resolve(RequestHelper::class);
+            $view = self::$container->resolve(View::class);
+
+            $instance->init($request, $view);
+        }
+
+        return $instance;
     }
+
+
 }

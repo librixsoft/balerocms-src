@@ -3,8 +3,6 @@
 namespace Modules\Admin\Controllers;
 
 use Framework\Core\Controller;
-use Framework\Core\View;
-use Framework\Http\RequestHelper;
 use Framework\Core\ErrorConsole;
 use Framework\IO\Uploader;
 use Modules\Admin\Models\AdminModel;
@@ -21,8 +19,6 @@ class AdminController extends Controller
     private AdminViewModel $viewModel;
 
     public function __construct(
-        RequestHelper $request,
-        View $view,
         AdminModel $model, // TODO: Keep because do database connection after
         Uploader $uploader,
         AdminViewModel $viewModel
@@ -30,8 +26,6 @@ class AdminController extends Controller
         $this->model = $model;
         $this->uploader = $uploader;
         $this->viewModel = $viewModel;
-
-        parent::__construct($request, $view);
     }
 
     #[Get('/')]

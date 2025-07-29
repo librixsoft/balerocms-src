@@ -3,9 +3,7 @@
 namespace Modules\Installer\Controllers;
 
 use Framework\Core\Validator;
-use Framework\Core\View;
 use Framework\Core\ErrorConsole;
-use Framework\Http\RequestHelper;
 use Modules\Installer\Mapper\InstallerMapper;
 use Modules\Installer\Models\InstallerModel;
 use Framework\Core\Controller;
@@ -23,14 +21,12 @@ class InstallerController extends Controller
     protected InstallerViewModel $installerViewModel;
 
     public function __construct(
-        RequestHelper $request,
-        View $view,
         InstallerModel $model,
         InstallerViewModel $installerViewModel
     ) {
         $this->model = $model;
         $this->installerViewModel = $installerViewModel;
-        parent::__construct($request, $view);
+
     }
 
     #[Get('/')]

@@ -12,7 +12,12 @@ class Controller
     protected RequestHelper $request;
     protected ConfigSettings $configSettings;
 
-    public function __construct(RequestHelper $request, View $view)
+    /**
+     * Called from Boot::resolver()
+     * @param RequestHelper $request
+     * @param View $view
+     */
+    public function init(RequestHelper $request, View $view)
     {
         $this->request = $request;
         $this->view = $view;
@@ -27,8 +32,7 @@ class Controller
          */
         $this->configSettings = ConfigSettings::getInstance();
 
-        $this->initBasePath();
-        $this->init();
+        $this->run();
     }
 
     private function initBasePath(): void
@@ -38,8 +42,10 @@ class Controller
         }
     }
 
-    public function init(): void
+    public function run(): void
     {
+        $this->initBasePath();
+
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $requestedSr = trim($this->request->get('sr') ?? '', '/');
 
