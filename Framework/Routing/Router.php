@@ -82,7 +82,7 @@ class Router
             ErrorConsole::handleException(new Exception("Controller class not found: $controllerClass"));
         }
 
-        Boot::safeResolve($controllerClass);
+        Boot::loadController($controllerClass);
     }
 
     // TODO: Move to admin controller login endpoint
@@ -106,7 +106,7 @@ class Router
         $menuData = $adminElements->mods_menu();
 
         if (!$mod) {
-            Boot::safeResolve('Modules\\Admin\\Controllers\\AdminController', [$menuData]);
+            Boot::loadController('Modules\\Admin\\Controllers\\AdminController', [$menuData]);
             return;
         }
 
@@ -117,7 +117,7 @@ class Router
             ErrorConsole::handleException(new Exception("Module controller class not found: $controllerClass"));
         }
 
-        Boot::safeResolve($controllerClass, [$menuData]);
+        Boot::loadController($controllerClass, [$menuData]);
     }
 
     private function checkInstallerRedirect(): void

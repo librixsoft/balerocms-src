@@ -14,5 +14,5 @@ use Framework\Routing\Router;
 
 new Boot();
 
-$router = Boot::resolve(Router::class);
+$router = Boot::loadController(Router::class);
 $router->init();
