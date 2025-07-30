@@ -3,38 +3,25 @@
 namespace Framework\Core;
 
 use Framework\Config\Context;
+use Framework\Core\ConfigSettings;
 
 class Redirect
 {
-    private static ?self $instance = null;
     private ConfigSettings $config;
 
-    private function __construct()
+    public function __construct()
     {
-        // Tomar instancia global sin inyectar
-        $this->config = Context::get('config');// Obtiene ConfigSettings desde el contenedor
+        // Se obtiene desde el contenedor al construirse (aún sin inyección automática)
+        $this->config = Context::get(ConfigSettings::class);
     }
 
     /**
-     * Inicializa Redirect singleton (solo si aún no existe)
-     */
-    public static function init(): void
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-    }
-
-    /**
-     * Redirecciona a una ruta relativa (usando basepath del config)
+     * Método estático que actúa como fachada limpia.
      */
     public static function to(string $url): void
     {
-        if (self::$instance === null) {
-            throw new \RuntimeException("Redirect no ha sido inicializado. Usa Redirect::init() primero.");
-        }
-
-        self::$instance->redirect($url);
+        $instance = Context::get(self::class);
+        $instance->redirect($url);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Framework\Config;
 
 use Framework\Core\ConfigSettings;
 use Framework\Core\Container;
+use Framework\Core\Redirect;
 
 class Context
 {
@@ -12,6 +13,7 @@ class Context
     // Aquí defines todos los servicios (solo una vez)
     protected static array $services = [
         'config' => ConfigSettings::class,
+        'redirect' => Redirect::class
         // 'request' => \Framework\Http\RequestHelper::class,
         // 'logger' => \Framework\Logger\Logger::class,
     ];

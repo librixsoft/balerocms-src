@@ -36,8 +36,6 @@ class Boot
         // Este Context ahora registra tod internamente
         Context::init(self::$container);
 
-        // Ahora puedes inicializar Redirect que usa ConfigSettings
-        Redirect::init();
     }
 
     /**
