@@ -13,7 +13,7 @@ class Controller
     protected ConfigSettings $configSettings;
 
     /**
-     * Called from Boot::resolver()
+     * Called from Boot::instantiateClass()
      * @param RequestHelper $request
      * @param View $view
      */
