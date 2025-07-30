@@ -12,14 +12,6 @@ use Throwable;
 
 class ErrorConsole
 {
-    private static ?self $instance = null;
-
-    private static ?string $lastFatalMessage = null;
-
-    public static function setInstance(self $instance): void
-    {
-        self::$instance = $instance;
-    }
 
     public static function register()
     {
