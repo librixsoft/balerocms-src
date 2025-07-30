@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
 namespace Modules\Page\Views;
 
 use Framework\Core\ConfigSettings;

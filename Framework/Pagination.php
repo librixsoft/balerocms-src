@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
+/**
  *
  * Pagination.php
  * (c) Jun 27, 2013 lastprophet 

@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
+/**
 * Plantilla de la clase appModel para Balero CMS.
 * Declare aqui todas las conexiones a la Base de datos.
 **/

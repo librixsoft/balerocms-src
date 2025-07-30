@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
+/**
  *
  * ModControllerManager.php
  * (c) May 10, 2013 lastprophet 

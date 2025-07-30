@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
+/**
  *
  * mod_virtual_page_Controller.php.php
  * (c) Jun 11, 2013 lastprophet 

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
 namespace Modules\Admin\Controllers;
 
 use Framework\Core\Controller;

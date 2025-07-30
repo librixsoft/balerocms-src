@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Balero CMS 
+ * @author Anibal Gomez <balerocms@gmail.com>
+ * @license GNU General Public License
+ */
+
+/**
 * Plantilla de la clase appView para Balero CMS.
 * Declare aqui todas las 'vistas'
 **/
