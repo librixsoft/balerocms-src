@@ -4,7 +4,7 @@ namespace Framework\Core;
 
 use Framework\Http\RequestHelper;
 use Framework\Core\View;
-
+use Framework\Config\Context;
 
 use Throwable;
 use Exception;
@@ -31,6 +31,9 @@ class Boot
 
         // Primero: instancia el contenedor
         self::$container = new Container();
+
+        // Helper para auto instanciar clases por metodos estaticos donde no se inyecte
+        Context::init(self::$container);
 
     }
 

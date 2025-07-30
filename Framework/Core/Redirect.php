@@ -2,50 +2,49 @@
 
 namespace Framework\Core;
 
-use Framework\Core\ConfigSettings;
+use Framework\Config\Context;
 
 class Redirect
 {
-
+    private static ?self $instance = null;
     private ConfigSettings $config;
 
     public function __construct(ConfigSettings $config)
     {
         $this->config = $config;
-    }
-
-    public function to(string $url): void
-    {
-        $basepath = rtrim($this->config->getBasepath(), '/');
-        $url = ltrim($url, '/');
-        $combinedUrl = $basepath . '/' . $url;
-        $normalizedUrl = preg_replace('#(?<!:)//+#', '/', $combinedUrl);
-        header("Location: " . $normalizedUrl);
-        exit;
+        self::$instance = $this; // Guarda la instancia creada
     }
 
     /**
-     * Redirección interna usando basepath
+     * Obtiene la instancia singleton desde Context (lazy load).
+     */
+    private static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = Context::get(self::class);
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Método estático para redirigir.
+     */
+    public static function to(string $url): void
+    {
+        self::getInstance()->redirect($url);
+    }
+
+    /**
+     * Realiza la redirección usando ConfigSettings inyectado.
      */
     private function redirect(string $url): void
     {
         $basepath = rtrim($this->config->getBasepath(), '/');
         $url = ltrim($url, '/');
-
         $combinedUrl = $basepath . '/' . $url;
-
-        // Elimina dobles slashes (excepto después de protocolo)
-        $normalizedUrl = $this->removeDoubleSlashes($combinedUrl);
+        $normalizedUrl = preg_replace('#(?<!:)//+#', '/', $combinedUrl);
 
         header("Location: " . $normalizedUrl);
         exit;
-    }
-
-    /**
-     * Elimina dobles slashes pero respeta http:// o https://
-     */
-    private function removeDoubleSlashes(string $url): string
-    {
-        return preg_replace('#(?<!:)//+#', '/', $url);
     }
 }

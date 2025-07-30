@@ -17,18 +17,15 @@ class AdminController extends Controller
     protected AdminModel $model;
     private Uploader $uploader;
     private AdminViewModel $viewModel;
-    private Redirect $redirect;
 
     public function __construct(
         AdminModel $model, // TODO: Keep because do database connection after
         Uploader $uploader,
-        AdminViewModel $viewModel,
-        Redirect $redirect  // autowiring
+        AdminViewModel $viewModel
     ) {
         $this->model = $model;
         $this->uploader = $uploader;
         $this->viewModel = $viewModel;
-        $this->redirect = $redirect;
     }
 
     #[Get('/')]
@@ -48,8 +45,7 @@ class AdminController extends Controller
         $loggedIn = true; // TODO: implementar login real
 
         if ($loggedIn) {
-            //Redirect::to('/admin/settings');
-            $this->redirect->to('/admin/settings');
+            Redirect::to('/admin/settings');
         } else {
             // TODO: manejar error
         }
@@ -58,8 +54,7 @@ class AdminController extends Controller
     #[Get('/dashboard')]
     public function dashboard()
     {
-        //Redirect::to('/admin/settings');
-        $this->redirect->to('/admin/settings');
+        Redirect::to('/admin/settings');
     }
 
     #[Get('/settings')]
