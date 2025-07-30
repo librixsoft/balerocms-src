@@ -12,15 +12,16 @@ use Framework\Core\Model;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 use Exception;
+use Framework\Database\MySQL;
 use Throwable;
 
 class InstallerModel extends Model
 {
 
-    public function __construct(ConfigSettings $configSettings)
+    public function __construct(ConfigSettings $configSettings, MySQL $db)
     {
         try {
-            parent::__construct($configSettings);
+            parent::__construct($configSettings, $db);
             $this->dbConnect(); // conecta a la base de datos al instanciar
         } catch (Throwable $e) {
             ErrorConsole::handleException(

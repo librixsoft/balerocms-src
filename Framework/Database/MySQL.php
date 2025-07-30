@@ -9,15 +9,12 @@
 namespace Framework\Database;
 
 use Exception;
+use Framework\Core\ConfigSettings;
 use Throwable;
 use Framework\Core\ErrorConsole;
 
 class MySQL
 {
-    private string $host;
-    private string $user;
-    private string $pass;
-    private string $db;
 
     private \mysqli $conn;
 
@@ -33,15 +30,16 @@ class MySQL
 
     private bool $status = false;
 
-    public function __construct(string $host = "", string $user = "", string $pass = "", string $db = "")
+    public function __construct(ConfigSettings $config)
     {
         try {
-            $this->host = $host;
-            $this->user = $user;
-            $this->pass = $pass;
-            $this->db = $db;
 
-            $this->conn = new \mysqli($host, $user, $pass, $db);
+            $this->conn = new \mysqli(
+                $config->getDbhost(),
+                $config->getDbuser(),
+                $config->getDbpass() ,
+                $config->getDbname()
+            );
 
             if ($this->conn->connect_errno) {
                 $this->status = false;
@@ -152,18 +150,6 @@ class MySQL
     }
 
     // Getters and setters...
-
-    public function getHost(): string { return $this->host; }
-    public function setHost(string $host): void { $this->host = $host; }
-
-    public function getUser(): string { return $this->user; }
-    public function setUser(string $user): void { $this->user = $user; }
-
-    public function getPass(): string { return $this->pass; }
-    public function setPass(string $pass): void { $this->pass = $pass; }
-
-    public function getDb(): string { return $this->db; }
-    public function setDb(string $db): void { $this->db = $db; }
 
     public function getConn(): \mysqli { return $this->conn; }
     public function setConn(\mysqli $conn): void { $this->conn = $conn; }
