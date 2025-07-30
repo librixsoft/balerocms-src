@@ -33,8 +33,6 @@ class Boot
     {
         spl_autoload_register([$this, "autoloadClass"]);
 
-        ErrorConsole::register();
-
         // Primero: instancia el contenedor
         self::$container = new Container();
 

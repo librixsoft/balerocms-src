@@ -11,6 +11,8 @@ namespace Framework\Config;
 use Framework\Core\Container;
 use Framework\Core\Redirect;
 
+use Framework\Core\ErrorConsole;
+
 /**
  * Clase Context
  *
@@ -38,6 +40,7 @@ class Context
      */
     protected static array $services = [
         'redirect' => Redirect::class,
+        'errorConsole' => ErrorConsole::class,
         // Agrega aquí otros servicios que desees registrar como singleton o "auto-instaniables"
     ];
 
@@ -56,6 +59,15 @@ class Context
             // Instancia el servicio y lo registra como singleton
             $instance = $container->resolveInstance($class);
             $container->registerSingletonInstance($class, $instance);
+
+            // Setup especial para ErrorConsole: asignar instancia y registrar handlers
+            if ($class === ErrorConsole::class) {
+                ErrorConsole::setInstance($instance);
+                ErrorConsole::register();
+            }
+
+            // Agregar aqui clases con metodos estaticos especiales como ErrorConsole o Redirect
+
         }
     }
 
