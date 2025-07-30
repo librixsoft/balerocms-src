@@ -18,10 +18,14 @@ use Throwable;
 class InstallerModel extends Model
 {
 
+    protected MySQL $db;
+    protected ConfigSettings $configSettings;
+
     public function __construct(ConfigSettings $configSettings, MySQL $db)
     {
+        $this->configSettings = $configSettings;
+        $this->db = $db;
         try {
-            parent::__construct($configSettings, $db);
             $this->dbConnect(); // conecta a la base de datos al instanciar
         } catch (Throwable $e) {
             ErrorConsole::handleException(
