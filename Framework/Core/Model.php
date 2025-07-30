@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -23,13 +23,14 @@ class Model
     {
         $this->configSettings = $configSettings;
         $this->db = $db;
+
+        $this->connectOnInit(); // Nueva función encargada de conectar
     }
 
-    public function dbConnect(): void
+    protected function connectOnInit(): void
     {
         try {
             if ($this->db->isStatus()) {
-                // Crea la base de datos si no existe
                 $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->configSettings->getDbname() . ";");
             } else {
                 throw new Exception("Failed to connect to the database.");

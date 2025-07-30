@@ -9,30 +9,12 @@
 namespace Modules\Installer\Models;
 
 use Framework\Core\Model;
-use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 use Exception;
-use Framework\Database\MySQL;
 use Throwable;
 
 class InstallerModel extends Model
 {
-
-    protected MySQL $db;
-    protected ConfigSettings $configSettings;
-
-    public function __construct(ConfigSettings $configSettings, MySQL $db)
-    {
-        $this->configSettings = $configSettings;
-        $this->db = $db;
-        try {
-            $this->dbConnect(); // conecta a la base de datos al instanciar
-        } catch (Throwable $e) {
-            ErrorConsole::handleException(
-                new Exception("Error during InstallerModel construction: " . $e->getMessage(), 0, $e)
-            );
-        }
-    }
 
     public function install(): void
     {
@@ -58,4 +40,5 @@ class InstallerModel extends Model
             );
         }
     }
+
 }
