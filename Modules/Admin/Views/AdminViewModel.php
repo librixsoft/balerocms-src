@@ -4,6 +4,7 @@ namespace Modules\Admin\Views;
 
 use Framework\Core\ConfigSettings;
 use Modules\Admin\Models\AdminModel;
+use Framework\Config\Context;
 
 class AdminViewModel
 {
@@ -13,7 +14,13 @@ class AdminViewModel
     public function __construct(AdminModel $model)
     {
         $this->model = $model;
-        $this->config = ConfigSettings::getInstance();
+
+        // Usar por alias
+        $this->config = Context::get('config');
+
+        // O directamente con FQCN
+        //$this->config = Context::get(\Framework\Core\ConfigSettings::class);
+
     }
 
     public function updateSettings(array $data): void

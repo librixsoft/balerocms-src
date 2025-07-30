@@ -4,6 +4,8 @@ namespace Framework\Core;
 
 use Framework\Http\RequestHelper;
 use Framework\Core\View;
+use Framework\Config\Context;
+
 
 use Throwable;
 use Exception;
@@ -28,10 +30,14 @@ class Boot
 
         ErrorConsole::register();
 
-        ConfigSettings::init();
-        Redirect::init();
-
+        // Primero: instancia el contenedor
         self::$container = new Container();
+
+        // Este Context ahora registra tod internamente
+        Context::init(self::$container);
+
+        // Ahora puedes inicializar Redirect que usa ConfigSettings
+        Redirect::init();
     }
 
     /**

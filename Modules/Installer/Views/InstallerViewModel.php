@@ -2,6 +2,7 @@
 
 namespace Modules\Installer\Views;
 
+use Framework\Config\Context;
 use Framework\Core\ConfigSettings;
 
 class InstallerViewModel
@@ -10,7 +11,7 @@ class InstallerViewModel
 
     public function __construct()
     {
-        $this->config = ConfigSettings::getInstance();
+        $this->config = Context::get('config');// Obtiene ConfigSettings desde el contenedor
     }
 
     public function getInstallerParams(): array

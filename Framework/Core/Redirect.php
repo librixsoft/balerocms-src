@@ -2,6 +2,8 @@
 
 namespace Framework\Core;
 
+use Framework\Config\Context;
+
 class Redirect
 {
     private static ?self $instance = null;
@@ -10,7 +12,7 @@ class Redirect
     private function __construct()
     {
         // Tomar instancia global sin inyectar
-        $this->config = ConfigSettings::getInstance();
+        $this->config = Context::get('config');// Obtiene ConfigSettings desde el contenedor
     }
 
     /**

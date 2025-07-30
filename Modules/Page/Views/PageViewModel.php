@@ -2,7 +2,9 @@
 
 namespace Modules\Page\Views;
 
+use Framework\Config\Context;
 use Framework\Core\ConfigSettings;
+
 use Modules\Page\Models\PageModel;
 
 class PageViewModel
@@ -13,7 +15,7 @@ class PageViewModel
 
     public function __construct(PageModel $model)
     {
-        $this->config = ConfigSettings::getInstance();
+        $this->config = Context::get('config');;
         $this->model = $model;
     }
 

@@ -5,6 +5,8 @@ namespace Framework\Core;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
+use Framework\Config\Context;
+
 
 class Controller
 {
@@ -30,7 +32,7 @@ class Controller
          * No se necesita volver a llamar a LoadSettings() ni inyectar manualmente
          * porque la instancia ya fue creada e inicializada en Boot.
          */
-        $this->configSettings = ConfigSettings::getInstance();
+        $this->configSettings = Context::get('config');
 
         $this->run();
     }
