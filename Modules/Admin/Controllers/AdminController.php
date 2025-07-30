@@ -16,7 +16,7 @@ use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Exception;
-use Framework\Core\Redirect;
+use Framework\Static\Redirect;
 
 class AdminController extends Controller
 {

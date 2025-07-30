@@ -39,9 +39,11 @@ class Context
      * @var array<string, class-string>
      */
     protected static array $services = [
-        'redirect' => Redirect::class,
-        'errorConsole' => ErrorConsole::class,
-        // Agrega aquí otros servicios que desees registrar como singleton o "auto-instaniables"
+        // Como en PHP no hay clases estaticas, instanciar clases con solo metodos estaticos, services o clases
+        // que se obtengan de manera global sin inyectar
+        // sino deseas instanciar la clase colocala en Static para que el contenedor omita la instancia simulando una clase estatica
+        //'redirect' => Redirect::class,
+        //'errorConsole' => ErrorConsole::class,
     ];
 
     /**
@@ -59,15 +61,6 @@ class Context
             // Instancia el servicio y lo registra como singleton
             $instance = $container->resolveInstance($class);
             $container->registerSingletonInstance($class, $instance);
-
-            // Setup especial para ErrorConsole: asignar instancia y registrar handlers
-            if ($class === ErrorConsole::class) {
-                ErrorConsole::setInstance($instance);
-                ErrorConsole::register();
-            }
-
-            // Agregar aqui clases con metodos estaticos especiales como ErrorConsole o Redirect
-
         }
     }
 

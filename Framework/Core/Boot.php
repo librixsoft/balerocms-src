@@ -36,7 +36,9 @@ class Boot
         // Primero: instancia el contenedor
         self::$container = new Container();
 
-        // Helper para auto instanciar clases por metodos estaticos donde no se inyecte
+        ErrorConsole::register();
+
+        // Global services
         Context::init(self::$container);
 
     }
