@@ -4,7 +4,6 @@ namespace Framework\Core;
 
 use Framework\Http\RequestHelper;
 use Framework\Core\View;
-use Framework\Config\Context;
 
 
 use Throwable;
@@ -32,9 +31,6 @@ class Boot
 
         // Primero: instancia el contenedor
         self::$container = new Container();
-
-        // Este Context ahora registra tod internamente
-        Context::init(self::$container);
 
     }
 

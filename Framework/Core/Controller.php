@@ -5,7 +5,6 @@ namespace Framework\Core;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
-use Framework\Config\Context;
 
 
 class Controller
@@ -19,20 +18,11 @@ class Controller
      * @param RequestHelper $request
      * @param View $view
      */
-    public function init(RequestHelper $request, View $view)
+    public function init(RequestHelper $request, View $view, ConfigSettings $configSettings)
     {
         $this->request = $request;
         $this->view = $view;
-
-        /**
-         * ConfigSettings se obtiene desde su instancia singleton.
-         * Esto garantiza que toda la aplicación comparta una única fuente
-         * de configuración centralizada y previamente cargada desde XML.
-         *
-         * No se necesita volver a llamar a LoadSettings() ni inyectar manualmente
-         * porque la instancia ya fue creada e inicializada en Boot.
-         */
-        $this->configSettings = Context::get('config');
+        $this->configSettings = $configSettings;
 
         $this->run();
     }
