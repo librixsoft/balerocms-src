@@ -9,7 +9,6 @@
 namespace Framework\Core;
 
 use Framework\Core\ConfigSettings;
-use Framework\Core\ErrorConsole;
 
 class View extends TemplateEngine
 {
@@ -18,10 +17,10 @@ class View extends TemplateEngine
     protected string $baseDir;
     protected ConfigSettings $configSettings;
 
-    public function __construct()
+    public function __construct(ConfigSettings $config)
     {
         $this->baseDir = $this->normalizePath(LOCAL_DIR . self::VIEWS_FOLDER);
-        $this->configSettings = new ConfigSettings();
+        $this->configSettings = $config;
         $this->configSettings->LoadSettings();
     }
 

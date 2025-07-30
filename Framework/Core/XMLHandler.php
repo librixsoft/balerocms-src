@@ -12,23 +12,19 @@ use Exception;
 
 class XMLHandler
 {
-    public $file;
-    public $obj;
-    public $children;
-    public $child;
-    public $array;
-    public $value;
-    public $node;
-    public $fix;
 
-    public function __construct($file = "")
+    private string $file;
+    private \SimpleXMLElement|null $obj = null;
+    private array $node = [];
+
+    public function __construct()
     {
-        $this->file = $file;
+        $this->file = LOCAL_DIR . "/resources/config/balero.config.xml";
 
-        if (!file_exists($file)) {
+        if (!file_exists($this->file )) {
             ErrorConsole::handleException(new Exception(get_class($this) . ": No existe el archivo: " . $file));
         } else {
-            $this->readXML($file);
+            $this->readXML($this->file );
         }
     }
 

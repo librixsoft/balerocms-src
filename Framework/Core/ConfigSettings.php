@@ -13,7 +13,6 @@ use Framework\Core\XMLHandler;
 class ConfigSettings
 {
     private XMLHandler $xml;
-    private string $cfgFile;
 
     // DB Configuration
     private string $dbhost;
@@ -43,14 +42,10 @@ class ConfigSettings
     private string $multilang;
     private string $editor;
 
-    private static ?self $instance = null;
-
-    public function __construct()
+    public function __construct(XMLHandler $xml)
     {
-        $this->cfgFile = LOCAL_DIR . "/resources/config/balero.config.xml";
-
+        $this->xml = $xml;
         try {
-            $this->xml = new XMLHandler($this->cfgFile);
             $this->LoadSettings();
         } catch (Throwable $e) {
             ErrorConsole::handleException($e);

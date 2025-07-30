@@ -43,6 +43,7 @@ class Context
         // que se obtengan de manera global sin inyectar
         // sino deseas instanciar la clase colocala en Static para que el contenedor omita la instancia simulando una clase estatica
         // Aqui se define alguna clase que no se inyecte en ningun lado pero que necesite ser instancia para estar disponible
+        // Solo si una clase no tiene dependencias debe crearse en FRamework/Static
         //'redirect' => Redirect::class,
         //'errorConsole' => ErrorConsole::class,
     ];
