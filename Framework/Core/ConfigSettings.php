@@ -163,18 +163,6 @@ class ConfigSettings
         $this->xml->editChild("/config/site/theme", $value);
     }
 
-    public function getEditor(): string { return $this->editor; }
-    public function setEditor(string $value): void {
-        $this->editor = $value;
-        $this->xml->editChild("/config/site/editor", $value);
-    }
-
-    public function getMultilang(): string { return $this->multilang; }
-    public function setMultilang(string $value): void {
-        $this->multilang = $value;
-        $this->xml->editChild("/config/site/multilang", $value);
-    }
-
     public function getFullBasepath(): string
     {
         $s = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 's' : '';
@@ -183,11 +171,6 @@ class ConfigSettings
         $uri = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
         $segments = explode('?', $uri, 2);
         return str_replace("index.php", "", $segments[0]);
-    }
-
-    public function edit(string $section, string $key, string $value): void
-    {
-        $this->xml->editChild("/config/{$section}/{$key}", $value);
     }
 
     public function getFirstname(): string { return $this->firstname; }

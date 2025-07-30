@@ -42,6 +42,7 @@ class Context
         // Como en PHP no hay clases estaticas, instanciar clases con solo metodos estaticos, services o clases
         // que se obtengan de manera global sin inyectar
         // sino deseas instanciar la clase colocala en Static para que el contenedor omita la instancia simulando una clase estatica
+        // Aqui se define alguna clase que no se inyecte en ningun lado pero que necesite ser instancia para estar disponible
         //'redirect' => Redirect::class,
         //'errorConsole' => ErrorConsole::class,
     ];
