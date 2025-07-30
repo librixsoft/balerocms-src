@@ -104,33 +104,28 @@ class Boot
      */
     public static function instantiateClass(string $class, array $args = []): object
     {
-        // Usamos el nuevo método resolveInstance para crear la instancia con dependencias
+        // Crear la instancia con el contenedor y argumentos para el constructor
         $instance = self::$container->resolveInstance($class, $args);
 
-        // Lee los params de el metodo init() y los inyecta automaticamente
-        if (method_exists($instance, 'init')) {
-            $method = new \ReflectionMethod($instance, 'init');
-            $parameters = $method->getParameters();
+        // Obtener el método init mediante reflexión
+        $method = new \ReflectionMethod($instance, 'init');
 
-            $dependencies = [];
+        // Obtener los parámetros del método init
+        $parameters = $method->getParameters();
 
-            foreach ($parameters as $param) {
-                $paramType = $param->getType();
+        $dependencies = [];
 
-                if (
-                    $paramType instanceof \ReflectionNamedType &&
-                    !$paramType->isBuiltin()
-                ) {
-                    $dependencyClass = $paramType->getName();
-                    $dependencies[] = self::$container->resolveInstance($dependencyClass);
-                } else {
-                    throw new \RuntimeException("No se puede resolver el parámetro '{$param->getName()}' en {$class}::init()");
-                }
-            }
-
-            $method->invokeArgs($instance, $dependencies);
+        // Por cada parámetro, obtener el tipo y crear su instancia
+        foreach ($parameters as $param) {
+            $dependencyClass = $param->getType()->getName();
+            $dependencies[] = self::$container->resolveInstance($dependencyClass);
         }
+
+        // Invocar el método init con las dependencias creadas
+        $method->invokeArgs($instance, $dependencies);
 
         return $instance;
     }
+
+
 }
