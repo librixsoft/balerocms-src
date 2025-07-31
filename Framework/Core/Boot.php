@@ -54,7 +54,7 @@ class Boot
     public function autoloadClass(string $class): void
     {
         $baseDirs = [
-            Constant::BASEPATH . '/',
+            Constant::LOCAL_BASEPATH . '/',
         ];
 
         $relativeClass = ltrim($class, '\\');

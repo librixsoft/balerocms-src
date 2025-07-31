@@ -67,7 +67,7 @@ class Uploader
                 throw new Exception("Failed to move uploaded file to destination.");
             }
 
-            return $this->configSettings->getBasepath(Constant::BASEPATH) . Constant::REMOTE_UPLOADS_PATH . $filename;
+            return $this->configSettings->getBasepath(Constant::LOCAL_BASEPATH) . Constant::REMOTE_UPLOADS_PATH . $filename;
 
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
