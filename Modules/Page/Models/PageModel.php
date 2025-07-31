@@ -10,6 +10,8 @@ namespace Modules\Page\Models;
 
 use Framework\Core\Model;
 use Framework\Core\ErrorConsole;
+use Framework\Core\ConfigSettings;
+use Framework\Database\MySQL;
 use Exception;
 use Throwable;
 
@@ -19,6 +21,7 @@ class PageModel extends Model
     public function getVirtualPages(): array
     {
         try {
+
             $sql = "SELECT * FROM page WHERE active = 1 AND visible = 1 ORDER BY id ASC";
             $this->db->query($sql);
             $this->db->get();

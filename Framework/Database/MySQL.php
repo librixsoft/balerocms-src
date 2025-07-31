@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -15,6 +15,8 @@ use Framework\Core\ErrorConsole;
 
 class MySQL
 {
+
+    private ConfigSettings $config;
 
     private \mysqli $conn;
 
@@ -30,27 +32,22 @@ class MySQL
 
     private bool $status = false;
 
-    public function __construct(ConfigSettings $config)
+    public function connect(
+        string $host,
+        string $user,
+        string $pass,
+        ?string $dbname = null): void
     {
-        try {
-
-            $this->conn = new \mysqli(
-                $config->getDbhost(),
-                $config->getDbuser(),
-                $config->getDbpass() ,
-                $config->getDbname()
-            );
-
-            if ($this->conn->connect_errno) {
-                $this->status = false;
-                throw new Exception("MySQL connection failed: " . $this->conn->connect_error);
-            }
-
-            $this->status = true;
-        } catch (Throwable $e) {
-            ErrorConsole::handleException(new Exception("Unexpected error in MySQL connection: " . $e->getMessage(), 0, $e));
+        if ($dbname) {
+            $this->conn = @new \mysqli($host, $user, $pass, $dbname);
+        } else {
+            $this->conn = @new \mysqli($host, $user, $pass);
         }
+
+        $this->status = !$this->conn->connect_error;
     }
+
+
 
     public function query(string $query, array $params = []): void
     {

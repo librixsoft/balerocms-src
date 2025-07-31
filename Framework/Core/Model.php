@@ -10,9 +10,6 @@ namespace Framework\Core;
 
 use Framework\Core\ConfigSettings;
 use Framework\Database\MySQL;
-use Framework\Core\ErrorConsole;
-use Throwable;
-use Exception;
 
 class Model
 {
@@ -24,22 +21,14 @@ class Model
         $this->configSettings = $configSettings;
         $this->db = $db;
 
-        $this->connectOnInit(); // Nueva función encargada de conectar
-    }
-
-    protected function connectOnInit(): void
-    {
-        try {
-            if ($this->db->isStatus()) {
-                $this->db->query("CREATE DATABASE IF NOT EXISTS " . $this->configSettings->getDbname() . ";");
-            } else {
-                throw new Exception("Failed to connect to the database.");
-            }
-        } catch (Throwable $e) {
-            ErrorConsole::handleException(
-                new Exception("Error in Model: " . $e->getMessage(), 0, $e)
+        // Solo conecta si la app ya está instalada
+        if ($this->configSettings->getInstalled() === 'yes') {
+            $this->db->connect(
+                $this->configSettings->getDbhost(),
+                $this->configSettings->getDbuser(),
+                $this->configSettings->getDbpass(),
+                $this->configSettings->getDbname()
             );
         }
     }
-
 }

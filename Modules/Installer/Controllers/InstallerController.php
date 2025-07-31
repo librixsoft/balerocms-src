@@ -93,6 +93,6 @@ class InstallerController extends Controller
             ErrorConsole::handleException($e);
         }
 
-        return $this->render("installer/progressBar.html", $this->getInstallerParams());
+        return $this->render("installer/progressBar.html", $this->installerViewModel->getInstallerParams());
     }
 }
