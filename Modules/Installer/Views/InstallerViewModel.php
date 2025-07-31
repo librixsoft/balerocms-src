@@ -9,6 +9,7 @@
 namespace Modules\Installer\Views;
 
 use Framework\Core\ConfigSettings;
+use Framework\Static\Constant;
 
 class InstallerViewModel
 {
@@ -65,7 +66,7 @@ class InstallerViewModel
             'mod_rewrite_enabled' => function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()),
             'welcome' => "Welcome to Balero CMS Setup Wizard.",
             'btn_install' => "Instalar",
-            'config_writeable' => is_writable(LOCAL_DIR . '/resources/config/balero.config.xml'),
+            'config_writeable' => is_writable(Constant::CONFIG_PATH),
         ];
 
         return $params;

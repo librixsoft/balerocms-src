@@ -9,17 +9,17 @@
 namespace Framework\Core;
 
 use Framework\Core\ConfigSettings;
+use Framework\Static\Constant;
 
 class View extends TemplateEngine
 {
-    private const VIEWS_FOLDER = '/resources/views';
 
     protected string $baseDir;
     protected ConfigSettings $configSettings;
 
     public function __construct(ConfigSettings $config)
     {
-        $this->baseDir = $this->normalizePath(LOCAL_DIR . self::VIEWS_FOLDER);
+        $this->baseDir = $this->normalizePath(Constant::VIEWS_PATH);
         $this->configSettings = $config;
         $this->configSettings->LoadSettings();
     }

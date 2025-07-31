@@ -9,6 +9,7 @@
 namespace Framework\Core;
 
 use Exception;
+use Framework\Static\Constant;
 
 class XMLHandler
 {
@@ -19,7 +20,7 @@ class XMLHandler
 
     public function __construct()
     {
-        $this->file = LOCAL_DIR . "/resources/config/balero.config.xml";
+        $this->file = Constant::CONFIG_PATH;
 
         if (!file_exists($this->file )) {
             ErrorConsole::handleException(new Exception(get_class($this) . ": No existe el archivo: " . $file));

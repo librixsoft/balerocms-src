@@ -12,6 +12,7 @@ use Framework\Http\RequestHelper;
 use Framework\Core\View;
 use Framework\Config\Context;
 
+use Framework\Static\Constant;
 use Throwable;
 use Exception;
 
@@ -53,7 +54,7 @@ class Boot
     public function autoloadClass(string $class): void
     {
         $baseDirs = [
-            LOCAL_DIR . '/',
+            Constant::BASEPATH . '/',
         ];
 
         $relativeClass = ltrim($class, '\\');

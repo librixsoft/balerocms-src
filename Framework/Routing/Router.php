@@ -14,6 +14,7 @@ use Framework\Core\ErrorConsole;
 use Framework\Http\RequestHelper;
 use Framework\Security\Security;
 use Framework\Security\LoginManager;
+use Framework\Static\Constant;
 use Modules\Admin\AdminElements;
 use Throwable;
 use Exception;
@@ -48,7 +49,7 @@ class Router
     public function init(): void
     {
         // Cargar helpers
-        require_once LOCAL_DIR . '/Framework/I18n/lang_helper.php';
+        require_once Constant::LANG_HELPER;
 
         // Detectar idioma y validar
         $lang = $_GET['lang'] ?? $_SESSION['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
@@ -61,7 +62,7 @@ class Router
         $_SESSION['lang'] = $lang;
 
         // ✅ Nuevo esquema: cargamos múltiples archivos desde carpeta
-        LangManager::load($lang, LOCAL_DIR . '/resources/lang');
+        LangManager::load($lang, Constant::LANG_PATH);
 
         // Resolver application
         $app = $this->request->get('app');
