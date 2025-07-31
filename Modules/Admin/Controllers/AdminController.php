@@ -91,7 +91,7 @@ class AdminController extends Controller
             throw new \Exception("input file not exist");
         }
 
-        echo $this->uploader->image($_FILES['file'], LOCAL_DIR);
+        echo $this->uploader->image($_FILES['file']);
         return "";
     }
 }

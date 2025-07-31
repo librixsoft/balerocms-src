@@ -146,6 +146,10 @@ class ConfigSettings
         $this->xml->editChild("/config/site/url", $value);
     }
 
+    /**
+     * Return remote basepath http://yourdomain...
+     * @return string
+     */
     public function getBasepath(): string { return $this->basepath; }
     public function setBasepath(string $value): void {
         $this->basepath = $value;

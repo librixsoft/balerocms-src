@@ -11,12 +11,12 @@ namespace Framework\IO;
 use Exception;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
+use Framework\Static\Constant;
 
 class Uploader
 {
     private ConfigSettings $configSettings;
 
-    private const UPLOADS_FOLDER = '/public/assets/images/uploads/';
     private const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
     private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -25,7 +25,7 @@ class Uploader
         $this->configSettings = $configSettings;
     }
 
-    public function image($file, $path)
+    public function image($file)
     {
         try {
             if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
@@ -49,7 +49,7 @@ class Uploader
             }
 
             // Ensure upload directory exists
-            $uploadDir = rtrim($path . self::UPLOADS_FOLDER, '/') . '/';
+            $uploadDir = rtrim(Constant::UPLOADS_PATH, '/') . '/';
             if (!is_dir($uploadDir)) {
                 if (!mkdir($uploadDir, 0777, true)) {
                     throw new Exception("Failed to create upload directory: $uploadDir");
@@ -67,7 +67,7 @@ class Uploader
                 throw new Exception("Failed to move uploaded file to destination.");
             }
 
-            return $this->configSettings->getBasepath($path) . self::UPLOADS_FOLDER . $filename;
+            return $this->configSettings->getBasepath(Constant::BASEPATH) . Constant::REMOTE_UPLOADS_PATH . $filename;
 
         } catch (Exception $e) {
             ErrorConsole::handleException($e);
