@@ -32,7 +32,7 @@ class InstallerModel extends Model
             $this->db->connect($host, $user, $pass, $dbname);
 
             // 4. Cargar y ejecutar el archivo SQL
-            $sqlFile = LOCAL_DIR . "/Modules/Installer/sql/tables.sql";
+            $sqlFile = LOCAL_DIR . "/Modules/Installer/sql/tables.sql"; // TODO: Create a static class to call this things
 
             if (!file_exists($sqlFile)) {
                 throw new Exception("Archivo SQL no encontrado: $sqlFile");
