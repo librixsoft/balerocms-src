@@ -9,6 +9,7 @@
 namespace Modules\Installer\Controllers;
 
 use Framework\Core\Validator;
+use Framework\Static\Redirect;
 use Modules\Installer\Mapper\InstallerMapper;
 use Modules\Installer\Models\InstallerModel;
 use Framework\Core\Controller;
@@ -42,8 +43,8 @@ class InstallerController extends Controller
         return $this->render("installer/setup_wizard.html", $params);
     }
 
-    #[Post('/')]
-    public function install()
+    #[Post('/install')]
+    public function postInstall()
     {
         $installerDTO = InstallerDTO::fromRequest($this->request);
         $input = (array) $installerDTO;
@@ -68,14 +69,22 @@ class InstallerController extends Controller
             LangSelector::getParams()
         );
 
-        return $this->render("installer/setup_wizard.html", $params);
+        // TODO: Store and pass $params error  and get it from session to show errors
+
+        Redirect::to("/installer/");
+    }
+
+    #[Get('progressBar')]
+    public function getProgressBar()
+    {
+        return $this->render("installer/progressBar.html", $this->installerViewModel->getInstallerParams());
     }
 
     #[Post('progressBar')]
-    public function progressBar()
+    public function postProgressBar()
     {
         $this->model->install();
-
-        return $this->render("installer/progressBar.html", $this->installerViewModel->getInstallerParams());
+        Redirect::to("/installer/progressBar");
     }
+
 }
