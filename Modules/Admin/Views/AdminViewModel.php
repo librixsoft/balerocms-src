@@ -41,9 +41,13 @@ class AdminViewModel
     public function getSettingsParams(): array
     {
         return [
+
+            'core_version' => _CORE_VERSION,
+
             'virtual_pages' => $this->model->getVirtualPages(),
             'defaultTheme' => $this->config->getTheme(),
 
+            // TODO: Implements theme system and reads
             'themes' => [
                 ['value' => 'Default', 'label' => 'Default'],
                 ['value' => 'Dark',    'label' => 'Dark'],
