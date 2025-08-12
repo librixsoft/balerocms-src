@@ -92,6 +92,11 @@ class AdminModel extends Model
         return true;
     }
 
+    public function getPagesCount(): int
+    {
+        $pages = $this->getVirtualPages();
+        return count($pages);
+    }
 
 
     /**

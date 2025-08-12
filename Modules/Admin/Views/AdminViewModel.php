@@ -46,6 +46,7 @@ class AdminViewModel
 
             'virtual_pages' => $this->model->getVirtualPages(),
             'defaultTheme' => $this->config->getTheme(),
+            'pages_count' => $this->model->getPagesCount(),
 
             // TODO: Implements theme system and reads
             'themes' => [
@@ -101,7 +102,7 @@ class AdminViewModel
             'btn_save' => 'Save',
             'pages' => $this->model->getVirtualPages(),
             'activeMenu' => 'all_pages',
-            'pages_count' => count($this->model->getVirtualPages()),  // <-- aquí el count
+            'pages_count' => $this->model->getPagesCount(),
         ];
     }
 
