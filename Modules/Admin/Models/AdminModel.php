@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -15,7 +15,6 @@ use Throwable;
 
 class AdminModel extends Model
 {
-
     public function getVirtualPages(): array
     {
         try {
@@ -27,7 +26,6 @@ class AdminModel extends Model
 
             // Generar URL estática para cada página virtual
             foreach ($rows as &$row) {
-
                 $slug = $this->slugify($row['static_url']);
                 $row['url'] = "{$slug}";
             }
@@ -41,7 +39,40 @@ class AdminModel extends Model
         }
     }
 
-    
+    public function getPageById(int $id): ?array
+    {
+        $id = (int)$id;
+        $sql = "SELECT * FROM page WHERE id = {$id} LIMIT 1";
+
+        $this->db->query($sql);
+        $this->db->get();
+
+        $rows = $this->db->getRows();
+
+        return $rows[0] ?? null;
+    }
+
+    public function updatePage(int $id, array $data): bool
+    {
+        $sql = "UPDATE page SET 
+        virtual_title = ?, 
+        static_url = ?, 
+        virtual_content = ? 
+        WHERE id = ?";
+
+        $params = [
+            $data['virtual_title'],
+            $data['static_url'],
+            $data['virtual_content'],
+            $id
+        ];
+
+        $this->db->query($sql, $params);
+
+        // Puedes devolver true si no hubo excepción
+        return true;
+    }
+
     /**
      * Genera un slug amigable para URLs basado en el título (opcional)
      */
@@ -57,5 +88,4 @@ class AdminModel extends Model
 
         return $text ?: 'page';
     }
-
 }

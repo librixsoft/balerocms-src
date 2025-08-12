@@ -99,4 +99,29 @@ class AdminController extends Controller
 
         return $this->uploader->image($_FILES['file']);
     }
+
+    #[Get('/pages/edit/{id}')]
+    public function editPage(int $id)
+    {
+        $params = $this->viewModel->getEditPageParams($id);
+        return $this->render("admin/edit_page.html", $params);
+    }
+
+    #[Post('/pages/edit/{id}')]
+    public function postEditPage(int $id)
+    {
+        // Leer también static_url para enviarlo al modelo (aunque sea readonly)
+        $data = [
+            'id' => $id,
+            'virtual_title' => $this->request->post("virtual_title"),
+            'static_url' => $this->request->post("static_url"),
+            'virtual_content' => $this->request->post("virtual_content"),
+        ];
+
+        $this->viewModel->updatePage($data);
+
+        Redirect::to('/admin/pages');
+    }
+
+
 }

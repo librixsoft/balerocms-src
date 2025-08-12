@@ -136,6 +136,12 @@ class MySQL
         }
     }
 
+    public function escape(string $value): string
+    {
+        return $this->conn->real_escape_string($value);
+    }
+
+
     public function queryArray(): array
     {
         return $this->rows;

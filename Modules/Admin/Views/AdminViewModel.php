@@ -88,13 +88,34 @@ class AdminViewModel
     public function getPagesParams(): array
     {
         return [
+            'lbl_edit_page' => 'Edit Page',
             'lbl_title' => 'Title',
+            'lbl_static_url' => 'Static URL',
+            'lbl_content' => 'Content',
             'lbl_action' => 'Action',
             'lbl_edit' => 'Edit',
             'lbl_delete' => 'Delete',
+            'btn_save' => 'Save',
             'pages' => $this->model->getVirtualPages(),
             'activeMenu' => 'all_pages',
         ];
     }
+
+    public function updatePage(array $data): bool
+    {
+        return $this->model->updatePage((int)$data['id'], $data);
+    }
+
+    public function getEditPageParams(int $id): array
+    {
+        $page = $this->model->getPageById($id);
+        // Obtener también parámetros generales de páginas
+        $pagesParams = $this->getPagesParams();
+
+        // Combinar ambos arrays, teniendo en cuenta que 'page' es específico
+        return array_merge($pagesParams, ['page' => $page]);
+    }
+
+
 
 }
