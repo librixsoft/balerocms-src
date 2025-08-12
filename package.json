@@ -1,0 +1,15 @@
+{
+  "name": "balero-assets",
+  "version": "1.0.0",
+  "description": "Librerías frontend para desarrollo local",
+  "scripts": {
+    "postinstall": "node copy-libs.js",
+    "update:libs": "npm update && node copy-libs.js"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "jquery": "^3.7.1",
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "summernote": "^0.9.1"
+  }
+}
