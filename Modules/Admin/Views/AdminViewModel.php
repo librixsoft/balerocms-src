@@ -73,17 +73,20 @@ class AdminViewModel
 
     public function getNewPageParams(): array
     {
-        return [
-            'lbl_title' => 'Title',
-            'lbl_active' => 'Active',
-            'enabled' => 'Enabled',
-            'disabled' => 'disabled',
-            'lbl_message' => 'Content',
-            'btn_add' => 'Create',
-            'new_page' => 'New page',
-            'activeMenu' => 'pages',
-        ];
+        $params = $this->getPagesParams(); // integrar getPagesParams
+        $params['current_date'] = date('Y-m-d H:i:s');
+        $params['activeMenu'] = 'pages';
+        // Otros valores específicos para "new page" si quieres
+        $params['new_page'] = 'New page';
+        $params['btn_add'] = 'Create';
+        $params['lbl_visible'] = 'Visible';
+        $params['enabled'] = 'Enabled';
+        $params['disabled'] = 'Disabled';
+        $params['lbl_static_url'] = 'Static URL';
+        $params['lbl_content'] = 'Content';
+        return $params;
     }
+
 
     public function getPagesParams(): array
     {

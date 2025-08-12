@@ -73,6 +73,27 @@ class AdminModel extends Model
         return true;
     }
 
+    public function createPage(array $data): bool
+    {
+        $sql = "INSERT INTO page (virtual_title, static_url, virtual_content, visible, date, active) VALUES (?, ?, ?, ?, ?, ?)";
+
+        $params = [
+            $data['virtual_title'],
+            $data['static_url'],
+            $data['virtual_content'],
+            $data['visible'],
+            $data['date'],
+            1  // activo por defecto
+        ];
+
+
+        $this->db->query($sql, $params);
+
+        return true;
+    }
+
+
+
     /**
      * Genera un slug amigable para URLs basado en el título (opcional)
      */

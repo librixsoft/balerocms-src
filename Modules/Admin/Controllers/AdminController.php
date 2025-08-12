@@ -90,6 +90,23 @@ class AdminController extends Controller
         return $this->render("admin/pages.html", $this->viewModel->getPagesParams());
     }
 
+    #[Post('/pages/new')]
+    public function postNewPage()
+    {
+        $data = [
+            'virtual_title'   => $this->request->post('virtual_title'),
+            'static_url'      => $this->request->post('static_url'),
+            'virtual_content' => $this->request->post('virtual_content'),
+            'visible'         => (int) $this->request->post('visible'),  // corregido, valor 1 o 0
+            'date'            => $this->request->post('date'),
+        ];
+
+        $this->model->createPage($data);
+
+        Redirect::to('/admin/pages');
+    }
+
+
     #[Post('/uploader')]
     public function postUploader()
     {
