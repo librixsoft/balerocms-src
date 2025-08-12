@@ -12,8 +12,14 @@ use Framework\I18n\LangManager;
 
 class TemplateEngine
 {
+
+    protected string $baseDir;
+
     protected function processTemplate(string $content, array $params): string
     {
+
+        $content = $this->processIncludes($content, $params);
+
         // Aplanar los parámetros con claves anidadas: 'errors.username' => 'Mensaje'
         $flatParams = $this->flattenParams($params);
 
@@ -169,6 +175,39 @@ class TemplateEngine
 
 
     /**
+     * Procesa inclusiones tipo <!-- @include "ruta/al/archivo.html" -->
+     */
+    protected function processIncludes(string $content, array $params): string
+    {
+        return preg_replace_callback(
+            '/<!--\s*@include\s+"([^"]+)"\s*-->/',
+            function ($matches) use ($params) {
+                $includePath = $matches[1];
+
+                // Aquí tienes que construir la ruta completa, usando baseDir o similar
+                // Pero TemplateEngine no conoce $baseDir de View, entonces una solución es:
+                // Que la clase TemplateEngine tenga una propiedad $baseDir, que le pases desde View
+
+                if (!isset($this->baseDir)) {
+                    // fallback: sin baseDir no puede incluir
+                    return "<!-- INCLUDE ERROR: baseDir no definido -->";
+                }
+
+                $fullPath = realpath($this->baseDir . $includePath);
+                if (!$fullPath || !file_exists($fullPath)) {
+                    return "<!-- INCLUDE ERROR: Archivo no encontrado $includePath -->";
+                }
+
+                $includedContent = file_get_contents($fullPath);
+                // Procesamos recursivamente includes y otras cosas en el contenido incluido
+                return $this->processTemplate($includedContent, $params);
+            },
+            $content
+        );
+    }
+
+
+    /**
      * Aplana un array multidimensional para claves como 'errors.username'
      */
     private function flattenParams(array $params, string $prefix = ''): array
@@ -187,4 +226,10 @@ class TemplateEngine
 
         return $result;
     }
+
+    public function setBaseDir(string $path): void
+    {
+        $this->baseDir = rtrim($path, '/') . '/';
+    }
+
 }

@@ -1,0 +1,29 @@
+<div class="span3" id="sidebar">
+    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+        <!-- @if activeMenu == "settings" -->
+        <li class="active">
+            <!-- @else -->
+        <li>
+            <!-- @endif -->
+            <a href="./admin/settings">Dashboard</a>
+        </li>
+
+        <!-- @if activeMenu == "pages" -->
+        <li class="active">
+            <!-- @else -->
+        <li>
+            <!-- @endif -->
+            <a href="./admin/new-page">New Page
+            </a>
+        </li>
+
+        <!-- @if activeMenu == "all_pages" -->
+        <li class="active">
+            <!-- @else -->
+        <li>
+            <!-- @endif -->
+            <a href="./admin/pages">
+                <span class="badge badge-important pull-right">0</span> All Pages</a>
+        </li>
+    </ul>
+</div>

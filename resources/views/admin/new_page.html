@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+<title>Admin Home Page - {mod_name}</title>
+ <!--  basepath -->
+<base href="{basepath}">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="public/assets/js/html5shiv.js"></script>
+<![endif]-->
+<!-- bootstrap -->
+<link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="public/assets/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<link href="public/assets/css/styles.css" rel="stylesheet" media="screen">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="public/assets/js/html5.js"></script>
+<![endif]-->
+<script src="public/assets/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<link rel="shortcut icon" href="favicon.ico">
+<!-- add library -->
+<script src="public/assets/js/jquery-1.9.1.min.js"></script>
+<script src="public/assets/js/bootstrap.min.js"></script>
+<link href="public/assets/css/font-awesome.css" rel="stylesheet">
+<!-- add summernote -->
+<link href="public/assets/css/summernote.css" rel="stylesheet">
+<script src="public/assets/js/summernote.js"></script>
+</head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="http://www.balerocms.com/"><img src="public/assets/images/admin/logo_top.png"></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> {username} ({email})<i class="caret"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="./logout">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav">
+                            <li>
+                                <a href="./admin">Dashboard</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Preview <i class="caret"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="./" target="_blank">Front-End</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+
+                <!-- @include "admin/includes/sidebar.html" -->
+
+                <div class="span9" id="content">
+
+                    <div class="row-fluid">
+
+                        <!-- dashboard dinamic content -->
+                        <!-- block -->
+                        <!-- new page -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">{new_page}</div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span12">
+                                    <!-- edit page -->
+                                    <div class="block-content collapse in">
+                                        <div class="row-fluid padd-bottom">
+                                            <!--  content -->
+                                            <div class="span12">
+                                                <form class="form-horizontal" method="POST" action="./admin/new_page/mod-virtual_page">
+                                                    <fieldset>
+                                                        <div class="control-group">
+                                                            <label class="control-label" for="select01">{lbl_title}</label>
+                                                            <div class="controls">
+                                                                <input type="text" class="span6" id="typeahead"  data-provide="typeahead" name="virtual_title">
+                                                            </div>
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label class="control-label" for="select01">{lbl_active}</label>
+                                                            <div class="controls">
+                                                                <div class="field"><input type="radio" name="a" value="1" checked="checked"> {enabled}</div>
+                                                                <div class="label"></div>
+                                                                <div class="field"><input type="radio" name="a" value="0"> {disabled}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label class="control-label" for="textarea2">{lbl_message}</label>
+                                                            <div class="controls">
+                                                                <textarea class="summernote" name="content"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-actions">
+                                                            <button type="submit" class="btn btn-primary" name="submit"><i class="icon-ok"></i> {btn_add}</button>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <!--  /content -->
+                                        </div>
+                                    </div>
+                                    <!-- /edit page -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /new page -->
+
+                        <!-- summernote javascript -->
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $('.summernote').summernote({
+                                    height: 350,
+                                    onImageUpload: function(files, editor, welEditable) {
+                                        sendFile(files[0], editor, welEditable);
+                                    },
+                                    codemirror: {
+                                        theme: ''
+                                    }
+                                });
+                                function sendFile(file, editor, welEditable) {
+                                    data = new FormData();
+                                    data.append("file", file);
+                                    $.ajax({
+                                        data: data,
+                                        type: "POST",
+                                        url: "{basepath}admin/uploader",
+                                        cache: false,
+                                        contentType: false,
+                                        processData: false,
+                                        success: function(url) {
+                                            editor.insertImage(welEditable, url);
+                                        }
+                                    });
+                                }
+                            });
+                            var postForm = function() {
+                                var content = $('textarea[name="content"]').html($('.summernote').code());
+                            }
+                        </script>
+                        <!-- /block -->
+                        <!-- end dashboard dinamic content --->
+
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <footer>
+                <p>Powered by <a href="#">Balero CMS</a>.</p>
+            </footer>
+        </div>
+        <!--/.fluid-container-->
+
+        <script src="public/assets/js/scripts.js"></script>
+
+    </body>
+</html>

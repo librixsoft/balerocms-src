@@ -71,7 +71,7 @@ class AdminViewModel
         ];
     }
 
-    public function getPagesParams(): array
+    public function getNewPageParams(): array
     {
         return [
             'lbl_title' => 'Title',
@@ -85,7 +85,7 @@ class AdminViewModel
         ];
     }
 
-    public function getAllPagesParams(): array
+    public function getPagesParams(): array
     {
         return [
             'lbl_title' => 'Title',
@@ -93,6 +93,7 @@ class AdminViewModel
             'lbl_edit' => 'Edit',
             'lbl_delete' => 'Delete',
             'pages' => $this->model->getVirtualPages(),
+            'activeMenu' => 'all_pages',
         ];
     }
 

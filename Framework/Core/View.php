@@ -22,6 +22,7 @@ class View extends TemplateEngine
         $this->baseDir = $this->normalizePath(Constant::VIEWS_PATH);
         $this->configSettings = $config;
         $this->configSettings->LoadSettings();
+        $this->setBaseDir($this->baseDir);
     }
 
     public function getDefaultParams(): array
@@ -65,6 +66,11 @@ class View extends TemplateEngine
     private function normalizePath(string $path): string
     {
         return rtrim($path, '/') . '/';
+    }
+
+    public function setBaseDir(string $path): void
+    {
+        $this->baseDir = $path;
     }
 
 }
