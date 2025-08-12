@@ -84,6 +84,12 @@ class AdminController extends Controller
         return $this->render("admin/pages.html", $this->viewModel->getPagesParams());
     }
 
+    #[Get('/all-pages')]
+    public function getAllPages()
+    {
+        return $this->render("admin/all_pages.html", $this->viewModel->getAllPagesParams());
+    }
+
     #[Post('/uploader')]
     public function postUploader()
     {

@@ -84,4 +84,16 @@ class AdminViewModel
             'activeMenu' => 'pages',
         ];
     }
+
+    public function getAllPagesParams(): array
+    {
+        return [
+            'lbl_title' => 'Title',
+            'lbl_action' => 'Action',
+            'lbl_edit' => 'Edit',
+            'lbl_delete' => 'Delete',
+            'pages' => $this->model->getVirtualPages(),
+        ];
+    }
+
 }
