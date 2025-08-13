@@ -1,37 +1,39 @@
 <div class="col-md-3" id="sidebar">
-    <ul class="nav flex-column nav-pills">
-        <!-- @if activeMenu == "settings" -->
-        <li class="nav-item">
-            <a class="nav-link active" href="./admin/settings">Dashboard</a>
-        </li>
-        <!-- @else -->
-        <li class="nav-item">
-            <a class="nav-link" href="./admin/settings">Dashboard</a>
-        </li>
-        <!-- @endif -->
+    <div class="rounded p-3">
+        <ul class="nav flex-column nav-pills bg-white">
+            <!-- @if activeMenu == "settings" -->
+            <li class="nav-item w-100">
+                <a class="nav-link active w-100" href="./admin/settings">Dashboard</a>
+            </li>
+            <!-- @else -->
+            <li class="nav-item w-100">
+                <a class="nav-link w-100" href="./admin/settings">Dashboard</a>
+            </li>
+            <!-- @endif -->
 
-        <!-- @if activeMenu == "pages" -->
-        <li class="nav-item">
-            <a class="nav-link active" href="./admin/new-page">New Page</a>
-        </li>
-        <!-- @else -->
-        <li class="nav-item">
-            <a class="nav-link" href="./admin/new-page">New Page</a>
-        </li>
-        <!-- @endif -->
+            <!-- @if activeMenu == "pages" -->
+            <li class="nav-item w-100">
+                <a class="nav-link active w-100" href="./admin/new-page">New Page</a>
+            </li>
+            <!-- @else -->
+            <li class="nav-item w-100">
+                <a class="nav-link w-100" href="./admin/new-page">New Page</a>
+            </li>
+            <!-- @endif -->
 
-        <!-- @if activeMenu == "all_pages" -->
-        <li class="nav-item">
-            <a class="nav-link active" href="./admin/pages">
-                <span class="badge bg-danger float-end">{pages_count}</span> Edit/View Pages
-            </a>
-        </li>
-        <!-- @else -->
-        <li class="nav-item">
-            <a class="nav-link" href="./admin/pages">
-                <span class="badge bg-danger float-end">{pages_count}</span> Edit/View Pages
-            </a>
-        </li>
-        <!-- @endif -->
-    </ul>
+            <!-- @if activeMenu == "all_pages" -->
+            <li class="nav-item w-100">
+                <a class="nav-link active w-100" href="./admin/pages">
+                    <span class="badge bg-danger float-end">{pages_count}</span> Edit/View Pages
+                </a>
+            </li>
+            <!-- @else -->
+            <li class="nav-item w-100">
+                <a class="nav-link w-100" href="./admin/pages">
+                    <span class="badge bg-danger float-end">{pages_count}</span> Edit/View Pages
+                </a>
+            </li>
+            <!-- @endif -->
+        </ul>
+    </div>
 </div>
