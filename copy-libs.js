@@ -56,8 +56,9 @@ copyFileSafe(
 );
 copyFolderSync(
     path.join(nodeModulesPath, '@fortawesome', 'fontawesome-free', 'webfonts'),
-    path.join(assetsPath, 'webfonts')
+    path.join(assetsPath, 'css', 'webfonts')   // <--- aquí agregas la carpeta css
 );
+
 
 // Summernote (usa minificado si existe, si no copia versión normal y renombra)
 const summernoteDist = path.join(nodeModulesPath, 'summernote', 'dist');
