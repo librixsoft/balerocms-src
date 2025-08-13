@@ -62,6 +62,14 @@ copyFolderSync(
 // Summernote (usa minificado si existe, si no copia versión normal y renombra)
 const summernoteDist = path.join(nodeModulesPath, 'summernote', 'dist');
 
+// Copiar carpeta fonts de Summernote a public/assets/css/font
+const summernoteFontSrc = path.join(summernoteDist, 'font');
+const summernoteFontDest = path.join(assetsPath, 'css', 'font');
+copyFolderSync(summernoteFontSrc, summernoteFontDest);
+
+// ... resto de tu código ...
+
+
 if (fs.existsSync(path.join(summernoteDist, 'summernote.min.css'))) {
     copyFileSafe(
         path.join(summernoteDist, 'summernote.min.css'),

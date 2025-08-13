@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Librerías frontend para desarrollo local",
   "scripts": {
-    "postinstall": "node copy-libs.js",
-    "update:libs": "npm update && node copy-libs.js"
+    "postinstall": "node copy-libs.js"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
