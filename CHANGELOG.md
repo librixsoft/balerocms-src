@@ -13,6 +13,7 @@ CHANGELOG
   * Load template system
   * Dynamic loading core
   * Using of attributes in controllers like Java style annotations
+  * Front-End dependency manager (package.json)
   
     v.0.8.3
   * Rich Text Editor Fixes
