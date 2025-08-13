@@ -9,8 +9,7 @@
     <!-- Bootstrap CSS -->
     <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap responsive no existe ya en v5 -->
-
+    <!-- Custom styles -->
     <link href="public/assets/css/styles.css" rel="stylesheet" media="screen">
 
     <!-- Font Awesome 6 -->
@@ -27,16 +26,22 @@
 
     <!-- Summernote JS -->
     <script src="public/assets/js/summernote.min.js"></script>
-
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="http://www.balerocms.com/">
+        <a class="navbar-brand" href="./">
             <img src="public/assets/images/admin/logo_top.png" alt="Logo" style="height: 30px;">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMain"
+                aria-controls="navbarMain"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -46,7 +51,14 @@
                     <a class="nav-link" href="./admin">Dashboard</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="previewDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="previewDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                    >
                         Preview
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="previewDropdown">
@@ -57,7 +69,14 @@
 
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="userDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                    >
                         <i class="fas fa-user"></i> {username} ({email})
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -72,9 +91,10 @@
 <div class="container-fluid" style="padding-top: 70px;">
     <div class="row">
 
+        <!-- Incluimos el sidebar aquí -->
         <!-- @include "admin/includes/sidebar.html" -->
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="content">
+        <main class="col-md-9 ms-sm-auto col-lg-9 px-md-4" id="content">
             <div class="row mb-3">
 
                 <!-- dashboard dinamic content -->
