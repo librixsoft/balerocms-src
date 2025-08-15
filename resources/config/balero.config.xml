@@ -14,7 +14,7 @@
 		<!-- admin god -->
 		<username>admin</username>
 		<!-- pwd encrypt -->
-		<passwd>$2a$07$p3RNtiP2Qub0zgd3wC9yPeE844.yLl1Fuj2krfUfJheTGCLvOcpe.</passwd>
+		<passwd>$2a$07$xACroomg65KmUf3t7t5KEu45I2pxfRWJF34NXABop1vA2SZ5KTBC2</passwd>
 		<!-- admin data -->
 		<firstname>Balero</firstname>
 		<lastname>CMS</lastname>

@@ -12,6 +12,7 @@ use Framework\Core\Model;
 use Framework\Core\ErrorConsole;
 use Framework\Core\ConfigSettings;
 use Framework\Database\MySQL;
+use Framework\Static\Utils;
 use Exception;
 use Throwable;
 
@@ -31,7 +32,7 @@ class PageModel extends Model
             // Generar URL estática para cada página virtual
             foreach ($rows as &$row) {
 
-                $slug = $this->slugify($row['static_url']);
+                $slug = Utils::slugify($row['static_url']);
                 $row['url'] = "{$slug}";
             }
 
@@ -63,22 +64,6 @@ class PageModel extends Model
             );
             return [];
         }
-    }
-
-    /**
-     * Genera un slug amigable para URLs basado en el título (opcional)
-     */
-    private function slugify(string $text): string
-    {
-        // Pasos básicos para crear un slug
-        $text = preg_replace('~[^\pL\d]+~u', '-', $text); // Reemplaza espacios y no letras por guion
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text); // Transliterar caracteres
-        $text = preg_replace('~[^-\w]+~', '', $text); // Eliminar caracteres no deseados
-        $text = trim($text, '-');
-        $text = preg_replace('~-+~', '-', $text);
-        $text = strtolower($text);
-
-        return $text ?: 'page';
     }
 
 }
