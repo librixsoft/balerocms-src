@@ -18,7 +18,7 @@ class AdminModel extends Model
     public function getVirtualPages(): array
     {
         try {
-            $sql = "SELECT * FROM page WHERE active = 1 AND visible = 1 ORDER BY id ASC";
+            $sql = "SELECT * FROM page WHERE visible = 1 ORDER BY id ASC";
             $this->db->query($sql);
             $this->db->get();
 
@@ -75,7 +75,7 @@ class AdminModel extends Model
 
     public function createPage(array $data): bool
     {
-        $sql = "INSERT INTO page (virtual_title, static_url, virtual_content, visible, date, active) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO page (virtual_title, static_url, virtual_content, visible, created_at) VALUES (?, ?, ?, ?, ?)";
 
         $params = [
             $data['virtual_title'],
@@ -83,7 +83,6 @@ class AdminModel extends Model
             $data['virtual_content'],
             $data['visible'],
             $data['date'],
-            1  // activo por defecto
         ];
 
 

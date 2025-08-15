@@ -2,165 +2,202 @@
 <html class="no-js">
 <head>
     <title>Admin Edit Page - {mod_name}</title>
-    <!--  basepath -->
     <base href="{basepath}">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-    <script src="public/assets/js/html5shiv.js"></script>
-    <![endif]-->
-    <!-- bootstrap -->
+
+    <!-- Bootstrap CSS -->
     <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="public/assets/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="public/assets/css/styles.css" rel="stylesheet" media="screen">
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-    <script src="public/assets/js/html5.js"></script>
-    <![endif]-->
-    <script src="public/assets/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    <link rel="shortcut icon" href="favicon.ico">
-    <!-- add library -->
-    <script src="public/assets/js/jquery-1.9.1.min.js"></script>
-    <script src="public/assets/js/bootstrap.min.js"></script>
-    <link href="public/assets/css/font-awesome.css" rel="stylesheet">
-    <!-- add summernote -->
-    <link href="public/assets/css/summernote.css" rel="stylesheet">
-    <script src="public/assets/js/summernote.js"></script>
+
+    <!-- Font Awesome 6 -->
+    <link href="public/assets/css/all.min.css" rel="stylesheet">
+
+    <!-- Summernote CSS -->
+    <link href="public/assets/css/summernote.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="public/assets/js/jquery.min.js"></script>
+    <script src="public/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="public/assets/js/summernote.min.js"></script>
 </head>
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="http://www.balerocms.com/"><img src="public/assets/images/admin/logo_top.png"></a>
-            <div class="nav-collapse collapse">
-                <ul class="nav pull-right">
-                    <li class="dropdown">
-                        <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> {username} ({email})<i class="caret"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a tabindex="-1" href="./logout">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav">
-                    <li>
-                        <a href="./admin">Dashboard</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Preview <i class="caret"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a tabindex="-1" href="./" target="_blank">Front-End</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="./">
+            <img src="public/assets/images/admin/logo_top.png" alt="Logo" style="height: 30px;">
+        </a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMain"
+                aria-controls="navbarMain"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="./admin">Dashboard</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="previewDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                    >
+                        Preview
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="previewDropdown">
+                        <li><a class="dropdown-item" href="./" target="_blank">Front-End</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="userDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                    >
+                        <i class="fas fa-user"></i> {username} ({email})
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="./logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
-</div>
-<div class="container-fluid">
-    <div class="row-fluid">
+</nav>
 
+<div class="container-fluid">
+    <div class="row">
         <!-- @include "admin/includes/sidebar.html" -->
 
-        <div class="span9" id="content">
-
-            <div class="row-fluid">
-
-                <!-- dashboard dinamic content -->
-                <!-- block -->
-                <!-- edit page -->
-                <div class="block">
-                    <div class="navbar navbar-inner block-header">
-                        <div class="muted pull-left">{lbl_edit_page}</div>
+        <main class="col-md-9 px-md-4" id="content">
+            <div class="mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">{lbl_edit_page}</h5>
                     </div>
-                    <div class="block-content collapse in">
-                        <div class="span12">
-                            <form class="form-horizontal" method="POST" action="./admin/pages/edit/{page.id}">
-                                <fieldset>
-                                    <div class="control-group">
-                                        <label class="control-label" for="virtual_title">{lbl_title}</label>
-                                        <div class="controls">
-                                            <input type="text" class="span6" id="virtual_title" name="virtual_title" value="{page.virtual_title}" required>
-                                        </div>
+                    <div class="card-body">
+                        <form method="POST" action="./admin/pages/edit/{page.id}">
+                            <fieldset>
+                                <div class="mb-3 row">
+                                    <label for="virtual_title" class="col-sm-2 col-form-label">{lbl_title}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="virtual_title" name="virtual_title"
+                                               value="{page.virtual_title}" required>
                                     </div>
-                                    <div class="control-group">
-                                        <label class="control-label" for="static_url">{lbl_static_url}</label>
-                                        <div class="controls">
-                                            <input type="text" class="span6 form-control" id="static_url" name="static_url"
-                                                   value="{page.static_url}" readonly
-                                                   style="background-color: #e9ecef; cursor: not-allowed;">
-                                        </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="static_url" class="col-sm-2 col-form-label">{lbl_static_url}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="static_url" name="static_url"
+                                               value="{page.static_url}" readonly
+                                               style="background-color: #e9ecef; cursor: not-allowed;">
                                     </div>
-                                    <div class="control-group">
-                                        <label class="control-label" for="virtual_content">{lbl_content}</label>
-                                        <div class="controls">
-                                            <textarea class="summernote" name="virtual_content">{page.virtual_content}</textarea>
-                                        </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="virtual_content" class="col-sm-2 col-form-label">{lbl_content}</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="summernote" name="virtual_content">{page.virtual_content}</textarea>
                                     </div>
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn btn-primary" name="submit"><i class="icon-ok"></i> {btn_save}</button>
-                                        <a href="{basepath}admin/pages" class="btn">Cancel</a>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="visible" class="col-sm-2 col-form-label">{lbl_visible}</label>
+                                    <div class="col-sm-10">
+                                        <select id="visible" name="visible" class="form-select w-auto">
+                                            <option value="1" {page.visible_selected}>{enabled}</option>
+                                            <option value="0" {page.hidden_selected}>{disabled}</option>
+                                        </select>
                                     </div>
-                                </fieldset>
-                            </form>
-                        </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="created_at" class="col-sm-2 col-form-label">{lbl_date}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="created_at" name="created_at"
+                                               value="{page.created_at}" readonly
+                                               style="background-color: #e9ecef; cursor: not-allowed;">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-start">
+                                    <button type="submit" class="btn btn-primary me-2" name="submit">
+                                        <i class="fas fa-check"></i> {btn_save}
+                                    </button>
+                                    <a href="{basepath}admin/pages" class="btn btn-secondary">Cancel</a>
+                                </div>
+
+                            </fieldset>
+                        </form>
                     </div>
                 </div>
-                <!-- /edit page -->
-
-                <!-- summernote javascript -->
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('.summernote').summernote({
-                            height: 350,
-                            onImageUpload: function(files, editor, welEditable) {
-                                sendFile(files[0], editor, welEditable);
-                            },
-                            codemirror: {
-                                theme: ''
-                            }
-                        });
-                        function sendFile(file, editor, welEditable) {
-                            data = new FormData();
-                            data.append("file", file);
-                            $.ajax({
-                                data: data,
-                                type: "POST",
-                                url: "{basepath}admin/uploader",
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                success: function(url) {
-                                    editor.insertImage(welEditable, url);
-                                }
-                            });
-                        }
-                    });
-                </script>
-                <!-- /block -->
-                <!-- end dashboard dinamic content --->
-
             </div>
-        </div>
+        </main>
     </div>
     <hr>
     <footer>
         <p>Powered by <a href="#">Balero CMS</a>.</p>
     </footer>
 </div>
-<!--/.fluid-container-->
+
+<script>
+    $(document).ready(function() {
+        $('.summernote').summernote({
+            height: 350,
+            callbacks: {
+                onImageUpload: function(files) {
+                    sendFile(files[0]);
+                }
+            }
+        });
+
+        function sendFile(file) {
+            var data = new FormData();
+            data.append("file", file);
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{basepath}admin/uploader",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(url) {
+                    $('.summernote').summernote('insertImage', url);
+                }
+            });
+        }
+
+        // Auto-generar slug para static_url al modificar título
+        $('#virtual_title').on('input', function() {
+            var title = $(this).val();
+            var slug = title.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .trim()
+                .replace(/[\s_-]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            $('#static_url').val(slug);
+        });
+    });
+</script>
 
 <script src="public/assets/js/scripts.js"></script>
-
 </body>
 </html>

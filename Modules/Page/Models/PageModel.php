@@ -22,7 +22,7 @@ class PageModel extends Model
     {
         try {
 
-            $sql = "SELECT * FROM page WHERE active = 1 AND visible = 1 ORDER BY id ASC";
+            $sql = "SELECT * FROM page WHERE visible = 1 ORDER BY id ASC";
             $this->db->query($sql);
             $this->db->get();
 
@@ -47,7 +47,7 @@ class PageModel extends Model
     public function getVirtualPageBySlug(string $slug): array
     {
         try {
-            $sql = "SELECT * FROM page WHERE static_url = ? AND active = 1 AND visible = 1 LIMIT 1";
+            $sql = "SELECT * FROM page WHERE static_url = ? AND visible = 1 LIMIT 1";
             $params = [$slug];
             $this->db->query($sql, $params);
             $this->db->get();
