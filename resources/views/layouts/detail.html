@@ -1,30 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base href="{basepath}">
+  <link rel="shortcut icon" href="favicon.ico">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title} - {page.virtual_title}</title>
   <meta name="description" content="{description}" />
   <meta name="keywords" content="{keywords}" />
+
   <link rel="stylesheet" href="public/assets/css/style.css" />
+
+  <!-- Bootstrap CSS -->
+  <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link href="public/assets/css/all.min.css" rel="stylesheet">
+
+  <!-- jQuery -->
+  <script src="public/assets/js/jquery.min.js"></script>
+
+  <!-- Bootstrap Bundle JS (con Popper incluido) -->
+  <script src="public/assets/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
-<header>
-  <h1>{title}</h1>
-  <nav>
-    <ul>
-      <a href="{basepath}">Home</a><br>
-    </ul>
-    <!-- @foreach virtual_pages as page -->
-    <ul>
-      <a href="{page.url}">{page.virtual_title}</a><br>
-    </ul>
-    <!-- @endforeach -->
-  </nav>
+<header class="bg-primary text-white p-3">
+  <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+    <h1 class="mb-2 mb-md-0">{title}</h1>
+
+    <nav class="navbar navbar-expand-md p-0">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{basepath}">Home</a>
+          </li>
+          <!-- @foreach virtual_pages as page -->
+          <li class="nav-item">
+            <a class="nav-link text-white" href="./page/{page.url}">{page.virtual_title}</a>
+          </li>
+          <!-- @endforeach -->
+        </ul>
+      </div>
+    </nav>
+  </div>
 </header>
 
-<main>
+<main class="container my-4">
 
   <h1>{page.virtual_title}</h1>
 
@@ -36,11 +62,10 @@
   <p>No hay contenido disponible.</p>
   <!-- @endif -->
 
-
 </main>
 
-<footer>
-  &copy; {date('Y')} Your Company. All rights reserved.
+<footer class="bg-light text-center py-3">
+  &copy; Your Company. All rights reserved.
 </footer>
 
 </body>
