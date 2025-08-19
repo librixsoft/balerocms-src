@@ -9,7 +9,7 @@ namespace Modules\Installer\Mapper;
 
 use Framework\Core\ConfigSettings;
 use Modules\Installer\DTO\InstallerDTO;
-use Framework\Library\Blowfish;
+use Framework\Static\Hash;
 
 class InstallerMapper
 {
@@ -29,7 +29,7 @@ class InstallerMapper
         $config->setUsername($dto->username);
         $config->setEmail($dto->email);
 
-        $pwd = (new Blowfish())->genpwd($dto->passwd);
+        $pwd = Hash::genpwd($dto->passwd);
         $config->setPass($pwd);
     }
 }

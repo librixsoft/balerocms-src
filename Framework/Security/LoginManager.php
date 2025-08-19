@@ -4,25 +4,22 @@ namespace Framework\Security;
 
 use Framework\Core\ConfigSettings;
 use Framework\Http\RequestHelper;
-use Framework\Library\Blowfish;
+use Framework\Static\Hash;
 
 class LoginManager
 {
     private Security $security;
     private ConfigSettings $config;
-    private Blowfish $blowfish;
     private RequestHelper $request;
     private string $message = '';
 
     public function __construct(
         Security $security,
         ConfigSettings $config,
-        Blowfish $blowfish,
         RequestHelper $request
     ) {
         $this->security = $security;
         $this->config = $config;
-        $this->blowfish = $blowfish;
         $this->request = $request;
     }
 
@@ -42,7 +39,7 @@ class LoginManager
             $usr = $this->request->post('usr', '');
             $pwd = $this->request->post('pwd', '');
 
-            $verify = $this->blowfish->verify_hash($pwd, $this->config->getPass());
+            $verify = Hash::verify_hash($pwd, $this->config->getPass());
 
             if ($usr === $this->config->getUsername() && $verify) {
                 $value = base64_encode($usr . ':' . $this->config->getPass());

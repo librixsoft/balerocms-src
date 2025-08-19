@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
-namespace Framework\Library;
+namespace Framework\Static;
 
-class Blowfish
+class Hash
 {
 
-    public function genpwd($pwd = "")
+    public static function genpwd($pwd = "")
     {
 
         /**
@@ -30,7 +30,7 @@ class Blowfish
 
     }
 
-    public function verify_hash($text, $hash)
+    public static function verify_hash($text, $hash)
     {
 
         if (crypt($text, $hash) == $hash) {
