@@ -52,7 +52,7 @@ class LoginManager
 
             // Falló el login → incrementar contador
             $this->setCookie('counter', $counter + 1, 120);
-            $this->message = _LOGIN_ERROR;
+            $this->message = _LOGIN_ERROR;  // TODO: Return error messages
             return false;
         }
 
@@ -92,6 +92,11 @@ class LoginManager
         return $this->message;
     }
 
+    private function setCookie(string $name, string $value, int $lifetime): void
+    {
+        setcookie($name, $value, time() + $lifetime, '/', '', false, true);
+    }
+
     /**
      * Cierra sesión
      */
@@ -100,15 +105,8 @@ class LoginManager
         $this->clearCookie('admin_god_balero');
     }
 
-    private function setCookie(string $name, string $value, int $lifetime): void
-    {
-        // 👈 lo dejamos tal cual lo tenías
-        setcookie($name, $value, time() + $lifetime, '/', '', false, true);
-    }
-
     private function clearCookie(string $name): void
     {
-        // 👈 también sin cambios
         setcookie($name, '', time() - 3600, '/', '', false, true);
     }
 }

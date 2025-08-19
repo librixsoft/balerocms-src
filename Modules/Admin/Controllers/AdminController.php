@@ -16,8 +16,8 @@ use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Static\Redirect;
-use Framework\Library\Blowfish;
 
+#[Auth(required: true)]
 class AdminController extends Controller
 {
     protected AdminModel $model;
@@ -37,8 +37,9 @@ class AdminController extends Controller
     #[Get('/')]
     public function home()
     {
-        return $this->render("admin/login.html", $this->viewModel->getLoginParams());
+        Redirect::to('/admin/settings');
     }
+
 
     #[Get('/dashboard')]
     public function dashboard()
@@ -46,7 +47,6 @@ class AdminController extends Controller
         Redirect::to('/admin/settings');
     }
 
-    #[Auth(required: true)]
     #[Get('/settings')]
     public function getSettings()
     {
@@ -129,26 +129,6 @@ class AdminController extends Controller
         $this->viewModel->updatePage($data);
 
         Redirect::to('/admin/pages');
-    }
-
-    #[Post('/login')]
-    public function login()
-    {
-        if ($this->loginManager->handleLogin()) {
-            Redirect::to('/admin/settings');
-        } else {
-            return $this->render(
-                "admin/login.html",
-                $this->viewModel->getLoginParams($this->loginManager)
-            );
-        }
-    }
-
-    #[Get('/logout')]
-    public function logout()
-    {
-        $this->loginManager->logout();
-        Redirect::to('/admin/');
     }
 
 }

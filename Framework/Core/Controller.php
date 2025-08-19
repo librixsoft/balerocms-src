@@ -62,6 +62,10 @@ class Controller
         $reflection = new \ReflectionClass($this);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 
+        // Leer atributo Auth a nivel de clase
+        $classAuthAttr = $reflection->getAttributes(\Framework\Http\Auth::class);
+        $classAuth = !empty($classAuthAttr) ? $classAuthAttr[0]->newInstance() : null;
+
         foreach ($methods as $method) {
             $attributes = $method->getAttributes();
 
@@ -80,15 +84,12 @@ class Controller
                     if (preg_match($regex, $requestedSr, $matches)) {
                         $params = array_filter($matches, fn($key) => !is_int($key), ARRAY_FILTER_USE_KEY);
 
-                        // Chequeo Auth antes de ejecutar el método
-                        $authAttr = $method->getAttributes(\Framework\Http\Auth::class);
-                        if (!empty($authAttr)) {
-                            /** @var \Framework\Security\Auth $auth */
-                            $auth = $authAttr[0]->newInstance();
+                        // Chequeo Auth a nivel de método
+                        $methodAuthAttr = $method->getAttributes(\Framework\Http\Auth::class);
+                        $auth = !empty($methodAuthAttr) ? $methodAuthAttr[0]->newInstance() : $classAuth;
 
-                            if ($auth->required && !$this->loginManager->isLoggedIn()) {
-                                die("Unauthorized - login required");
-                            }
+                        if ($auth && $auth->required && !$this->loginManager->isLoggedIn()) {
+                            die("Unauthorized - login required");
                         }
 
                         $this->runMethod($method->getName(), $params);
