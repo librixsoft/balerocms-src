@@ -34,6 +34,22 @@ class RequestHelper
         return isset($_POST[$key]);
     }
 
+    /**
+     * Leer cookie segura
+     */
+    public function cookie($key, $default = null)
+    {
+        return $this->filter($_COOKIE[$key] ?? $default);
+    }
+
+    /**
+     * Verificar existencia de cookie
+     */
+    public function hasCookie($key): bool
+    {
+        return isset($_COOKIE[$key]);
+    }
+
     public function request($key, $default = null)
     {
         return $this->filter($_REQUEST[$key] ?? $default);

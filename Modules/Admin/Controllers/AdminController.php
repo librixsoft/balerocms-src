@@ -10,44 +10,37 @@ namespace Modules\Admin\Controllers;
 
 use Framework\Core\Controller;
 use Framework\IO\Uploader;
+use Framework\Security\LoginManager;
 use Modules\Admin\Models\AdminModel;
 use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Static\Redirect;
+use Framework\Library\Blowfish;
 
 class AdminController extends Controller
 {
     protected AdminModel $model;
     private Uploader $uploader;
     private AdminViewModel $viewModel;
+    private LoginManager $loginManager;
 
     public function __construct(
         AdminModel $model,
         Uploader $uploader,
-        AdminViewModel $viewModel
+        AdminViewModel $viewModel,
+        LoginManager $loginManager
     ) {
         $this->model = $model;
         $this->uploader = $uploader;
         $this->viewModel = $viewModel;
+        $this->loginManager = $loginManager;
     }
 
     #[Get('/')]
     public function home()
     {
         return $this->render("admin/login.html", $this->viewModel->getLoginParams());
-    }
-
-    #[Post('/login')]
-    public function login()
-    {
-        $loggedIn = true; // TODO: implementar login real
-
-        if ($loggedIn) {
-            Redirect::to('/admin/settings');
-        } else {
-            // TODO: manejar error o redireccionar con mensaje
-        }
     }
 
     #[Get('/dashboard')]
@@ -140,5 +133,27 @@ class AdminController extends Controller
         Redirect::to('/admin/pages');
     }
 
+
+
+    #[Post('/login')]
+    public function login()
+    {
+        if ($this->loginManager->handleLogin()) {
+            Redirect::to('/admin/settings');
+        } else {
+            // Render con mensaje de error
+            return $this->render(
+                "admin/login.html",
+                $this->viewModel->getLoginParams($this->loginManager)
+            );
+        }
+    }
+
+    #[Get('/logout')]
+    public function logout()
+    {
+        $this->loginManager->logout();
+        Redirect::to('/admin/');
+    }
 
 }

@@ -13,7 +13,6 @@ use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 use Framework\Http\RequestHelper;
 use Framework\Security\Security;
-use Framework\Security\LoginManager;
 use Framework\Static\Constant;
 use Modules\Admin\AdminElements;
 use Throwable;
@@ -73,9 +72,8 @@ class Router
             exit;
         }
 
-        // before swtich case
+        // before switch case
         match ($app) {
-            'logout' => LoginManager::logout(), // TODO: Move to admin controller login endpoint
             default  => $this->initApp(ucfirst($app)),
         };
     }
@@ -90,41 +88,6 @@ class Router
         }
 
         Boot::loadController($controllerClass);
-    }
-
-    // TODO: Move to admin controller login endpoint
-    private function handleAdmin(): void
-    {
-        $loginManager = new LoginManager($this->security);
-
-        if ($loginManager->handleLogin()) {
-            $this->initAdminModule();
-        } else {
-            $loginManager->showLoginForm();
-        }
-    }
-
-    // TODO: Move to admin controller login endpoint
-    // TODO: Delete this method logic because  admin controlers modules will be integrated as admin controllers
-    private function initAdminModule(): void
-    {
-        $mod = $this->request->get("mod");
-        $adminElements = new AdminElements();
-        $menuData = $adminElements->mods_menu();
-
-        if (!$mod) {
-            Boot::loadController('Modules\\Admin\\Controllers\\AdminController', [$menuData]);
-            return;
-        }
-
-        $modName = ucfirst($mod);
-        $controllerClass = "Modules\\Admin\\Controllers\\mod_{$modName}_Controller";
-
-        if (!class_exists($controllerClass)) {
-            ErrorConsole::handleException(new Exception("Module controller class not found: $controllerClass"));
-        }
-
-        Boot::loadController($controllerClass, [$menuData]);
     }
 
     private function checkInstallerRedirect(): void
