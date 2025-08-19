@@ -11,24 +11,36 @@ namespace Framework\Core;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
+use Framework\Security\LoginManager;
 
 
 class Controller
 {
+    /****************************
+     * Seran heredado al controller
+     * hijo no se necesita redeclarar
+     ***************************/
     protected View $view;
     protected RequestHelper $request;
     protected ConfigSettings $configSettings;
+    protected LoginManager $loginManager;
 
     /**
      * Called from Boot::instantiateClass()
      * @param RequestHelper $request
      * @param View $view
      */
-    public function init(RequestHelper $request, View $view, ConfigSettings $configSettings)
+    public function init(
+        RequestHelper $request,
+        View $view,
+        ConfigSettings $configSettings,
+        LoginManager $loginManager
+    )
     {
         $this->request = $request;
         $this->view = $view;
         $this->configSettings = $configSettings;
+        $this->loginManager = $loginManager;
 
         $this->run();
     }
@@ -62,12 +74,23 @@ class Controller
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
                     $routePattern = trim($instance->sr, '/');
-
                     $regex = preg_replace('#\{([^}]+)\}#', '(?P<$1>[^/]+)', $routePattern);
                     $regex = '#^' . $regex . '$#';
 
                     if (preg_match($regex, $requestedSr, $matches)) {
                         $params = array_filter($matches, fn($key) => !is_int($key), ARRAY_FILTER_USE_KEY);
+
+                        // Chequeo Auth antes de ejecutar el método
+                        $authAttr = $method->getAttributes(\Framework\Http\Auth::class);
+                        if (!empty($authAttr)) {
+                            /** @var \Framework\Security\Auth $auth */
+                            $auth = $authAttr[0]->newInstance();
+
+                            if ($auth->required && !$this->loginManager->isLoggedIn()) {
+                                die("Unauthorized - login required");
+                            }
+                        }
+
                         $this->runMethod($method->getName(), $params);
                         return;
                     }

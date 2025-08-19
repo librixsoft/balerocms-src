@@ -9,8 +9,8 @@
 namespace Modules\Admin\Controllers;
 
 use Framework\Core\Controller;
+use Framework\Http\Auth;
 use Framework\IO\Uploader;
-use Framework\Security\LoginManager;
 use Modules\Admin\Models\AdminModel;
 use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
@@ -23,18 +23,15 @@ class AdminController extends Controller
     protected AdminModel $model;
     private Uploader $uploader;
     private AdminViewModel $viewModel;
-    private LoginManager $loginManager;
 
     public function __construct(
         AdminModel $model,
         Uploader $uploader,
-        AdminViewModel $viewModel,
-        LoginManager $loginManager
+        AdminViewModel $viewModel
     ) {
         $this->model = $model;
         $this->uploader = $uploader;
         $this->viewModel = $viewModel;
-        $this->loginManager = $loginManager;
     }
 
     #[Get('/')]
@@ -49,6 +46,7 @@ class AdminController extends Controller
         Redirect::to('/admin/settings');
     }
 
+    #[Auth(required: true)]
     #[Get('/settings')]
     public function getSettings()
     {
@@ -133,15 +131,12 @@ class AdminController extends Controller
         Redirect::to('/admin/pages');
     }
 
-
-
     #[Post('/login')]
     public function login()
     {
         if ($this->loginManager->handleLogin()) {
             Redirect::to('/admin/settings');
         } else {
-            // Render con mensaje de error
             return $this->render(
                 "admin/login.html",
                 $this->viewModel->getLoginParams($this->loginManager)
