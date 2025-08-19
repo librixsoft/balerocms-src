@@ -11,6 +11,6 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# 3) Rutas limpias: /app y /app/route
-RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?app=$1 [QSA,L]
-RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?app=$1&sr=$2 [QSA,L]
+# 3) Rutas limpias: /module y /module/target
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?module=$1 [QSA,L]
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?module=$1&target=$2 [QSA,L]

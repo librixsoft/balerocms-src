@@ -13,10 +13,10 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD)]
 class Get
 {
-    public string $sr;
+    public string $target;
 
-    public function __construct(string $sr = '')
+    public function __construct(string $target = '')
     {
-        $this->sr = $sr;
+        $this->target = $target;
     }
 }

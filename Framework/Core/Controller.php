@@ -16,6 +16,12 @@ use Framework\Security\LoginManager;
 
 class Controller
 {
+
+    /**
+     * Constante que define el nombre del parámetro secundario index.php?module=module&target={target}
+     */
+    private const PARAM_TARGET = 'target';
+
     /****************************
      * Seran heredado al controller
      * hijo no se necesita redeclarar
@@ -57,7 +63,7 @@ class Controller
         $this->initBasePath();
 
         $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $requestedSr = trim($this->request->get('sr') ?? '', '/');
+        $requestedTarget = trim($this->request->get(self::PARAM_TARGET) ?? '', '/');
 
         $reflection = new \ReflectionClass($this);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -77,11 +83,12 @@ class Controller
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    $routePattern = trim($instance->sr, '/');
+                    // $target = index.php?controller=...&target=$method
+                    $routePattern = trim($instance->target, '/');
                     $regex = preg_replace('#\{([^}]+)\}#', '(?P<$1>[^/]+)', $routePattern);
                     $regex = '#^' . $regex . '$#';
 
-                    if (preg_match($regex, $requestedSr, $matches)) {
+                    if (preg_match($regex, $requestedTarget, $matches)) {
                         $params = array_filter($matches, fn($key) => !is_int($key), ARRAY_FILTER_USE_KEY);
 
                         // Chequeo Auth a nivel de método
@@ -99,7 +106,7 @@ class Controller
             }
         }
 
-        ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedSr}'"));
+        ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedTarget}'"));
     }
 
     private function runMethod(string $methodName, array $params = []): void

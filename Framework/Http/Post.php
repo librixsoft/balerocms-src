@@ -12,9 +12,9 @@ use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
 class Post {
-    public string $sr;
+    public string $target;
 
-    public function __construct(string $sr = '') {
-        $this->sr = trim($sr, '/');
+    public function __construct(string $target = '') {
+        $this->target = trim($target, '/');
     }
 }

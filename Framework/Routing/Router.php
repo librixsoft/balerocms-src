@@ -28,6 +28,11 @@ class Router
      */
     private const DEFAULT_APP = 'Page';
 
+    /**
+     * Constante que define el nombre del parámetro index.php?module={module}
+     */
+    private const PARAM_MODULE = 'module';
+
     private Security $security;
     private RequestHelper $request;
     private ConfigSettings $configSettings;
@@ -45,7 +50,7 @@ class Router
         $this->checkInstallerRedirect();
     }
 
-    public function init(): void
+    public function initBalero(): self
     {
         // Cargar helpers
         require_once Constant::LANG_HELPER;
@@ -64,21 +69,22 @@ class Router
         LangManager::load($lang, Constant::LANG_PATH);
 
         // Resolver application
-        $app = $this->request->get('app');
+        $app = $this->request->get(self::PARAM_MODULE);
 
         // Default app load, before swtich case
         if (!$app) {
-            $this->initApp(self::DEFAULT_APP);
+            $this->initModule(self::DEFAULT_APP);
             exit;
         }
 
         // before switch case
         match ($app) {
-            default  => $this->initApp(ucfirst($app)),
+            default  => $this->initModule(ucfirst($app)),
         };
+        return $this;
     }
 
-    private function initApp(string $appName): void
+    private function initModule(string $appName): void
     {
         $this->app = $appName;
         $controllerClass = "Modules\\{$appName}\\Controllers\\{$appName}Controller";
@@ -94,7 +100,7 @@ class Router
     {
         try {
             if ($this->configSettings->getInstalled() === "no") {
-                $currentApp = $this->request->get('app');
+                $currentApp = $this->request->get(self::PARAM_MODULE);
                 if ($currentApp !== 'installer') {
                     $base = rtrim($this->configSettings->getBasePath(), '/');
                     header('Location: ' . $base . '/installer/');
