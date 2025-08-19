@@ -26,11 +26,11 @@ class Controller
     protected LoginManager $loginManager;
 
     /**
-     * Called from Boot::instantiateClass()
+     * Called from Boot::loadController()
      * @param RequestHelper $request
      * @param View $view
      */
-    public function init(
+    public function initControllerAndInject(
         RequestHelper $request,
         View $view,
         ConfigSettings $configSettings,

@@ -58,12 +58,11 @@ class Container
      * Lanza excepción si no puede instanciar o resolver dependencias no tipadas o escalares.
      *
      * @param string $id Identificador de clase o interfaz.
-     * @param array $args Argumentos opcionales para el constructor (actualmente no usados en resolución automática).
      * @return object|null Instancia resuelta.
      *
      * @throws \Exception Si no puede crear la instancia o resolver dependencias.
      */
-    public function resolveInstance(string $id, array $args = []): ?object
+    public function resolveInstance(string $id): ?object
     {
 
         if (str_starts_with($id, 'Framework\\Static\\')) {

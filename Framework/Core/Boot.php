@@ -79,63 +79,57 @@ class Boot
     }
 
     /**
-     * Intenta cargar y ejecutar un controlador, manejando errores en caso de fallo.
-     * Usualmente se llama para iniciar el flujo de ejecución de una petición HTTP.
-     *
-     * @param string $controllerClass Nombre completo del controlador.
-     * @param array $args Argumentos opcionales para la creación del controlador.
-     * @return void
+     * LLama el metodo initControllerAndInject() de la clase padre
+     * Ejecuta la DI adicionalmente al constructor con el metodo initControllerAndInject()
+     * @param string $controllerClass
      */
-    public static function loadController(string $controllerClass, array $args = []): void
+    public static function loadController(string $controllerClass): void
     {
         try {
-            self::instantiateClass($controllerClass, $args);
-        } catch (Throwable $e) {
+            // Instancia el controlador con DI en el constructor
+            $instance = self::instantiateClass($controllerClass);
+
+            // Evitar que tener que llamar __parent:: dentro de los modulos/controllers
+            // Si el controlador tiene método initControllerAndInject -> inyectar dependencias y ejecutar
+            if (method_exists($instance, 'initControllerAndInject')) {
+                $method = new \ReflectionMethod($instance, 'initControllerAndInject');
+                $parameters = $method->getParameters();
+                $dependencies = [];
+
+                foreach ($parameters as $param) {
+                    $type = $param->getType();
+
+                    if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+                        throw new \RuntimeException(
+                            "No se puede resolver el parámetro \${$param->getName()} en {$controllerClass}::initControllerAndInject()"
+                        );
+                    }
+
+                    // Reutiliza la DI del contenedor
+                    $dependencies[] = self::instantiateClass($type->getName());
+                }
+
+                $method->invokeArgs($instance, $dependencies);
+            }
+
+        } catch (\Throwable $e) {
             ErrorConsole::handleException(
-                new Exception("Error cargando controlador '$controllerClass': " . $e->getMessage(), 0, $e)
+                new \Exception("Error cargando controlador '$controllerClass': " . $e->getMessage(), 0, $e)
             );
             exit;
         }
     }
 
     /**
-     * Instancia cualquier clase pasando argumentos opcionales y
-     * si la instancia tiene método init(), detecta automáticamente
-     * sus dependencias y las inyecta desde el contenedor.
+     * Instancia cualquier clase pasando argumentos opcionales.
+     * No realiza lógica extra ni inyecciones automáticas.
      *
-     * Esto permite inyección automática para inicialización posterior
-     * sin tener que hacerlo manualmente en cada controlador o clase.
-     *
-     * @param string $class Nombre completo de la clase a instanciar.
      * @param array $args Argumentos opcionales para el constructor.
-     * @return object Instancia creada y lista para usar.
-     *
-     * @throws \RuntimeException Si no se pueden resolver las dependencias de init().
+     * @return object Instancia creada.
      */
-    public static function instantiateClass(string $class, array $args = []): object
+    public static function instantiateClass(string $class): object
     {
-        // Crear la instancia con el contenedor y argumentos para el constructor
-        $instance = self::$container->resolveInstance($class, $args);
-
-        // Obtener el método init mediante reflexión
-        $method = new \ReflectionMethod($instance, 'init');
-
-        // Obtener los parámetros del método init
-        $parameters = $method->getParameters();
-
-        $dependencies = [];
-
-        // Por cada parámetro, obtener el tipo y crear su instancia
-        foreach ($parameters as $param) {
-            $dependencyClass = $param->getType()->getName();
-            $dependencies[] = self::$container->resolveInstance($dependencyClass);
-        }
-
-        // Invocar el método init con las dependencias creadas
-        $method->invokeArgs($instance, $dependencies);
-
-        return $instance;
+        return self::$container->resolveInstance($class);
     }
-
 
 }

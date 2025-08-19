@@ -15,5 +15,5 @@ require_once(LOCAL_DIR . "/Framework/Static/Constant.php");
 
 new Boot();
 
-$router = Boot::loadController(Router::class);
+$router = Boot::instantiateClass(Router::class);
 $router->init();
