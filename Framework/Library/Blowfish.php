@@ -11,12 +11,6 @@ namespace Framework\Library;
 class Blowfish
 {
 
-    private $pwd;
-    private $pwd_string;
-
-    public $message;
-    public $basepath;
-
     public function genpwd($pwd = "")
     {
 
@@ -46,58 +40,5 @@ class Blowfish
         }
 
     }
-
-    /**
-     *
-     * require ThemeLoder class
-     */
-
-    public function login_form($view)
-    {
-
-
-        /**
-         * Debug
-         */
-
-        //echo $view;
-
-        /**
-         *
-         * Login view {vars}
-         */
-
-        $array = array(
-            'message' => $this->message,
-            'basepath' => $this->basepath
-        );
-
-
-        /**
-         *
-         * Render page
-         */
-
-
-        //require_once(LOCAL_DIR . "/core/ThemeLoader.php");
-
-        try {
-
-            //if(!file_exists($view)) {
-            //throw new Exception(_THEME_DONT_EXIST);
-            //}
-
-            $objTheme = new ThemeLoader($view);
-
-        } catch (Exception $e) {
-
-            throw new Exception($e->getMessage());
-
-        }
-
-        return $objTheme->renderPage($array);
-
-    }
-
 
 }

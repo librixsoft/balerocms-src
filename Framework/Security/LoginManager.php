@@ -91,16 +91,6 @@ class LoginManager
     }
 
     /**
-     * Renderizar formulario de login (sin header)
-     */
-    public function renderLoginForm(): string
-    {
-        $this->blowfish->message = $this->message;
-        $this->blowfish->basepath = $this->config->getBasepath();
-        return $this->blowfish->login_form(APPS_DIR . 'admin/panel/login.html');
-    }
-
-    /**
      * Cierra sesión
      */
     public function logout(): void
