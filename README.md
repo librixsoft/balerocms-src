@@ -9,4 +9,5 @@ Update/Install Front-End Libs
 Adjust your library version in package.json and execute:
 
 npm install
-npm run update:libs
+
+It will keep update your local front-end libraries.
