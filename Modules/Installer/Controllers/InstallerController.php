@@ -18,6 +18,7 @@ use Modules\Installer\Views\InstallerViewModel;
 use Framework\I18n\LangSelector;
 use Framework\Http\Get;
 use Framework\Http\Post;
+use Framework\Static\Flash;
 
 class InstallerController extends Controller
 {
@@ -40,6 +41,14 @@ class InstallerController extends Controller
             LangSelector::getParams()
         );
 
+        if (Flash::has('errors')) {
+            $params['errors'] = Flash::get('errors');
+        }
+
+        if (Flash::has('cacheFormData')) {
+            $params['cacheFormData'] = Flash::get('cacheFormData');
+        }
+
         return $this->render("installer/setup_wizard.html", $params);
     }
 
@@ -58,8 +67,10 @@ class InstallerController extends Controller
         $params = [];
 
         if ($validator->fails()) {
-            $params['errors'] = $validator->errors();
-        } else {
+            Flash::set('errors', $validator->errors());
+            Flash::set('cacheFormData', $input);
+            Redirect::to("/installer/");
+        }else {
             InstallerMapper::map($installerDTO, $this->configSettings);
         }
 
@@ -68,9 +79,7 @@ class InstallerController extends Controller
             $this->installerViewModel->getInstallerParams(),
             LangSelector::getParams()
         );
-
-        // TODO: Store and pass $params error  and get it from session to show errors
-
+        
         Redirect::to("/installer/");
     }
 
