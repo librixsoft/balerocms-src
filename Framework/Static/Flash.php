@@ -39,6 +39,7 @@ class Flash
     {
         self::ensureSessionStarted();
 
+        // TODO: Add $_SESSION wrapper to RequestHelper
         if (isset($_SESSION[self::FLASH_KEY][$key])) {
             $value = $_SESSION[self::FLASH_KEY][$key];
             unset($_SESSION[self::FLASH_KEY][$key]);

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Framework\Http;
 
 use Framework\Security\Security;
@@ -32,6 +26,11 @@ class RequestHelper
     public function hasPost($key): bool
     {
         return isset($_POST[$key]);
+    }
+
+    public function hasGet($key): bool
+    {
+        return isset($_GET[$key]);
     }
 
     /**

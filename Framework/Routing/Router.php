@@ -55,8 +55,13 @@ class Router
         // Cargar helpers
         require_once Constant::LANG_HELPER;
 
+        // TODO: Add logic to lang selector
         // Detectar idioma y validar
-        $lang = $_GET['lang'] ?? $_SESSION['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
+        $lang = $this->request->hasGet('lang')
+            ? $this->request->get('lang')
+            // TODO: Add $_SESSION wrapper to RequestHelper
+            : ($_SESSION['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2));
+
         $supported = ['en', 'es']; // Agrega más si es necesario
 
         if (!in_array($lang, $supported)) {
@@ -71,7 +76,7 @@ class Router
         // Resolver application
         $app = $this->request->get(self::PARAM_MODULE);
 
-        // Default app load, before swtich case
+        // Default app load, before switch case
         if (!$app) {
             $this->initModule(self::DEFAULT_APP);
             exit;

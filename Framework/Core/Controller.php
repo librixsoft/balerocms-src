@@ -133,7 +133,7 @@ class Controller
             'basepath' => $this->configSettings->getBasepath(),
         ];
 
-        $langParams = LangSelector::getParams();
+        $langParams = LangSelector::getParams($this->request);
 
         return $this->view->render($template, array_merge($common, $langParams, $params));
     }

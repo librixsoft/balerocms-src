@@ -1,33 +1,19 @@
 <?php
-
 namespace Framework\I18n;
+
+use Framework\Http\RequestHelper;
 
 class LangSelector
 {
-    /**
-     * Retorna los parámetros necesarios para mostrar el selector de idioma.
-     * Prioriza la query string (?lang=es) sobre la sesión.
-     *
-     * @return array
-     */
-    public static function getParams(): array
+    public static function getParams(RequestHelper $request): array
     {
-        // Priorizar GET sobre SESSION
-        $lang = $_GET['lang'] ?? $_SESSION['lang'] ?? 'en';
-
-        // Guardar en sesión para persistencia
+        $lang = $request->hasGet('lang') ? $request->get('lang') : ($_SESSION['lang'] ?? 'en');
         $_SESSION['lang'] = $lang;
 
         return [
-            // Para <select> en formularios
             'lang_selected_en' => $lang === 'en' ? 'selected' : '',
             'lang_selected_es' => $lang === 'es' ? 'selected' : '',
-
-            // Textos generales del idioma
-            'lang' => [
-                'select_language' => __('select_language'),
-                // Aquí puedes agregar más claves traducibles
-            ],
+            'lang' => ['select_language' => __('select_language')],
         ];
     }
 }
