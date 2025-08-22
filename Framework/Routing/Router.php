@@ -19,8 +19,6 @@ use Framework\I18n\LangSelector;
 use Throwable;
 use Exception;
 
-use Framework\I18n\LangManager;
-
 class Router
 {
 
