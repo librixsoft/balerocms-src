@@ -1,28 +1,28 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Modules\Installer\Views;
 
+use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
 use Framework\Static\Constant;
 
 class InstallerViewModel
 {
     private ConfigSettings $config;
+    private ViewModel $viewModel;
 
     public function __construct(ConfigSettings $config)
     {
         $this->config = $config;
+        $this->viewModel = new ViewModel(); // instanciación interna
     }
 
-    public function getInstallerParams(): array
+    /**
+     * Pobla todos los parámetros de instalación y devuelve el array listo para render
+     */
+    public function setInstallerParams(array $extraParams = []): array
     {
-        $params = [
+        $this->viewModel->addAll([
             // Etiquetas
             'lbl_dbconfig' => 'Database Configuration',
             'lbl_dbhost' => 'Database Host',
@@ -67,8 +67,13 @@ class InstallerViewModel
             'welcome' => "Welcome to Balero CMS Setup Wizard.",
             'btn_install' => "Instalar",
             'config_writeable' => is_writable(Constant::CONFIG_PATH),
-        ];
+        ]);
 
-        return $params;
+        // Merge con parámetros extra (por ejemplo errores o datos cacheados)
+        if (!empty($extraParams)) {
+            $this->viewModel->addAll($extraParams);
+        }
+
+        return $this->viewModel->all();
     }
 }

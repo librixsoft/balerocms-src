@@ -1,24 +1,18 @@
 <?php
 
-/**
- * Balero CMS
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Modules\Installer\Controllers;
 
 use Framework\Core\Validator;
+use Framework\Core\Controller;
 use Framework\Static\Redirect;
+use Framework\Static\Flash;
 use Modules\Installer\Mapper\InstallerMapper;
 use Modules\Installer\Models\InstallerModel;
-use Framework\Core\Controller;
 use Modules\Installer\DTO\InstallerDTO;
 use Modules\Installer\Views\InstallerViewModel;
 use Framework\I18n\LangSelector;
 use Framework\Http\Get;
 use Framework\Http\Post;
-use Framework\Static\Flash;
 
 class InstallerController extends Controller
 {
@@ -36,18 +30,19 @@ class InstallerController extends Controller
     #[Get('/')]
     public function home()
     {
-        $params = array_merge(
-            $this->installerViewModel->getInstallerParams(),
-            LangSelector::getParams()
-        );
+        // Recolectar parámetros extra: Lang + errores + cacheFormData
+        $extra = LangSelector::getParams();
 
         if (Flash::has('errors')) {
-            $params['errors'] = Flash::get('errors');
+            $extra['errors'] = Flash::get('errors');
         }
 
         if (Flash::has('cacheFormData')) {
-            $params['cacheFormData'] = Flash::get('cacheFormData');
+            $extra['cacheFormData'] = Flash::get('cacheFormData');
         }
+
+        // Obtener todos los parámetros listos para render
+        $params = $this->installerViewModel->setInstallerParams($extra);
 
         return $this->render("installer/setup_wizard.html", $params);
     }
@@ -64,29 +59,23 @@ class InstallerController extends Controller
             ->match('passwd', 'passwd2', 'Las contraseñas no coinciden.')
             ->email('email', 'El correo electrónico no es válido.');
 
-        $params = [];
-
         if ($validator->fails()) {
             Flash::set('errors', $validator->errors());
             Flash::set('cacheFormData', $input);
-            Redirect::to("/installer/");
-        }else {
+        } else {
             InstallerMapper::map($installerDTO, $this->configSettings);
         }
 
-        $params = array_merge(
-            $params,
-            $this->installerViewModel->getInstallerParams(),
-            LangSelector::getParams()
-        );
-        
+        // Redirigir usando PRG
         Redirect::to("/installer/");
     }
 
     #[Get('progressBar')]
     public function getProgressBar()
     {
-        return $this->render("installer/progressBar.html", $this->installerViewModel->getInstallerParams());
+        // Solo necesitamos los parámetros base del instalador
+        $params = $this->installerViewModel->setInstallerParams(LangSelector::getParams());
+        return $this->render("installer/progressBar.html", $params);
     }
 
     #[Post('progressBar')]
@@ -95,5 +84,4 @@ class InstallerController extends Controller
         $this->model->install();
         Redirect::to("/installer/progressBar");
     }
-
 }
