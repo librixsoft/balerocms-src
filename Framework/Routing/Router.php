@@ -15,7 +15,6 @@ use Framework\Http\RequestHelper;
 use Framework\Security\Security;
 use Framework\Static\Constant;
 use Modules\Admin\AdminElements;
-use Framework\I18n\LangSelector;
 use Throwable;
 use Exception;
 
@@ -53,9 +52,6 @@ class Router
     {
         // Cargar helpers
         require_once Constant::LANG_HELPER;
-
-        // Obtener parámetros de idioma y cargar archivos
-        LangSelector::getLanguageParams($this->request);
 
         // Resolver application
         $app = $this->request->get(self::PARAM_MODULE);
