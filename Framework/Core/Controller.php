@@ -12,7 +12,7 @@ use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
 use Framework\Security\LoginManager;
-
+use Framework\I18n\LangSelector;
 
 class Controller
 {
@@ -133,6 +133,10 @@ class Controller
             'basepath' => $this->configSettings->getBasepath(),
         ];
 
-        return $this->view->render($template, array_merge($common, $params));
+        $langParams = LangSelector::getParams();
+
+        return $this->view->render($template, array_merge($common, $langParams, $params));
     }
+
+
 }

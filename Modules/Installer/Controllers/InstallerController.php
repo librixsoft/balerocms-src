@@ -10,7 +10,6 @@ use Modules\Installer\Mapper\InstallerMapper;
 use Modules\Installer\Models\InstallerModel;
 use Modules\Installer\DTO\InstallerDTO;
 use Modules\Installer\Views\InstallerViewModel;
-use Framework\I18n\LangSelector;
 use Framework\Http\Get;
 use Framework\Http\Post;
 
@@ -30,19 +29,19 @@ class InstallerController extends Controller
     #[Get('/')]
     public function home()
     {
-        // Recolectar parámetros extra: Lang + errores + cacheFormData
-        $extra = LangSelector::getParams();
+        // Recolectar errores y datos cacheados
+        $params = [];
 
         if (Flash::has('errors')) {
-            $extra['errors'] = Flash::get('errors');
+            $params['errors'] = Flash::get('errors');
         }
 
         if (Flash::has('cacheFormData')) {
-            $extra['cacheFormData'] = Flash::get('cacheFormData');
+            $params['cacheFormData'] = Flash::get('cacheFormData');
         }
 
-        // Obtener todos los parámetros listos para render
-        $params = $this->installerViewModel->setInstallerParams($extra);
+        // Obtener todos los parámetros del instalador listos para render
+        $params = $this->installerViewModel->setInstallerParams($params);
 
         return $this->render("installer/setup_wizard.html", $params);
     }
@@ -66,15 +65,14 @@ class InstallerController extends Controller
             InstallerMapper::map($installerDTO, $this->configSettings);
         }
 
-        // Redirigir usando PRG
+        // PRG
         Redirect::to("/installer/");
     }
 
     #[Get('progressBar')]
     public function getProgressBar()
     {
-        // Solo necesitamos los parámetros base del instalador
-        $params = $this->installerViewModel->setInstallerParams(LangSelector::getParams());
+        $params = $this->installerViewModel->setInstallerParams();
         return $this->render("installer/progressBar.html", $params);
     }
 
