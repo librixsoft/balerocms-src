@@ -15,6 +15,7 @@ use Framework\Http\RequestHelper;
 use Framework\Security\Security;
 use Framework\Static\Constant;
 use Modules\Admin\AdminElements;
+use Framework\I18n\LangSelector;
 use Throwable;
 use Exception;
 
@@ -55,37 +56,22 @@ class Router
         // Cargar helpers
         require_once Constant::LANG_HELPER;
 
-        // TODO: Add logic to lang selector
-        // Detectar idioma y validar
-        $lang = $this->request->hasGet('lang')
-            ? $this->request->get('lang')
-            // TODO: Add $_SESSION wrapper to RequestHelper
-            : ($_SESSION['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2));
-
-        $supported = ['en', 'es']; // Agrega más si es necesario
-
-        if (!in_array($lang, $supported)) {
-            $lang = 'en';
-        }
-
-        $_SESSION['lang'] = $lang;
-
-        // ✅ Nuevo esquema: cargamos múltiples archivos desde carpeta
-        LangManager::load($lang, Constant::LANG_PATH);
+        // Obtener parámetros de idioma y cargar archivos
+        LangSelector::getLanguageParams($this->request);
 
         // Resolver application
         $app = $this->request->get(self::PARAM_MODULE);
 
-        // Default app load, before switch case
         if (!$app) {
             $this->initModule(self::DEFAULT_APP);
             exit;
         }
 
-        // before switch case
+        // Default load
         match ($app) {
-            default  => $this->initModule(ucfirst($app)),
+            default => $this->initModule(ucfirst($app)),
         };
+
         return $this;
     }
 
