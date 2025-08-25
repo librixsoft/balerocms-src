@@ -19,6 +19,9 @@
   <!-- bs-stepper CSS -->
   <link href="public/assets/css/bs-stepper.min.css" rel="stylesheet">
 
+  <!-- Wizard CSS -->
+  <link href="public/assets/css/setup_wizard.css" rel="stylesheet">
+
 </head>
 <body class="bg-light">
 
@@ -69,8 +72,7 @@
   </div>
   <!-- @else -->
   <div class="alert alert-success alert-dismissible fade show">
-    <i class="fas fa-info-circle"></i>
-    The file <code>balero.config.xml</code> is writable. You can proceed.
+    <i class="fas fa-info-circle"></i> The file <code>balero.config.xml</code> is writable. You can proceed.
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
   <!-- @endif -->
@@ -110,86 +112,137 @@
     </div>
 
     <div class="card-body">
-      <div class="bs-stepper-content">
-        <form method="POST" action="installer/install">
-          <!-- TAB 1: DB Config -->
-          <div id="dbconfig-part" class="content" role="tabpanel">
-            <div class="mb-3">
-              <label for="dbhost" class="form-label">{lbl_dbhost}</label>
+
+      <!--region WizardTabs-->
+      <form method="POST" action="installer/install">
+
+        <!-- TAB 1: DB Config -->
+        <div id="dbconfig-part" class="content" role="tabpanel">
+          <div class="row mb-3 align-items-center">
+            <label for="dbhost" class="col-3 col-form-label">{lbl_dbhost}</label>
+            <div class="col-9">
               <input name="dbhost" id="dbhost" class="form-control" value="{txt_dbhost}" required>
             </div>
-            <div class="mb-3">
-              <label for="dbuser" class="form-label">{lbl_dbusername}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="dbuser" class="col-3 col-form-label">{lbl_dbusername}</label>
+            <div class="col-9">
               <input name="dbuser" id="dbuser" class="form-control" value="{txt_dbuser}" required>
             </div>
-            <div class="mb-3">
-              <label for="dbpass" class="form-label">{lbl_dbpass}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="dbpass" class="col-3 col-form-label">{lbl_dbpass}</label>
+            <div class="col-9">
               <input name="dbpass" id="dbpass" class="form-control" type="password" value="{txt_dbpass}">
             </div>
-            <div class="mb-3">
-              <label for="dbname" class="form-label">{lbl_dbname}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="dbname" class="col-3 col-form-label">{lbl_dbname}</label>
+            <div class="col-9">
               <input name="dbname" id="dbname" class="form-control" value="{txt_dbname}" required>
               <div class="form-text">{lbl_dbname_note}</div>
             </div>
-            <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
           </div>
 
-          <!-- TAB 2: Site Info -->
-          <div id="siteinfo-part" class="content" role="tabpanel">
-            <div class="mb-3">
-              <label for="basepath" class="form-label">{lbl_basepath}</label>
+          <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
+        </div>
+
+        <!-- TAB 2: Site Info -->
+        <div id="siteinfo-part" class="content" role="tabpanel">
+          <div class="row mb-3 align-items-center">
+            <label for="basepath" class="col-3 col-form-label text-end">{lbl_basepath}</label>
+            <div class="col-9 input-with-info">
               <input name="basepath" id="basepath" class="form-control" value="{txt_basepath}">
-              <div class="form-text">{lbl_basepath_note}</div>
+              <i class="fas fa-info-circle" title="{lbl_basepath_note}"></i>
             </div>
-            <div class="mb-3">
-              <label for="title" class="form-label">{lbl_title}</label>
+          </div>
+
+
+          <div class="row mb-3 align-items-center">
+            <label for="title" class="col-3 col-form-label">{lbl_title}</label>
+            <div class="col-9">
               <input name="title" id="title" class="form-control" value="{title}">
             </div>
-            <div class="mb-3">
-              <label for="url" class="form-label">{lbl_url}</label>
-              <input name="url" id="url" class="form-control" placeholder="http://" value="{txt_url}">
-            </div>
-            <div class="mb-3">
-              <label for="keywords" class="form-label">{lbl_keywords}</label>
-              <input name="keywords" id="keywords" class="form-control" value="{keywords}">
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">{lbl_description}</label>
-              <textarea name="description" id="description" class="form-control" rows="4">{description}</textarea>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
           </div>
 
-          <!-- TAB 3: Admin Config -->
-          <div id="adminconfig-part" class="content" role="tabpanel">
-            <div class="mb-3">
-              <label for="username" class="form-label">{lbl_administrator}</label>
+          <div class="row mb-3 align-items-center">
+            <label for="url" class="col-3 col-form-label">{lbl_url}</label>
+            <div class="col-9">
+              <input name="url" id="url" class="form-control" placeholder="http://" value="{txt_url}">
+            </div>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="keywords" class="col-3 col-form-label">{lbl_keywords}</label>
+            <div class="col-9">
+              <input name="keywords" id="keywords" class="form-control" value="{keywords}">
+            </div>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="description" class="col-3 col-form-label">{lbl_description}</label>
+            <div class="col-9">
+              <textarea name="description" id="description" class="form-control" rows="4">{description}</textarea>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
+        </div>
+
+        <!-- TAB 3: Admin Config -->
+        <div id="adminconfig-part" class="content" role="tabpanel">
+          <div class="row mb-3 align-items-center">
+            <label for="username" class="col-3 col-form-label">{lbl_administrator}</label>
+            <div class="col-9">
               <input name="username" id="username" class="form-control" value="{username}">
             </div>
-            <div class="mb-3">
-              <label for="passwd" class="form-label">{lbl_pass}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="passwd" class="col-3 col-form-label">{lbl_pass}</label>
+            <div class="col-9">
               <input name="passwd" id="passwd" class="form-control" type="password">
             </div>
-            <div class="mb-3">
-              <label for="passwd2" class="form-label">{lbl_retype}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="passwd2" class="col-3 col-form-label">{lbl_retype}</label>
+            <div class="col-9">
               <input name="passwd2" id="passwd2" class="form-control" type="password">
             </div>
-            <div class="mb-3">
-              <label for="firstname" class="form-label">{lbl_firstname}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="firstname" class="col-3 col-form-label">{lbl_firstname}</label>
+            <div class="col-9">
               <input name="firstname" id="firstname" class="form-control" value="{txt_firstname}">
             </div>
-            <div class="mb-3">
-              <label for="lastname" class="form-label">{lbl_lastname}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="lastname" class="col-3 col-form-label">{lbl_lastname}</label>
+            <div class="col-9">
               <input name="lastname" id="lastname" class="form-control" value="{txt_lastname}">
             </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">{lbl_email}</label>
+          </div>
+
+          <div class="row mb-3 align-items-center">
+            <label for="email" class="col-3 col-form-label">{lbl_email}</label>
+            <div class="col-9">
               <input name="email" id="email" class="form-control" type="email" value="{txt_email}">
             </div>
-            <button type="submit" class="btn btn-success">{btn_save}</button>
           </div>
-        </form>
-      </div>
+
+          <button type="submit" class="btn btn-success">{btn_save}</button>
+        </div>
+
+      </form>
+      <!--/region WizardTabs-->
+
+
     </div>
   </div>
 

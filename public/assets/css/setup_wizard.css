@@ -1,0 +1,43 @@
+/* Ajuste de labels e inputs */
+.row.align-items-center {
+    flex-wrap: nowrap; /* evitar que se dividan en varias líneas */
+}
+
+.row.align-items-center > .col-3 {
+    flex: 0 0 180px;       /* ancho fijo del label */
+    max-width: 180px;      /* ancho máximo del label */
+    padding-right: 20px;   /* espacio entre label e input */
+    text-align: right;     /* alineación a la derecha */
+}
+
+.row.align-items-center > .col-9 {
+    flex: 1;               /* ocupa el resto del espacio */
+    padding-left: 0;       /* opcional, distancia mínima */
+}
+
+.col-form-label {
+    margin-bottom: 0;      /* alinea verticalmente con el input */
+}
+
+/* Input mínimo para evitar que quede demasiado pequeño */
+.row.align-items-center > .col-9 input,
+.row.align-items-center > .col-9 textarea {
+    min-width: 150px;
+}
+
+/* Contenedor de input + ícono info */
+.input-with-info {
+    display: flex;
+    align-items: center;
+}
+
+.input-with-info input,
+.input-with-info textarea {
+    flex: 1; /* ocupa todx el espacio disponible */
+    margin-right: 0.5rem; /* separación mínima entre input y el icono */
+}
+
+.input-with-info i {
+    cursor: help;
+    color: #6c757d; /* gris bootstrap */
+}
