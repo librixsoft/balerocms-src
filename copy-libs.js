@@ -67,9 +67,6 @@ const summernoteFontSrc = path.join(summernoteDist, 'font');
 const summernoteFontDest = path.join(assetsPath, 'css', 'font');
 copyFolderSync(summernoteFontSrc, summernoteFontDest);
 
-// ... resto de tu código ...
-
-
 if (fs.existsSync(path.join(summernoteDist, 'summernote.min.css'))) {
     copyFileSafe(
         path.join(summernoteDist, 'summernote.min.css'),
@@ -93,5 +90,16 @@ if (fs.existsSync(path.join(summernoteDist, 'summernote.min.js'))) {
         path.join(assetsPath, 'js', 'summernote.min.js')
     );
 }
+
+// BS Stepper
+copyFileSafe(
+    path.join(nodeModulesPath, 'bs-stepper', 'dist', 'css', 'bs-stepper.min.css'),
+    path.join(assetsPath, 'css', 'bs-stepper.min.css')
+);
+copyFileSafe(
+    path.join(nodeModulesPath, 'bs-stepper', 'dist', 'js', 'bs-stepper.min.js'),
+    path.join(assetsPath, 'js', 'bs-stepper.min.js')
+);
+
 
 console.log('📦 Copia de librerías completada.');

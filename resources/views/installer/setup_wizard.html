@@ -4,329 +4,212 @@
   <meta charset="utf-8">
   <title>{title}</title>
   <base href="{basepath}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-  <style>
+  <link rel="shortcut icon" href="favicon.ico">
 
-    /* Fondo general */
-    body {
-      background-color: #c0c0c0;
-    }
+  <!-- Bootstrap 5 -->
+  <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
 
-    /* Contenedor global central que envuelve todo */
-    #wizard-container {
-      width: 80%;
-      margin: 40px auto;
-      background-color: #fcfcfc;
-      padding: 30px;
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+  <!-- Font Awesome 6 -->
+  <link href="public/assets/css/all.min.css" rel="stylesheet">
 
-    /* Wizard dentro del contenedor */
-    #rootwizard {
-      background-color: transparent; /* usa el fondo del contenedor padre */
-      padding: 20px 0;
-    }
+  <!-- Custom styles -->
+  <link href="public/assets/css/styles.css" rel="stylesheet">
 
-    /* Espacio entre tabs y contenido */
-    .tab-content {
-      margin-top: 20px;
-    }
+  <!-- bs-stepper CSS -->
+  <link href="public/assets/css/bs-stepper.min.css" rel="stylesheet">
 
-    /* Tabs con color azul más claro y menos intenso */
-    .nav-tabs > li.active > a,
-    .nav-tabs > li.active > a:hover,
-    .nav-tabs > li.active > a:focus {
-      background: linear-gradient(45deg, #7aaee9, #5c8adf);
-      color: white;
-      border: 1px solid #5c8adf;
-      border-bottom-color: transparent;
-      font-weight: bold;
-    }
-
-    /* Botón azul degradado claro */
-    .btn-primary {
-      background: linear-gradient(45deg, #7aaee9, #5c8adf);
-      border-color: #5c8adf;
-      color: white;
-      box-shadow: 0 2px 4px rgba(92, 138, 223, 0.6);
-      transition: none;
-    }
-
-    .btn-primary:hover,
-    .btn-primary:focus,
-    .btn-primary:active,
-    .btn-primary.active {
-      background: linear-gradient(45deg, #7aaee9, #5c8adf);
-      border-color: #5c8adf;
-      color: white;
-      box-shadow: 0 2px 4px rgba(92, 138, 223, 0.6);
-    }
-
-    /* Botón verde degradado claro */
-    .btn-success {
-      background: linear-gradient(45deg, #82c785, #60a45a);
-      border-color: #60a45a;
-      color: white;
-      box-shadow: 0 2px 4px rgba(96, 164, 90, 0.6);
-      transition: none;
-    }
-
-    .btn-success:hover,
-    .btn-success:focus,
-    .btn-success:active,
-    .btn-success.active {
-      background: linear-gradient(45deg, #82c785, #60a45a);
-      border-color: #60a45a;
-      color: white;
-      box-shadow: 0 2px 4px rgba(96, 164, 90, 0.6);
-    }
-    /* Espacio entre las tabs y el contenido de los formularios */
-    .tab-content {
-      margin-top: 20px;
-    }
-
-
-  </style>
-
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap-wizard/1.2/jquery.bootstrap.wizard.min.js"></script>
 </head>
-<body>
+<body class="bg-light">
 
-<div id="wizard-container">
+<div class="container my-1">
 
-  <div class="row" style="margin-bottom: 10px;">
-    <div class="col-sm-12 text-right">
-      <form method="get" class="form-inline">
-        <div class="form-group">
-          <select name="lang" id="lang" class="form-control input-sm" onchange="this.form.submit()">
-            <option value="en" {lang_selected_en}>English</option>
-            <option value="es" {lang_selected_es}>Español</option>
-          </select>
-          <input type="hidden" name="app" value="installer">
-        </div>
+  <!-- Idioma -->
+  <div class="d-flex justify-content-end mb-3">
+    <form method="get" class="d-inline">
+      <select name="lang" id="lang" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="en" {lang_selected_en}>English</option>
+        <option value="es" {lang_selected_es}>Español</option>
+      </select>
+      <input type="hidden" name="app" value="installer">
+    </form>
+  </div>
+
+  <!-- Card Bienvenida -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">{installer.welcome}</h5>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="installer/progressBar">
+        <button type="submit" class="btn btn-success">
+          <i class="fas fa-download"></i> {btn_install}
+        </button>
       </form>
     </div>
   </div>
 
-  <div class="row-fluid section">
-
-    <div class="block" style="margin-top: 20px;">
-      <div class="navbar navbar-inner block-header">
-        <div class="clearfix"></div>
-        <div class="padd-top" style="margin-top: 10px;">
-          <h3>{installer.welcome}</h3>
-        </div>
-      </div>
-    </div>
-
-    <!-- @if title -->
-    <div class="block" style="margin-top: 20px;">
-      <div class="navbar navbar-inner block-header">
-        <div class="clearfix"></div>
-        <div class="padd-top" style="margin-top: 10px;">
-          <form class="form-inline" method="POST" action="installer/progressBar">
-            <input type="submit" class="btn btn-success btn-large" value="{btn_install}" name="submit">
-          </form>
-        </div>
-      </div>
-    </div>
-    <!-- @endif -->
-
-    <!-- @if mod_rewrite_enabled -->
-    <div class="alert alert-success alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-      mod_rewrite is enabled on your server.
-    </div>
-    <!-- @else -->
-    <div class="alert alert-warning alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-      mod_rewrite is not enabled, we need require this option enabled. You can't install.
-    </div>
-    <!-- @endif -->
-
-    <!-- @if !config_writeable -->
-    <div class="alert alert-danger alert-dismissible" style="margin-top: 15px;">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-      <strong>Warning:</strong> The file <code>balero.config.xml</code> is not writable. Please check the file permissions to proceed with the installation.
-    </div>
-    <!-- @else -->
-    <div class="alert alert-success alert-dismissible" style="margin-top: 15px;">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-      <strong>Info:</strong> The file <code>balero.config.xml</code> is writable. You can proceed with the installation.
-    </div>
-    <!-- @endif -->
-
-    <!-- @if errors.username -->
-    <div class="alert alert-danger alert-dismissible" style="margin-top: 15px;">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-      {errors.username}.
-    </div>
-    <!-- @endif -->
-
-    <div class="block">
-      <div class="block-content collapse in">
-        <div class="span12">
-          <div id="rootwizard">
-            <ul class="nav nav-tabs" style="margin: 0; padding-left: 0;">
-              <li class="active"><a href="#tab1" data-toggle="tab"><i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_dbconfig}</a></li>
-              <li><a href="#tab2" data-toggle="tab"><i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_siteinfo}</a></li>
-              <li><a href="#tab3" data-toggle="tab"><i class="bi bi-check-circle-fill text-success" style="font-size: 1.5em;"></i> {lbl_adminconfig}</a></li>
-            </ul>
-
-            <form class="form-horizontal" method="POST" action="installer/install">
-              <div class="tab-content">
-
-                <!-- TAB 1 -->
-                <div class="tab-pane active" id="tab1">
-                  <fieldset>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="dbhost">{lbl_dbhost}</label>
-                      <div class="col-sm-10">
-                        <input name="dbhost" class="form-control" id="dbhost" type="text" value="{txt_dbhost}" required>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="dbuser">{lbl_dbusername}</label>
-                      <div class="col-sm-10">
-                        <input name="dbuser" class="form-control" id="dbuser" type="text" value="{txt_dbuser}" required>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="dbpass">{lbl_dbpass}</label>
-                      <div class="col-sm-10">
-                        <input name="dbpass" class="form-control" id="dbpass" type="password" value="{txt_dbpass}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="dbname">{lbl_dbname}</label>
-                      <div class="col-sm-10">
-                        <input name="dbname" class="form-control" id="dbname" type="text" value="{txt_dbname}" required>
-                        <p class="help-block">{lbl_dbname_note}</p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" class="btn btn-primary next-tab" style="margin-top: 15px;">{btn_save}</button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </div>
-
-                <!-- TAB 2 -->
-                <div class="tab-pane" id="tab2">
-                  <fieldset>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="basepath">{lbl_basepath}</label>
-                      <div class="col-sm-10">
-                        <input name="basepath" class="form-control" id="basepath" type="text" value="{txt_basepath}">
-                        <p class="help-block">{lbl_basepath_note}</p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="title">{lbl_title}</label>
-                      <div class="col-sm-10">
-                        <input name="title" class="form-control" id="title" type="text" value="{title}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="url">{lbl_url}</label>
-                      <div class="col-sm-10">
-                        <input name="url" class="form-control" id="url" placeholder="http://" type="text" value="{txt_url}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="keywords">{lbl_keywords}</label>
-                      <div class="col-sm-10">
-                        <input name="keywords" class="form-control" id="keywords" type="text" value="{keywords}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="description">{lbl_description}</label>
-                      <div class="col-sm-10">
-                        <textarea name="description" class="form-control" id="description" style="height: 200px;">{description}</textarea>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" class="btn btn-primary next-tab" style="margin-top: 15px;">{btn_save}</button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </div>
-
-                <!-- TAB 3 -->
-                <div class="tab-pane" id="tab3">
-                  <fieldset>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="username">{lbl_administrator}</label>
-                      <div class="col-sm-10">
-                        <input name="username" class="form-control" id="username" type="text" value="{username}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="passwd">{lbl_pass}</label>
-                      <div class="col-sm-10">
-                        <input name="passwd" class="form-control" id="passwd" type="password">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="passwd2">{lbl_retype}</label>
-                      <div class="col-sm-10">
-                        <input name="passwd2" class="form-control" id="passwd2" type="password">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="firstname">{lbl_firstname}</label>
-                      <div class="col-sm-10">
-                        <input name="firstname" class="form-control" id="firstname" type="text" value="{txt_firstname}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="lastname">{lbl_lastname}</label>
-                      <div class="col-sm-10">
-                        <input name="lastname" class="form-control" id="lastname" type="text" value="{txt_lastname}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="email">{lbl_email}</label>
-                      <div class="col-sm-10">
-                        <input name="email" class="form-control" id="email" type="email" value="{txt_email}">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success" style="margin-top: 15px;">{btn_save}</button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </div>
-
-
-              </div>
-            </form>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <!-- Alertas -->
+  <!-- @if mod_rewrite_enabled -->
+  <div class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-check-circle"></i> mod_rewrite is enabled.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
+  <!-- @else -->
+  <div class="alert alert-warning alert-dismissible fade show">
+    <i class="fas fa-exclamation-triangle"></i> mod_rewrite is not enabled, installation cannot continue.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <!-- @endif -->
+
+  <!-- @if !config_writeable -->
+  <div class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-times-circle"></i>
+    <strong>Warning:</strong> The file <code>balero.config.xml</code> is not writable.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <!-- @else -->
+  <div class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-info-circle"></i>
+    The file <code>balero.config.xml</code> is writable. You can proceed.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <!-- @endif -->
+
+  <!-- @if errors.username -->
+  <div class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-user-times"></i> {errors.username}.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <!-- @endif -->
+
+  <!-- Wizard -->
+  <div id="installerWizard" class="bs-stepper card mt-4">
+    <div class="card-header">
+      <div class="bs-stepper-header" role="tablist">
+        <div class="step" data-target="#dbconfig-part">
+          <button type="button" class="step-trigger" role="tab">
+            <span class="bs-stepper-circle"><i class="fas fa-database"></i></span>
+            <span class="bs-stepper-label">{lbl_dbconfig}</span>
+          </button>
+        </div>
+        <div class="line"></div>
+        <div class="step" data-target="#siteinfo-part">
+          <button type="button" class="step-trigger" role="tab">
+            <span class="bs-stepper-circle"><i class="fas fa-globe"></i></span>
+            <span class="bs-stepper-label">{lbl_siteinfo}</span>
+          </button>
+        </div>
+        <div class="line"></div>
+        <div class="step" data-target="#adminconfig-part">
+          <button type="button" class="step-trigger" role="tab">
+            <span class="bs-stepper-circle"><i class="fas fa-user-shield"></i></span>
+            <span class="bs-stepper-label">{lbl_adminconfig}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="bs-stepper-content">
+        <form method="POST" action="installer/install">
+          <!-- TAB 1: DB Config -->
+          <div id="dbconfig-part" class="content" role="tabpanel">
+            <div class="mb-3">
+              <label for="dbhost" class="form-label">{lbl_dbhost}</label>
+              <input name="dbhost" id="dbhost" class="form-control" value="{txt_dbhost}" required>
+            </div>
+            <div class="mb-3">
+              <label for="dbuser" class="form-label">{lbl_dbusername}</label>
+              <input name="dbuser" id="dbuser" class="form-control" value="{txt_dbuser}" required>
+            </div>
+            <div class="mb-3">
+              <label for="dbpass" class="form-label">{lbl_dbpass}</label>
+              <input name="dbpass" id="dbpass" class="form-control" type="password" value="{txt_dbpass}">
+            </div>
+            <div class="mb-3">
+              <label for="dbname" class="form-label">{lbl_dbname}</label>
+              <input name="dbname" id="dbname" class="form-control" value="{txt_dbname}" required>
+              <div class="form-text">{lbl_dbname_note}</div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
+          </div>
+
+          <!-- TAB 2: Site Info -->
+          <div id="siteinfo-part" class="content" role="tabpanel">
+            <div class="mb-3">
+              <label for="basepath" class="form-label">{lbl_basepath}</label>
+              <input name="basepath" id="basepath" class="form-control" value="{txt_basepath}">
+              <div class="form-text">{lbl_basepath_note}</div>
+            </div>
+            <div class="mb-3">
+              <label for="title" class="form-label">{lbl_title}</label>
+              <input name="title" id="title" class="form-control" value="{title}">
+            </div>
+            <div class="mb-3">
+              <label for="url" class="form-label">{lbl_url}</label>
+              <input name="url" id="url" class="form-control" placeholder="http://" value="{txt_url}">
+            </div>
+            <div class="mb-3">
+              <label for="keywords" class="form-label">{lbl_keywords}</label>
+              <input name="keywords" id="keywords" class="form-control" value="{keywords}">
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">{lbl_description}</label>
+              <textarea name="description" id="description" class="form-control" rows="4">{description}</textarea>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
+          </div>
+
+          <!-- TAB 3: Admin Config -->
+          <div id="adminconfig-part" class="content" role="tabpanel">
+            <div class="mb-3">
+              <label for="username" class="form-label">{lbl_administrator}</label>
+              <input name="username" id="username" class="form-control" value="{username}">
+            </div>
+            <div class="mb-3">
+              <label for="passwd" class="form-label">{lbl_pass}</label>
+              <input name="passwd" id="passwd" class="form-control" type="password">
+            </div>
+            <div class="mb-3">
+              <label for="passwd2" class="form-label">{lbl_retype}</label>
+              <input name="passwd2" id="passwd2" class="form-control" type="password">
+            </div>
+            <div class="mb-3">
+              <label for="firstname" class="form-label">{lbl_firstname}</label>
+              <input name="firstname" id="firstname" class="form-control" value="{txt_firstname}">
+            </div>
+            <div class="mb-3">
+              <label for="lastname" class="form-label">{lbl_lastname}</label>
+              <input name="lastname" id="lastname" class="form-control" value="{txt_lastname}">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">{lbl_email}</label>
+              <input name="email" id="email" class="form-control" type="email" value="{txt_email}">
+            </div>
+            <button type="submit" class="btn btn-success">{btn_save}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<script>
-  $(function() {
-    $('#rootwizard').bootstrapWizard();
+<!-- Scripts -->
+<script src="public/assets/js/jquery.min.js"></script>
+<script src="public/assets/js/bootstrap.bundle.min.js"></script>
+<script src="public/assets/js/bs-stepper.min.js"></script>
 
-    $('.next-tab').click(function() {
-      $('#rootwizard').bootstrapWizard('next');
+<script>
+  var stepper;
+  document.addEventListener('DOMContentLoaded', function () {
+    stepper = new Stepper(document.querySelector('#installerWizard'), {
+      linear: false, // <--- esto permite ir a cualquier tab
+      animation: true
     });
   });
-</script>
 
+</script>
 </body>
 </html>
