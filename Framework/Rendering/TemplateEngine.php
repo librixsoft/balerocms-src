@@ -15,16 +15,27 @@ class TemplateEngine
 
     private string $baseDir;
 
+    private ProcessorForEach $processorForEach;
+    private ProcessorFlattenParams $processFlattenParams;
+
+    public function __construct(
+        ProcessorForEach $processorForEach,
+        ProcessorFlattenParams $processFlattenParams
+    ) {
+        $this->processorForEach = $processorForEach;
+        $this->processFlattenParams = $processFlattenParams;
+    }
+
     public function processTemplate(string $content, array $params): string
     {
 
         $content = $this->processIncludes($content, $params);
 
         // Aplanar los parámetros con claves anidadas: 'errors.username' => 'Mensaje'
-        $flatParams = $this->flattenParams($params);
+        $flatParams = $this->processFlattenParams->process($params);
 
         // Primero procesar los foreach para evitar conflictos con variables internas
-        $content = $this->processForeach($content, $params);
+        $content = $this->processorForEach->process($content, $params);
 
         // Reemplazo directo de variables {key}
         foreach ($flatParams as $key => $value) {
@@ -62,52 +73,6 @@ class TemplateEngine
         return $content;
     }
 
-    /**
-     * Procesa bloques @foreach var as item ... @endforeach
-     */
-    public function processForeach(string $content, array $params): string
-    {
-        return preg_replace_callback(
-            '/<!--\s*@foreach\s+(\w+)\s+as\s+(\w+)\s*-->(.*?)<!--\s*@endforeach\s*-->/is',
-            function ($matches) use ($params) {
-                $arrayKey = $matches[1];    // ej: 'virtual_pages' o 'themes'
-                $itemKey  = $matches[2];    // ej: 'page' o 't'
-                $block    = $matches[3];    // contenido dentro del foreach
-
-                if (!isset($params[$arrayKey]) || !is_array($params[$arrayKey])) {
-                    return ''; // Si no existe o no es array, no imprime nada
-                }
-
-                $result = '';
-                foreach ($params[$arrayKey] as $item) {
-                    $flatItem = $this->flattenParams([$itemKey => $item]);
-
-                    $blockCopy = $block;
-                    foreach ($flatItem as $k => $v) {
-                        $safeValue = htmlspecialchars((string)$v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                        $blockCopy = str_replace('{' . $k . '}', $safeValue, $blockCopy);
-                    }
-
-                    // FIX corregido con clave completa
-                    $blockCopy = preg_replace_callback(
-                        '/<!--\s*@if\s+defaultTheme\s*==\s*t\.value\s*-->/i',
-                        function() use ($flatItem, $itemKey) {
-                            $val = $flatItem[$itemKey . '.value'] ?? '';
-                            $val = htmlspecialchars($val, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                            return "<!-- @if defaultTheme == '{$val}' -->";
-                        },
-                        $blockCopy
-                    );
-
-                    $result .= $blockCopy;
-                }
-
-
-                return $result;
-            },
-            $content
-        );
-    }
 
     public function processIfBlocks(string $content, array $flatParams): string
     {
@@ -206,26 +171,6 @@ class TemplateEngine
         );
     }
 
-
-    /**
-     * Aplana un array multidimensional para claves como 'errors.username'
-     */
-    public function flattenParams(array $params, string $prefix = ''): array
-    {
-        $result = [];
-
-        foreach ($params as $key => $value) {
-            $fullKey = $prefix === '' ? $key : $prefix . '.' . $key;
-
-            if (is_array($value)) {
-                $result += $this->flattenParams($value, $fullKey);
-            } else {
-                $result[$fullKey] = $value;
-            }
-        }
-
-        return $result;
-    }
 
     public function setBaseDir(string $path): void
     {

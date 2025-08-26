@@ -22,7 +22,7 @@
 	</admin>
 	<system>
 		<!-- balero cms installed -->
-		<installed>yes</installed>
+		<installed>no</installed>
 	</system>
 	<site>
 		<!-- title page -->
