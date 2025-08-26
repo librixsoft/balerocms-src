@@ -34,8 +34,7 @@ class TemplateEngine
     public function processTemplate(string $content, array $params): string
     {
 
-        $this->processorIncludes->setBaseDir($this->getBaseDir());
-        $content = $this->processorIncludes->process($content, $params);
+        $content = $this->processorIncludes->process($content, $this->baseDir);
 
         // Aplanar los parámetros con claves anidadas: 'errors.username' => 'Mensaje'
         $flatParams = $this->processFlattenParams->process($params);
@@ -82,14 +81,6 @@ class TemplateEngine
     public function setBaseDir(string $path): void
     {
         $this->baseDir = rtrim($path, '/') . '/';
-    }
-
-    /**
-     * @return string
-     */
-    public function getBaseDir(): string
-    {
-        return $this->baseDir;
     }
 
 }

@@ -4,16 +4,10 @@ namespace Framework\Rendering;
 
 class ProcessorIncludes
 {
-    private string $baseDir = '';
 
-    public function setBaseDir(string $baseDir): void
+    public function process(string $content, string $baseDir): string
     {
-        $this->baseDir = rtrim($baseDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-    }
-
-    public function process(string $content, array $params): string
-    {
-        if (!$this->baseDir) {
+        if (!$baseDir) {
             return '<!-- INCLUDE ERROR: baseDir no definido -->';
         }
 
@@ -21,7 +15,7 @@ class ProcessorIncludes
             '/<!--\s*@include\s+"([^"]+)"\s*-->/',
             function ($matches) {
                 $includePath = $matches[1];
-                $fullPath = realpath($this->baseDir . $includePath);
+                $fullPath = realpath(baseDir . $includePath);
 
                 if (!$fullPath || !file_exists($fullPath)) {
                     return "<!-- INCLUDE ERROR: Archivo no encontrado $includePath -->";
