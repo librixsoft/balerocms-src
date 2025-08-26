@@ -13,9 +13,9 @@ use Framework\I18n\LangManager;
 class TemplateEngine
 {
 
-    protected string $baseDir;
+    private string $baseDir;
 
-    protected function processTemplate(string $content, array $params): string
+    public function processTemplate(string $content, array $params): string
     {
 
         $content = $this->processIncludes($content, $params);
@@ -65,7 +65,7 @@ class TemplateEngine
     /**
      * Procesa bloques @foreach var as item ... @endforeach
      */
-    private function processForeach(string $content, array $params): string
+    public function processForeach(string $content, array $params): string
     {
         return preg_replace_callback(
             '/<!--\s*@foreach\s+(\w+)\s+as\s+(\w+)\s*-->(.*?)<!--\s*@endforeach\s*-->/is',
@@ -109,7 +109,7 @@ class TemplateEngine
         );
     }
 
-    private function processIfBlocks(string $content, array $flatParams): string
+    public function processIfBlocks(string $content, array $flatParams): string
     {
         // @if var == var2 o var == 'string' ... @else ... @endif
         $content = preg_replace_callback(
@@ -177,7 +177,7 @@ class TemplateEngine
     /**
      * Procesa inclusiones tipo <!-- @include "ruta/al/archivo.html" -->
      */
-    protected function processIncludes(string $content, array $params): string
+    public function processIncludes(string $content, array $params): string
     {
         return preg_replace_callback(
             '/<!--\s*@include\s+"([^"]+)"\s*-->/',
@@ -210,7 +210,7 @@ class TemplateEngine
     /**
      * Aplana un array multidimensional para claves como 'errors.username'
      */
-    private function flattenParams(array $params, string $prefix = ''): array
+    public function flattenParams(array $params, string $prefix = ''): array
     {
         $result = [];
 

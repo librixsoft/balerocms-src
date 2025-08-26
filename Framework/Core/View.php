@@ -12,18 +12,23 @@ use Framework\Core\ConfigSettings;
 use Framework\Static\Constant;
 use Framework\Rendering\TemplateEngine;
 
-class View extends TemplateEngine
+class View
 {
 
-    protected string $baseDir;
-    protected ConfigSettings $configSettings;
+    private string $baseDir;
+    private ConfigSettings $configSettings;
+    private TemplateEngine $templateEngine;
 
-    public function __construct(ConfigSettings $config)
+    public function __construct(
+        ConfigSettings $config,
+        TemplateEngine $templateEngine
+    )
     {
         $this->baseDir = $this->normalizePath(Constant::VIEWS_PATH);
         $this->configSettings = $config;
+        $this->templateEngine= $templateEngine;
         $this->configSettings->LoadSettings();
-        $this->setBaseDir($this->baseDir);
+        $this->templateEngine->setBaseDir($this->baseDir);
     }
 
     public function getDefaultParams(): array
@@ -54,7 +59,7 @@ class View extends TemplateEngine
 
             $params = array_merge($this->getDefaultParams(), $params);
 
-            return $this->processTemplate($content, $params);
+            return $this->templateEngine->processTemplate($content, $params);
         } catch (\Throwable $e) {
             ErrorConsole::handleException($e);
             return '';
@@ -67,11 +72,6 @@ class View extends TemplateEngine
     private function normalizePath(string $path): string
     {
         return rtrim($path, '/') . '/';
-    }
-
-    public function setBaseDir(string $path): void
-    {
-        $this->baseDir = $path;
     }
 
 }
