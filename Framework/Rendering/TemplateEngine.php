@@ -15,24 +15,27 @@ class TemplateEngine
 
     private string $baseDir;
 
-    private ProcessorForEach $processorForEach;
+    private ProcessorIncludes $processorIncludes;
     private ProcessorFlattenParams $processFlattenParams;
+    private ProcessorForEach $processorForEach;
     private ProcessorIfBlocks $processorIfBlocks;
 
     public function __construct(
-        ProcessorForEach $processorForEach,
+        ProcessorIncludes $processorIncludes,
         ProcessorFlattenParams $processFlattenParams,
-        ProcessorIfBlocks $processorIfBlocks
-    ) {
-        $this->processorForEach = $processorForEach;
+        ProcessorForEach $processorForEach,
+        ProcessorIfBlocks $processorIfBlocks) {
+        $this->processorIncludes = $processorIncludes;
         $this->processFlattenParams = $processFlattenParams;
+        $this->processorForEach = $processorForEach;
         $this->processorIfBlocks = $processorIfBlocks;
     }
 
     public function processTemplate(string $content, array $params): string
     {
 
-        $content = $this->processIncludes($content, $params);
+        $this->processorIncludes->setBaseDir($this->getBaseDir());
+        $content = $this->processorIncludes->process($content, $params);
 
         // Aplanar los parámetros con claves anidadas: 'errors.username' => 'Mensaje'
         $flatParams = $this->processFlattenParams->process($params);
@@ -76,43 +79,17 @@ class TemplateEngine
         return $content;
     }
 
-
-    /**
-     * Procesa inclusiones tipo <!-- @include "ruta/al/archivo.html" -->
-     */
-    public function processIncludes(string $content, array $params): string
-    {
-        return preg_replace_callback(
-            '/<!--\s*@include\s+"([^"]+)"\s*-->/',
-            function ($matches) use ($params) {
-                $includePath = $matches[1];
-
-                // Aquí tienes que construir la ruta completa, usando baseDir o similar
-                // Pero TemplateEngine no conoce $baseDir de View, entonces una solución es:
-                // Que la clase TemplateEngine tenga una propiedad $baseDir, que le pases desde View
-
-                if (!isset($this->baseDir)) {
-                    // fallback: sin baseDir no puede incluir
-                    return "<!-- INCLUDE ERROR: baseDir no definido -->";
-                }
-
-                $fullPath = realpath($this->baseDir . $includePath);
-                if (!$fullPath || !file_exists($fullPath)) {
-                    return "<!-- INCLUDE ERROR: Archivo no encontrado $includePath -->";
-                }
-
-                $includedContent = file_get_contents($fullPath);
-                // Procesamos recursivamente includes y otras cosas en el contenido incluido
-                return $this->processTemplate($includedContent, $params);
-            },
-            $content
-        );
-    }
-
-
     public function setBaseDir(string $path): void
     {
         $this->baseDir = rtrim($path, '/') . '/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseDir(): string
+    {
+        return $this->baseDir;
     }
 
 }
