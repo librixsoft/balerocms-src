@@ -6,7 +6,7 @@
  * @license GNU General Public License
  */
 
-namespace Framework\Core;
+namespace Framework\Rendering;
 
 use Framework\I18n\LangManager;
 

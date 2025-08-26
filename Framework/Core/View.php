@@ -10,6 +10,7 @@ namespace Framework\Core;
 
 use Framework\Core\ConfigSettings;
 use Framework\Static\Constant;
+use Framework\Rendering\TemplateEngine;
 
 class View extends TemplateEngine
 {
