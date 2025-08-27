@@ -12,8 +12,8 @@ use Framework\Core\Boot;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
 use Framework\Http\RequestHelper;
-use Framework\Security\Security;
 use Framework\Static\Constant;
+use Framework\Static\Redirect;
 use Modules\Admin\AdminElements;
 use Throwable;
 use Exception;
@@ -24,25 +24,22 @@ class Router
     /**
      * Load default app controller
      */
-    private const DEFAULT_APP = 'Page';
+    private const DEFAULT_MODULE = 'Page';
 
     /**
      * Constante que define el nombre del parámetro index.php?module={module}
      */
     private const PARAM_MODULE = 'module';
 
-    private Security $security;
     private RequestHelper $request;
     private ConfigSettings $configSettings;
-    private string $app;
+    private string $module;
 
     public function __construct(
         ConfigSettings $configSettings,
-        Security $security,
         RequestHelper $request
     ) {
         $this->configSettings = $configSettings;
-        $this->security = $security;
         $this->request = $request;
 
         $this->checkInstallerRedirect();
@@ -54,25 +51,25 @@ class Router
         require_once Constant::LANG_HELPER;
 
         // Resolver application
-        $app = $this->request->get(self::PARAM_MODULE);
+        $module = $this->request->get(self::PARAM_MODULE);
 
-        if (!$app) {
-            $this->initModule(self::DEFAULT_APP);
+        if (!$module) {
+            $this->initModule(self::DEFAULT_MODULE);
             exit;
         }
 
         // Default load
-        match ($app) {
-            default => $this->initModule(ucfirst($app)),
+        match ($module) {
+            default => $this->initModule(ucfirst($module)),
         };
 
         return $this;
     }
 
-    private function initModule(string $appName): void
+    private function initModule(string $module): void
     {
-        $this->app = $appName;
-        $controllerClass = "Modules\\{$appName}\\Controllers\\{$appName}Controller";
+        $this->module = $module;
+        $controllerClass = "Modules\\{$module}\\Controllers\\{$module}Controller";
 
         if (!class_exists($controllerClass)) {
             ErrorConsole::handleException(new Exception("Controller class not found: $controllerClass"));
@@ -85,10 +82,9 @@ class Router
     {
         try {
             if ($this->configSettings->getInstalled() === "no") {
-                $currentApp = $this->request->get(self::PARAM_MODULE);
-                if ($currentApp !== 'installer') {
-                    $base = rtrim($this->configSettings->getBasePath(), '/');
-                    header('Location: ' . $base . '/installer/');
+                $currentModule = $this->request->get(self::PARAM_MODULE);
+                if ($currentModule !== 'installer') {
+                    Redirect::to('/installer');
                     exit;
                 }
             }
