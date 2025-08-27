@@ -124,7 +124,6 @@ class Boot
      * Instancia cualquier clase pasando argumentos opcionales.
      * No realiza lógica extra ni inyecciones automáticas.
      *
-     * @param array $args Argumentos opcionales para el constructor.
      * @return object Instancia creada.
      */
     public static function instantiateClass(string $class): object
