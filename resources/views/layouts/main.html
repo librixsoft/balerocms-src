@@ -24,45 +24,177 @@
   <!-- Bootstrap Bundle JS (con Popper incluido) -->
   <script src="public/assets/js/bootstrap.bundle.min.js"></script>
 
+  <style>
+    /* Navbar transparente y estático */
+    .navbar {
+      background: transparent !important;
+    }
+
+    .navbar .nav-link,
+    .navbar .navbar-brand {
+      color: #343a40 !important; /* gris oscuro */
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .navbar .nav-link:hover {
+      color: #0d6efd !important; /* azul al pasar el mouse */
+    }
+
+    /* Hero Header con degradado azul */
+    header.hero-header {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      text-align: center;
+      padding: 120px 20px;
+      position: relative;
+    }
+
+    header.hero-header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    header.hero-header .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    header.hero-header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    header.hero-header p.slogan {
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    /* Sección de tres bloques sin borde ni sombra */
+    .features .card {
+      border: none;
+      box-shadow: none;
+      text-align: center;
+      transition: none;
+    }
+
+    /* Main dinámico limpio */
+    main.container {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+
+    main.container h2,
+    main.container p {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #f8f9fa;
+      padding: 40px 20px;
+    }
+
+    footer .social-icons a {
+      color: #495057;
+      margin: 0 10px;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+
+    footer .social-icons a:hover {
+      color: #0d6efd;
+    }
+  </style>
 </head>
 <body>
 
-<header class="bg-primary text-white p-3">
-  <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
-    <h1 class="mb-2 mb-md-0">{title}</h1>
+<!-- Navbar estático -->
+<nav class="navbar navbar-expand-md">
+  <div class="container">
+    <a class="navbar-brand" href="{basepath}">{title}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <nav class="navbar navbar-expand-md p-0">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{basepath}">Home</a>
+        </li>
+        <!-- @foreach virtual_pages as page -->
+        <li class="nav-item">
+          <a class="nav-link" href="./page/{page.url}">{page.virtual_title}</a>
+        </li>
+        <!-- @endforeach -->
+      </ul>
+    </div>
+  </div>
+</nav>
 
-      <div class="collapse navbar-collapse" id="navbarMain">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link text-white" href="{basepath}">Home</a>
-          </li>
-          <!-- @foreach virtual_pages as page -->
-          <li class="nav-item">
-            <a class="nav-link text-white" href="./page/{page.url}">{page.virtual_title}</a>
-          </li>
-          <!-- @endforeach -->
-        </ul>
-      </div>
-    </nav>
+<!-- Hero Header con degradado azul -->
+<header class="hero-header">
+  <div class="hero-content">
+    <h1>{title}</h1>
+    <p class="slogan">Aquí va tu slogan inspirador</p>
   </div>
 </header>
 
-<main class="container my-4">
+<!-- Sección de tres bloques -->
+<section class="features py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card p-4">
+          <i class="fas fa-cogs fa-3x mb-3"></i>
+          <h5 class="card-title">Funcionalidad 1</h5>
+          <p class="card-text">Descripción breve de la funcionalidad o característica 1.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4">
+          <i class="fas fa-lightbulb fa-3x mb-3"></i>
+          <h5 class="card-title">Funcionalidad 2</h5>
+          <p class="card-text">Descripción breve de la funcionalidad o característica 2.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4">
+          <i class="fas fa-users fa-3x mb-3"></i>
+          <h5 class="card-title">Funcionalidad 3</h5>
+          <p class="card-text">Descripción breve de la funcionalidad o característica 3.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- Main dinámico de páginas -->
+<main class="container my-4">
   <!-- @foreach virtual_pages as page -->
   <h2>{page.virtual_title}</h2>
   <p>{page.virtual_content}</p>
   <!-- @endforeach -->
-
 </main>
 
-<footer class="bg-light text-center py-3">
-  &copy; Your Company. All rights reserved.
+<!-- Footer -->
+<footer class="text-center">
+  <p>&copy; {year} Your Company. Todos los derechos reservados.</p>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+  </div>
 </footer>
 
 </body>
