@@ -40,12 +40,12 @@ class PageController extends Controller
 
         if (empty($page)) {
             // Página no encontrada → pasar mensaje al ViewModel
-            return $this->render("layouts/detail.html", $this->viewModel->setPageParams([
+            return $this->render("layouts/page_detail.html", $this->viewModel->setPageParams([
                 'error_message' => "La página solicitada no existe.",
             ]));
         }
 
-        return $this->render("layouts/detail.html", $this->viewModel->setPageParams([
+        return $this->render("layouts/page_detail.html", $this->viewModel->setPageParams([
             'page' => $page,
         ]));
     }
