@@ -16,6 +16,7 @@ use Throwable;
 
 class AdminModel extends Model
 {
+
     public function getVirtualPages(): array
     {
         try {
@@ -96,6 +97,14 @@ class AdminModel extends Model
     {
         $pages = $this->getVirtualPages();
         return count($pages);
+    }
+
+    public function updateSettings(array $data): void
+    {
+        $this->configSettings->setTitle($data['title'] ?? '');
+        $this->configSettings->setDescription($data['description'] ?? '');
+        $this->configSettings->setKeywords($data['keywords'] ?? '');
+        $this->configSettings->setTheme($data['theme'] ?? '');
     }
 
 }

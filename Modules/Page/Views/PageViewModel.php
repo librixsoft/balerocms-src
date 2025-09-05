@@ -9,7 +9,7 @@
 namespace Modules\Page\Views;
 
 use Framework\Core\ConfigSettings;
-
+use Framework\Core\ViewModel;
 use Modules\Page\Models\PageModel;
 
 class PageViewModel
@@ -17,53 +17,41 @@ class PageViewModel
 
     private PageModel $model;
     private ConfigSettings $config;
+    private ViewModel $viewModel;
 
     public function __construct(PageModel $model, ConfigSettings $config)
     {
         $this->config = $config;
         $this->model = $model;
+        $this->viewModel = new ViewModel();
     }
 
     /**
-     * Diccionario específico para la vista principal.
+     * Pobla todos los parámetros de Page y devuelve el array listo para render.
+     *
+     * @param array $extraParams Parámetros adicionales (por ejemplo errores o datos específicos).
      */
-    public function getHomeParams(): array
+    public function setPageParams(array $extraParams = []): array
     {
-        return [
+        $this->viewModel->addAll([
+            // Colecciones
             'virtual_pages' => $this->model->getVirtualPages(),
 
-            // Etiquetas
+            // Etiquetas comunes
             'lbl_virtual_pages' => 'Virtual Pages',
             'lbl_home' => 'Home',
             'lbl_no_pages' => 'No virtual pages available.',
 
-            // Botones o textos varios
+            // Botones
             'btn_refresh' => 'Refresh',
-        ];
+        ]);
+
+        // Mezclar parámetros adicionales (por ejemplo, página actual o errores)
+        if (!empty($extraParams)) {
+            $this->viewModel->addAll($extraParams);
+        }
+
+        return $this->viewModel->all();
     }
 
-    /**
-     * Diccionario para página individual.
-     */
-    public function getDetailParams(array $page): array
-    {
-        return [
-            'virtual_pages' => $this->model->getVirtualPages(),
-            'page' => $page,
-
-            // Etiquetas
-            'lbl_virtual_pages' => 'Virtual Pages',
-            'lbl_home' => 'Home',
-        ];
-    }
-
-    /**
-     * Diccionario para error de página no encontrada.
-     */
-    public function getNotFoundParams(): array
-    {
-        return [
-            'error_message' => "La página solicitada no existe.",
-        ];
-    }
 }

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Balero CMS
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Modules\Login\Controllers;
 
 use Framework\Core\Controller;
@@ -31,7 +25,7 @@ class LoginController extends Controller
     #[Get('/')]
     public function home()
     {
-        return $this->render("admin/login.html", $this->viewModel->getLoginParams());
+        return $this->render("admin/login.html", $this->viewModel->setLoginParams());
     }
 
     #[Post('/')]
@@ -42,7 +36,9 @@ class LoginController extends Controller
         } else {
             return $this->render(
                 "admin/login.html",
-                $this->viewModel->getLoginParams($this->loginManager)
+                $this->viewModel->setLoginParams([
+                    'error_message' => 'Usuario o contraseña incorrectos.'
+                ])
             );
         }
     }
@@ -53,5 +49,4 @@ class LoginController extends Controller
         $this->loginManager->logout();
         Redirect::to('/login/');
     }
-
 }

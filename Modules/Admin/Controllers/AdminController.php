@@ -63,7 +63,7 @@ class AdminController extends Controller
             'theme' => $this->request->post("theme"),
         ];
 
-        $this->viewModel->updateSettings($data);
+        $this->model->updateSettings($data);
 
         Redirect::to('/admin/settings');
         return "";
@@ -72,13 +72,13 @@ class AdminController extends Controller
     #[Get('/new-page')]
     public function getPages()
     {
-        return $this->render("admin/new_page.html", $this->viewModel->getNewPageParams());
+        return $this->render("admin/new_page.html", $this->viewModel->getPagesParams());
     }
 
     #[Get('/pages')]
     public function getAllPages()
     {
-        return $this->render("admin/pages.html", $this->viewModel->getPagesParams());
+        return $this->render("admin/pages.html", $this->viewModel->getAllPagesParams());
     }
 
     #[Post('/pages/new')]
@@ -111,14 +111,12 @@ class AdminController extends Controller
     #[Get('/pages/edit/{id}')]
     public function editPage(int $id)
     {
-        $params = $this->viewModel->getEditPageParams($id);
-        return $this->render("admin/edit_page.html", $params);
+        return $this->render("admin/edit_page.html", $this->viewModel->getEditPageParams($id));
     }
 
     #[Post('/pages/edit/{id}')]
     public function postEditPage(int $id)
     {
-        // Leer también static_url para enviarlo al modelo (aunque sea readonly)
         $data = [
             'id' => $id,
             'virtual_title' => $this->request->post("virtual_title"),

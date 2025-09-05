@@ -1,13 +1,8 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Modules\Admin\Views;
 
+use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
 use Modules\Admin\Models\AdminModel;
 
@@ -15,40 +10,23 @@ class AdminViewModel
 {
     private AdminModel $model;
     private ConfigSettings $config;
+    private ViewModel $viewModel;
 
     public function __construct(AdminModel $model, ConfigSettings $config)
     {
         $this->model = $model;
         $this->config = $config;
-    }
-
-    public function updateSettings(array $data): void
-    {
-        $this->config->setTitle($data['title'] ?? '');
-        $this->config->setDescription($data['description'] ?? '');
-        $this->config->setKeywords($data['keywords'] ?? '');
-        $this->config->setTheme($data['theme'] ?? '');
-    }
-
-    public function getLoginParams(): array
-    {
-        return [
-            'core_version' => _CORE_VERSION,
-            'lbl_theme' => 'Theme',
-        ];
+        $this->viewModel = new ViewModel();
     }
 
     public function getSettingsParams(): array
     {
-        return [
+        $this->viewModel->addAll([
+            'core_version'   => _CORE_VERSION,
+            'virtual_pages'  => $this->model->getVirtualPages(),
+            'defaultTheme'   => $this->config->getTheme(),
+            'pages_count'    => $this->model->getPagesCount(),
 
-            'core_version' => _CORE_VERSION,
-
-            'virtual_pages' => $this->model->getVirtualPages(),
-            'defaultTheme' => $this->config->getTheme(),
-            'pages_count' => $this->model->getPagesCount(),
-
-            // TODO: Implements theme system and reads
             'themes' => [
                 ['value' => 'Default', 'label' => 'Default'],
                 ['value' => 'Dark',    'label' => 'Dark'],
@@ -56,76 +34,64 @@ class AdminViewModel
                 ['value' => 'Modern',  'label' => 'Modern'],
             ],
 
-            'activeMenu' => 'settings',
+            'activeMenu'    => 'settings',
 
-            'lbl_theme' => "Theme",
-            'lbl_settings' => __('admin.settings'),
-            'lbl_title' => 'Title',
-            'lbl_keywords' => 'Keywords',
+            'lbl_theme'     => "Theme",
+            'lbl_settings'  => __('admin.settings'),
+            'lbl_title'     => 'Title',
+            'lbl_keywords'  => 'Keywords',
             'lbl_description' => 'Description',
 
-            'txt_title' => $this->config->getTitle(),
-            'txt_keywords' => $this->config->getKeywords(),
+            'txt_title'       => $this->config->getTitle(),
+            'txt_keywords'    => $this->config->getKeywords(),
             'txt_description' => $this->config->getDescription(),
 
             'btn_refresh' => 'Refresh',
-        ];
-    }
+        ]);
 
-    public function getNewPageParams(): array
-    {
-        $params = $this->getPagesParams(); // integrar getPagesParams
-        $params['current_date'] = date('Y-m-d H:i:s');
-        $params['activeMenu'] = 'pages';
-        // Otros valores específicos para "new page" si quieres
-        $params['new_page'] = 'New page';
-        $params['btn_add'] = 'Create';
-        $params['lbl_visible'] = 'Visible';
-        $params['enabled'] = 'Enabled';
-        $params['disabled'] = 'Disabled';
-        $params['lbl_static_url'] = 'Static URL';
-        $params['lbl_content'] = 'Content';
-        return $params;
+        return $this->viewModel->all();
     }
-
 
     public function getPagesParams(): array
     {
-        return [
-            'lbl_edit_page' => 'Edit Page',
-            'lbl_title' => 'Title',
-            'lbl_static_url' => 'Static URL',
-            'lbl_content' => 'Content',
-            'lbl_action' => 'Action',
-            'lbl_edit' => 'Edit',
-            'lbl_delete' => 'Delete',
-            'btn_save' => 'Save',
-            'pages' => $this->model->getVirtualPages(),
-            'activeMenu' => 'all_pages',
-            'pages_count' => $this->model->getPagesCount(),
-        ];
+        $this->viewModel->addAll([
+            'lbl_title'     => 'Title',
+            'activeMenu'   => 'pages',
+            'current_date' => date('Y-m-d H:i:s'),
+            'new_page'     => 'New page',
+            'btn_add'      => 'Create',
+            'lbl_visible'  => 'Visible',
+            'pages_count'    => $this->model->getPagesCount(),
+        ]);
+
+        return $this->viewModel->all();
     }
 
-    public function updatePage(array $data): bool
+    public function getAllPagesParams(): array
     {
-        return $this->model->updatePage((int)$data['id'], $data);
+        $this->viewModel->addAll([
+            'activeMenu' => 'all_pages',
+            'pages'      => $this->model->getVirtualPages(),
+            'pages_count'    => $this->model->getPagesCount(),
+        ]);
+
+        return $this->viewModel->all();
     }
 
     public function getEditPageParams(int $id): array
     {
         $page = $this->model->getPageById($id);
-        // Obtener también parámetros generales de páginas
-        $pagesParams = $this->getPagesParams();
 
-        // Combinar ambos arrays, teniendo en cuenta que 'page' es específico
-        return array_merge($pagesParams, ['page' => $page]);
+        $this->viewModel->addAll([
+            'activeMenu' => 'pages',
+            'page'       => $page,
+        ]);
+
+        return $this->viewModel->all();
     }
 
-    public function getPagesCount(): int
+    public function updatePage(array $data): bool
     {
-        $pages = $this->model->getVirtualPages();
-        return count($pages);
+        return $this->model->updatePage((int)($data['id'] ?? 0), $data);
     }
-
-
 }

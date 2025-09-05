@@ -30,7 +30,7 @@ class PageController extends Controller
     #[Get('/')]
     public function home()
     {
-        return $this->render("layouts/main.html", $this->viewModel->getHomeParams());
+        return $this->render("layouts/main.html", $this->viewModel->setPageParams());
     }
 
     #[Get('/{staticUrl}')]
@@ -39,9 +39,15 @@ class PageController extends Controller
         $page = $this->model->getVirtualPageBySlug($staticUrl);
 
         if (empty($page)) {
-            throw new Exception("Página no encontrada");
+            // Página no encontrada → pasar mensaje al ViewModel
+            return $this->render("layouts/detail.html", $this->viewModel->setPageParams([
+                'error_message' => "La página solicitada no existe.",
+            ]));
         }
 
-        return $this->render("layouts/detail.html", $this->viewModel->getDetailParams($page));
+        return $this->render("layouts/detail.html", $this->viewModel->setPageParams([
+            'page' => $page,
+        ]));
     }
+
 }
