@@ -2,6 +2,8 @@
 
 namespace Framework\Rendering;
 
+use Framework\Security\Security;
+
 /**
  * Processor para el reemplazo directo de variables.
  *
@@ -10,6 +12,14 @@ namespace Framework\Rendering;
  */
 class ProcessorVariables
 {
+
+    private Security $security;
+
+    public function __construct(
+        Security $security) {
+        $this->security = $security;
+    }
+
     /**
      * Procesa el contenido reemplazando las variables {key} por sus valores correspondientes.
      *
@@ -21,7 +31,7 @@ class ProcessorVariables
     public function process(string $content, array $flatParams): string
     {
         foreach ($flatParams as $key => $value) {
-            $safeValue = htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $safeValue = $this->security->antiXSS((string)$value);
             $content = str_replace('{' . $key . '}', $safeValue, $content);
         }
 

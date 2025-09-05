@@ -9,15 +9,20 @@
 
 namespace Framework\Rendering;
 
+use Framework\Security\Security;
+
 
 class ProcessorForEach
 {
 
     private ProcessorFlattenParams $processFlattenParams;
+    private Security $security;
 
     public function __construct(
-        ProcessorFlattenParams $processFlattenParams) {
+        ProcessorFlattenParams $processFlattenParams,
+        Security $security) {
         $this->processFlattenParams = $processFlattenParams;
+        $this->security = $security;
     }
 
     /**
@@ -42,7 +47,7 @@ class ProcessorForEach
 
                     $blockCopy = $block;
                     foreach ($flatItem as $k => $v) {
-                        $safeValue = htmlspecialchars((string)$v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        $safeValue = $this->security->antiXSS((string)$v);
                         $blockCopy = str_replace('{' . $k . '}', $safeValue, $blockCopy);
                     }
 
@@ -51,7 +56,7 @@ class ProcessorForEach
                         '/<!--\s*@if\s+defaultTheme\s*==\s*t\.value\s*-->/i',
                         function() use ($flatItem, $itemKey) {
                             $val = $flatItem[$itemKey . '.value'] ?? '';
-                            $val = htmlspecialchars($val, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            $val = $this->security->antiXSS($val);
                             return "<!-- @if defaultTheme == '{$val}' -->";
                         },
                         $blockCopy
