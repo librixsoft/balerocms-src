@@ -107,4 +107,19 @@ class AdminModel extends Model
         $this->configSettings->setTheme($data['theme'] ?? '');
     }
 
+    public function deletePage(int $id): bool
+    {
+        try {
+            $sql = "DELETE FROM page WHERE id = ?";
+            $this->db->query($sql, [$id]);
+            return true;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al eliminar página: " . $e->getMessage(), 0, $e)
+            );
+            return false;
+        }
+    }
+
+
 }

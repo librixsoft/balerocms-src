@@ -97,17 +97,6 @@ class AdminController extends Controller
         Redirect::to('/admin/pages');
     }
 
-
-    #[Post('/uploader')]
-    public function postUploader()
-    {
-        if (!isset($_FILES['file'])) {
-            throw new \Exception("input file not exist");
-        }
-
-        return $this->uploader->image($_FILES['file']);
-    }
-
     #[Get('/pages/edit/{id}')]
     public function editPage(int $id)
     {
@@ -128,5 +117,23 @@ class AdminController extends Controller
 
         Redirect::to('/admin/pages');
     }
+
+    #[Post('/pages/delete/{id}')]
+    public function postDeletePage(int $id)
+    {
+        $this->model->deletePage($id);
+        Redirect::to('/admin/pages');
+    }
+
+    #[Post('/uploader')]
+    public function postUploader()
+    {
+        if (!isset($_FILES['file'])) {
+            throw new \Exception("input file not exist");
+        }
+
+        return $this->uploader->image($_FILES['file']);
+    }
+
 
 }

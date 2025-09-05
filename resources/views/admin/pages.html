@@ -63,10 +63,13 @@
                                         <a href="./admin/pages/edit/{page.id}" class="btn btn-sm btn-info">
                                             <i class="fas fa-pencil-alt"></i> {lbl_edit}
                                         </a>
-                                        <a href="./admin/pages/delete/{page.id}" class="btn btn-sm btn-danger"
-                                           onclick="return confirm('{lbl_confirm_delete}')">
-                                            <i class="fas fa-trash"></i> {lbl_delete}
-                                        </a>
+
+                                        <form method="post" action="./admin/pages/delete/{page.id}" style="display:inline;"
+                                              onsubmit="return confirm('{lbl_confirm_delete}')">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i> {lbl_delete}
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <!-- @endforeach -->
