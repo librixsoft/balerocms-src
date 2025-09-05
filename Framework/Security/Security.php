@@ -63,9 +63,8 @@ class Security {
         return $val;
     }
 
-    public function sanitizeUrlSlug(string $val): string {
-        $val = htmlspecialchars($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        return $val;
+    public function sanitize(string $val): string {
+        return htmlspecialchars($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**
@@ -83,6 +82,5 @@ class Security {
 	public function __toString() {
 		return (string)$this->var;
 	}
-	
-	
+
 }

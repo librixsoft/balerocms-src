@@ -49,20 +49,22 @@ class RequestHelper
         return isset($_COOKIE[$key]);
     }
 
-    public function request($key, $default = null)
-    {
-        return $this->filter($_REQUEST[$key] ?? $default);
-    }
-
     protected function filter($value)
     {
-        if (is_string($value)) {
-            $value = trim($value);
-            if ($this->security && method_exists($this->security, 'antiXSS')) {
-                return $this->security->sanitizeUrlSlug($value);
-            }
-            return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        if ($value === null) {
+            return null;
         }
-        return $value;
+
+        return $this->security->sanitize($value);
     }
+
+    public function raw($key, $default = null)
+    {
+        $value = $_POST[$key] ?? $default;
+        if ($value === null) {
+            return null;
+        }
+        return $this->security->antiXSS($value);
+    }
+
 }

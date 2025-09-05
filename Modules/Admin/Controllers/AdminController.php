@@ -87,7 +87,7 @@ class AdminController extends Controller
         $data = [
             'virtual_title'   => $this->request->post('virtual_title'),
             'static_url'      => $this->request->post('static_url'),
-            'virtual_content' => $this->request->post('virtual_content'),
+            'virtual_content' => $this->request->raw('virtual_content'),
             'visible'         => (int) $this->request->post('visible'),  // corregido, valor 1 o 0
             'date'            => $this->request->post('date'),
         ];
@@ -121,7 +121,7 @@ class AdminController extends Controller
             'id' => $id,
             'virtual_title' => $this->request->post("virtual_title"),
             'static_url' => $this->request->post("static_url"),
-            'virtual_content' => $this->request->post("virtual_content"),
+            'virtual_content' => $this->request->raw("virtual_content"),
         ];
 
         $this->viewModel->updatePage($data);
