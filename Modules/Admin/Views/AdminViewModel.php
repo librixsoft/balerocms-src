@@ -95,4 +95,36 @@ class AdminViewModel
     {
         return $this->model->updatePage((int)($data['id'] ?? 0), $data);
     }
+
+    public function getAllBlocksParams(): array
+    {
+        $this->viewModel->addAll([
+            'blocks' => $this->model->getBlocks(),
+            'lbl_blocks' => 'Blocks',
+            'lbl_new_block' => 'New Block',
+            'activeMenu' => 'all_blocks'
+        ]);
+        return $this->viewModel->all();
+    }
+
+    public function getNewBlockParams(): array
+    {
+        $this->viewModel->addAll([
+            'lbl_new_block' => 'New Block',
+            'activeMenu' => 'blocks'
+        ]);
+        return $this->viewModel->all();
+    }
+
+    public function getEditBlockParams(int $id): array
+    {
+        $block = $this->model->getBlockById($id);
+        $this->viewModel->addAll([
+            'block' => $block,
+            'lbl_edit_block' => 'Edit Block',
+            'activeMenu' => 'blocks'
+        ]);
+        return $this->viewModel->all();
+    }
+
 }

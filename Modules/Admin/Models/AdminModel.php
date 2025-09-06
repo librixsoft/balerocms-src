@@ -121,5 +121,128 @@ class AdminModel extends Model
         }
     }
 
+    /**
+     * Obtener todos los bloques, ordenados por sort_order ascendente.
+     */
+    public function getBlocks(): array
+    {
+        try {
+            $sql = "SELECT * FROM block ORDER BY sort_order ASC";
+            $this->db->query($sql);
+            $this->db->get();
+
+            $rows = $this->db->getRows() ?? [];
+
+            // Aseguramos que cada bloque tenga todas las claves
+            foreach ($rows as &$row) {
+                $row = [
+                    'id' => $row['id'] ?? 0,
+                    'name' => $row['name'] ?? '',
+                    'sort_order' => $row['sort_order'] ?? 1,
+                    'content' => $row['content'] ?? '',
+                ];
+            }
+
+            return $rows;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al obtener bloques: " . $e->getMessage(), 0, $e)
+            );
+            return [];
+        }
+    }
+
+    /**
+     * Obtener un bloque por ID
+     */
+    public function getBlockById(int $id): array
+    {
+        try {
+            $sql = "SELECT * FROM block WHERE id = ? LIMIT 1";
+            $this->db->query($sql, [$id]);
+            $this->db->get();
+            $row = $this->db->getRow() ?? [];
+
+            // Retornar con valores por defecto si alguna clave falta
+            return [
+                'id' => $row['id'] ?? 0,
+                'name' => $row['name'] ?? '',
+                'sort_order' => $row['sort_order'] ?? 1,
+                'content' => $row['content'] ?? '',
+            ];
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al obtener bloque por ID: " . $e->getMessage(), 0, $e)
+            );
+            return [
+                'id' => 0,
+                'name' => '',
+                'sort_order' => 1,
+                'content' => '',
+            ];
+        }
+    }
+
+    /**
+     * Crear un nuevo bloque
+     */
+    public function createBlock(array $data): bool
+    {
+        try {
+            $sql = "INSERT INTO block (name, sort_order, content) VALUES (?, ?, ?)";
+            $params = [
+                $data['name'] ?? '',
+                $data['sort_order'] ?? 1,
+                $data['content'] ?? '',
+            ];
+            $this->db->query($sql, $params);
+            return true;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al crear bloque: " . $e->getMessage(), 0, $e)
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Actualizar un bloque existente
+     */
+    public function updateBlock(int $id, array $data): bool
+    {
+        try {
+            $sql = "UPDATE block SET name = ?, sort_order = ?, content = ? WHERE id = ?";
+            $params = [
+                $data['name'] ?? '',
+                $data['sort_order'] ?? 1,
+                $data['content'] ?? '',
+                $id
+            ];
+            $this->db->query($sql, $params);
+            return true;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al actualizar bloque: " . $e->getMessage(), 0, $e)
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Eliminar un bloque por ID
+     */
+    public function deleteBlock(int $id): bool
+    {
+        try {
+            $sql = "DELETE FROM block WHERE id = ?";
+            $this->db->query($sql, [$id]);
+            return true;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al eliminar bloque: " . $e->getMessage(), 0, $e)
+            );
+            return false;
+        }
+    }
 
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <title>Admin Blocks - {mod_name}</title>
+  <base href="{basepath}">
+  <link rel="shortcut icon" href="favicon.ico">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="public/assets/css/styles.css" rel="stylesheet" media="screen">
+  <link href="public/assets/css/all.min.css" rel="stylesheet">
+  <link href="public/assets/css/summernote.min.css" rel="stylesheet">
+
+  <script src="public/assets/js/jquery.min.js"></script>
+  <script src="public/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="public/assets/js/summernote.min.js"></script>
+</head>
+<body>
+
+<!-- @include "admin/includes/navbar.html" -->
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- @include "admin/includes/sidebar.html" -->
+
+    <main class="col-md-9 ms-sm-auto col-lg-9 px-md-4" id="content">
+      <div class="row mb-3">
+
+        <!-- block -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Blocks</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Order</th>
+                <th>Content</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- @foreach blocks as block -->
+              <tr>
+                <td>{block.id}</td>
+                <td>{block.sort_order}</td>
+                <td>{block.name}</td>
+                <td>
+                  <a href="./admin/blocks/edit/{block.id}" class="btn btn-sm btn-info">
+                    <i class="fas fa-pencil-alt"></i> Edit
+                  </a>
+                  <form method="post" action="./admin/blocks/delete/{block.id}" style="display:inline;"
+                        onsubmit="return confirm('Delete this block?')">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              <!-- @endforeach -->
+              </tbody>
+            </table>
+
+            <div class="text-end mt-3">
+              <a href="./admin/blocks/new" class="btn btn-sm btn-info">
+                <i class="fas fa-plus"></i> {lbl_new_block}
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /block -->
+
+        <script>
+          $(document).ready(function() {
+            $('.summernote').summernote({
+              height: 350,
+              callbacks: {
+                onImageUpload: function(files) {
+                  sendFile(files[0]);
+                }
+              }
+            });
+
+            function sendFile(file) {
+              var data = new FormData();
+              data.append("file", file);
+              $.ajax({
+                data: data,
+                type: "POST",
+                url: "{basepath}admin/uploader",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(url) {
+                  $('.summernote').summernote('insertImage', url);
+                }
+              });
+            }
+          });
+        </script>
+
+      </div>
+    </main>
+  </div>
+  <hr>
+  <footer>
+    <p>Powered by <a href="#">Balero CMS</a>.</p>
+  </footer>
+</div>
+
+<script src="public/assets/js/scripts.js"></script>
+</body>
+</html>

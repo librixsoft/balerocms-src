@@ -135,5 +135,56 @@ class AdminController extends Controller
         return $this->uploader->image($_FILES['file']);
     }
 
+    #[Get('/blocks')]
+    public function listBlocks()
+    {
+        return $this->render("admin/blocks.html", $this->viewModel->getAllBlocksParams());
+    }
+
+    #[Get('/blocks/new')]
+    public function newBlock()
+    {
+        return $this->render("admin/new_block.html", $this->viewModel->getNewBlockParams());
+    }
+
+    #[Post('/blocks/new')]
+    public function postNewBlock()
+    {
+        $data = [
+            'name'    => $this->request->post('name'),
+            'content' => $this->request->raw('content'),
+            'visible' => (int) $this->request->post('visible'),
+        ];
+
+        $this->model->createBlock($data);
+        Redirect::to('/admin/blocks');
+    }
+
+    #[Get('/blocks/edit/{id}')]
+    public function editBlock(int $id)
+    {
+        return $this->render("admin/edit_block.html", $this->viewModel->getEditBlockParams($id));
+    }
+
+    #[Post('/blocks/edit/{id}')]
+    public function postEditBlock(int $id)
+    {
+        $data = [
+            'id'      => $id,
+            'name'    => $this->request->post('name'),
+            'content' => $this->request->raw('content'),
+            'visible' => (int) $this->request->post('visible'),
+        ];
+
+        $this->model->updateBlock($id, $data);
+        Redirect::to('/admin/blocks');
+    }
+
+    #[Post('/blocks/delete/{id}')]
+    public function deleteBlock(int $id)
+    {
+        $this->model->deleteBlock($id);
+        Redirect::to('/admin/blocks');
+    }
 
 }
