@@ -144,24 +144,41 @@ class AdminController extends Controller
     #[Get('/blocks/new')]
     public function newBlock()
     {
-        return $this->render("admin/new_block.html", $this->viewModel->getNewBlockParams());
+        // Obtener todos los bloques existentes
+        $blocks = $this->model->getBlocks();
+
+        // Calcular el siguiente sort_order
+        $maxSort = 0;
+        foreach ($blocks as $b) {
+            if ($b['sort_order'] > $maxSort) {
+                $maxSort = $b['sort_order'];
+            }
+        }
+        $nextSort = $maxSort + 1;
+
+        // Obtener parámetros base de la vista
+        $params = $this->viewModel->getNewBlockParams();
+        $params['next_sort_order'] = $nextSort;
+
+        return $this->render("admin/new_block.html", $params);
     }
 
     #[Post('/blocks/new')]
-    public function postNewBlock()
+    public function createBlock()
     {
         $data = [
-            'name'    => $this->request->post('name'),
-            'content' => $this->request->raw('content'),
-            'visible' => (int) $this->request->post('visible'),
+            'name' => $this->request->post('name'),
+            'sort_order' => $this->request->post('sort_order'),
+            'content' => $this->request->post('content'),
         ];
 
         $this->model->createBlock($data);
+
         Redirect::to('/admin/blocks');
     }
 
     #[Get('/blocks/edit/{id}')]
-    public function editBlock(int $id)
+    public function getEditBlock(int $id)
     {
         return $this->render("admin/edit_block.html", $this->viewModel->getEditBlockParams($id));
     }
@@ -170,15 +187,16 @@ class AdminController extends Controller
     public function postEditBlock(int $id)
     {
         $data = [
-            'id'      => $id,
-            'name'    => $this->request->post('name'),
-            'content' => $this->request->raw('content'),
-            'visible' => (int) $this->request->post('visible'),
+            'name' => $this->request->post('name'),
+            'sort_order' => $this->request->post('sort_order'),
+            'content' => $this->request->post('content'),
         ];
 
         $this->model->updateBlock($id, $data);
+
         Redirect::to('/admin/blocks');
     }
+
 
     #[Post('/blocks/delete/{id}')]
     public function deleteBlock(int $id)

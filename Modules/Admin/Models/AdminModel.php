@@ -189,10 +189,14 @@ class AdminModel extends Model
     public function createBlock(array $data): bool
     {
         try {
+            $sortOrder = isset($data['sort_order']) && is_numeric($data['sort_order'])
+                ? (int)$data['sort_order']
+                : 1;
+
             $sql = "INSERT INTO block (name, sort_order, content) VALUES (?, ?, ?)";
             $params = [
                 $data['name'] ?? '',
-                $data['sort_order'] ?? 1,
+                $sortOrder,
                 $data['content'] ?? '',
             ];
             $this->db->query($sql, $params);
@@ -211,13 +215,19 @@ class AdminModel extends Model
     public function updateBlock(int $id, array $data): bool
     {
         try {
+            // Convertir a entero asegurando valor válido
+            $sortOrder = (isset($data['sort_order']) && is_numeric($data['sort_order']))
+                ? (int)$data['sort_order']
+                : 1;
+
             $sql = "UPDATE block SET name = ?, sort_order = ?, content = ? WHERE id = ?";
             $params = [
                 $data['name'] ?? '',
-                $data['sort_order'] ?? 1,
+                $sortOrder,
                 $data['content'] ?? '',
                 $id
             ];
+
             $this->db->query($sql, $params);
             return true;
         } catch (Throwable $e) {
