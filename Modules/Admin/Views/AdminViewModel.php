@@ -55,12 +55,12 @@ class AdminViewModel
     public function getPagesParams(): array
     {
         $this->viewModel->addAll([
-            'lbl_title'     => 'Title',
-            'activeMenu'   => 'pages',
+            'lbl_title'    => 'Title',
             'current_date' => date('Y-m-d H:i:s'),
             'new_page'     => 'New page',
             'btn_add'      => 'Create',
             'lbl_visible'  => 'Visible',
+            'activeMenu'   => 'all_pages',
             'pages_count'    => $this->model->getPagesCount(),
         ]);
 
@@ -83,7 +83,8 @@ class AdminViewModel
         $page = $this->model->getPageById($id);
 
         $this->viewModel->addAll([
-            'activeMenu' => 'pages',
+            'activeMenu'   => 'all_pages',
+            'pages_count'    => $this->model->getPagesCount(),
             'page'       => $page,
         ]);
 
