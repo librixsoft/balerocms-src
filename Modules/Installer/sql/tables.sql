@@ -11,7 +11,43 @@ CREATE TABLE IF NOT EXISTS `page` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
 
+CREATE TABLE IF NOT EXISTS `block` (
+    `id` INT(10) NOT NULL AUTO_INCREMENT,
+    `sort_order` INT(10) NOT NULL,
+    `content` LONGTEXT NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO `page` (`id`, `virtual_title`, `static_url`, `virtual_content`, `created_at`, `visible`)
 VALUES
 (1, 'Welcome Title', 'welcome-title', 'Welcome content ...', '2025-07-04', 1),
 (2, 'Another Example', 'another-example-page-demo', 'Hello there ...', '2025-07-04', 1);
+
+INSERT INTO `block` (`id`, `sort_order`, `content`) VALUES
+(1, 1, '<section class="features py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card p-4">
+          <i class="fas fa-cogs fa-3x mb-3"></i>
+          <h5 class="card-title">Funcionalidad 1</h5>
+          <p class="card-text">Descripción breve de la funcionalidad o característica 1.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4">
+          <i class="fas fa-lightbulb fa-3x mb-3"></i>
+          <h5 class="card-title">Funcionalidad 2</h5>
+          <p class="card-text">Descripción breve de la funcionalidad o característica 2.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4">
+          <i class="fas fa-users fa-3x mb-3"></i>
+          <h5 class="card-title">Funcionalidad 3</h5>
+          <p class="card-text">Descripción breve de la funcionalidad o característica 3.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>');

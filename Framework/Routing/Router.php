@@ -24,7 +24,7 @@ class Router
     /**
      * Load default app controller
      */
-    private const DEFAULT_MODULE = 'Page';
+    private const DEFAULT_MODULE = 'Block';
 
     /**
      * Constante que define el nombre del parámetro index.php?module={module}
