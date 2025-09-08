@@ -18,50 +18,31 @@ class Security {
      * @param int $rich Is Rich Text?
      * @return Proccesed String
      */
-    public function antiXSS($val, $rich = 0) {
-
-        //$val = preg_replace("/<(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t(.*)>(.*)/i", "(xss-tag-detected)", $val);
-        if($rich == 0) {
-            $val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '(xss-code-detected)', $val);
+    public function antiXSS($val) {
+        if (!is_string($val)) {
+            return $val; // Solo procesar strings
         }
-        $val = str_replace('\'', '\&#39;', $val);
 
-        $search = '[a-zA-Z0-9]';
-        $search .= '!@#$%^&*()';
-        $search .= '~`";:?+/={}[]-\\_|\'';
-        for ($i = 0; $i < strlen($search); $i++) {
-            $val = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $val); // with a ;
-            $val = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $val); // with a ;
-        }
-        $ra1 = Array('javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'script', 'object', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'cript', 'scri', 'scrip', 'cript');
-        $ra2 = Array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
-        $ra = array_merge($ra1, $ra2);
+        // Eliminar caracteres de control (ASCII 0-31 y 127)
+        $val = preg_replace('/[\x00-\x1F\x7F]/u', '', $val);
 
-        $found = true;
-        while ($found) {
-            $val_before = $val;
-            for ($i = 0; $i < sizeof($ra); $i++) {
-                $pattern = '/';
-                for ($j = 0; $j < strlen($ra[$i]); $j++) {
-                    if ($j > 0) {
-                        $pattern .= '(';
-                        $pattern .= '(&#[xX]0{0,8}([9ab]);)';
-                        $pattern .= '|';
-                        $pattern .= '|(&#0{0,8}([9|10|13]);)';
-                        $pattern .= ')*';
-                    }
-                    $pattern .= $ra[$i][$j];
-                }
-                $pattern .= '/i';
-                $replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2);
-                $val = preg_replace($pattern, $replacement, $val);
-                if ($val_before == $val) {
-                    $found = false;
-                }
-            }
-        }
+        // Eliminar etiquetas peligrosas
+        $val = preg_replace(
+            '#<(script|iframe|object|embed|link|meta|base|form)(.*?)>(.*?)</\1>#is',
+            '',
+            $val
+        );
+
+        // Eliminar atributos peligrosos (ej: onclick, onerror, onload, etc.)
+        $val = preg_replace('/\s+on\w+="[^"]*"/i', '', $val);
+        $val = preg_replace("/\s+on\w+='[^']*'/i", '', $val);
+
+        // 🔹 Bloquear javascript: en href o src
+        $val = preg_replace('/(href|src)\s*=\s*["\']\s*javascript:[^"\']*["\']/i', '$1="#"', $val);
+
         return $val;
     }
+
 
     public function sanitize(string $val): string {
         return htmlspecialchars($val);
