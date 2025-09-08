@@ -26,6 +26,7 @@ class AdminViewModel
             'virtual_pages'  => $this->model->getVirtualPages(),
             'defaultTheme'   => $this->config->getTheme(),
             'pages_count'    => $this->model->getPagesCount(),
+            'blocks_count'    => $this->model->getBlocksCount(),
 
             'themes' => [
                 ['value' => 'Default', 'label' => 'Default'],
@@ -73,6 +74,7 @@ class AdminViewModel
             'activeMenu' => 'all_pages',
             'pages'      => $this->model->getVirtualPages(),
             'pages_count'    => $this->model->getPagesCount(),
+            'blocks_count'    => $this->model->getBlocksCount()
         ]);
 
         return $this->viewModel->all();
@@ -102,7 +104,9 @@ class AdminViewModel
             'blocks' => $this->model->getBlocks(),
             'lbl_blocks' => 'Blocks',
             'lbl_new_block' => 'New Block',
-            'activeMenu' => 'all_blocks'
+            'activeMenu' => 'all_blocks',
+            'pages_count'    => $this->model->getPagesCount(),
+            'blocks_count'    => $this->model->getBlocksCount()
         ]);
         return $this->viewModel->all();
     }

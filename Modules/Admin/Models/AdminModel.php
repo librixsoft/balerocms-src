@@ -99,6 +99,12 @@ class AdminModel extends Model
         return count($pages);
     }
 
+    public function getBlocksCount(): int
+    {
+        $blocks = $this->getBlocks();
+        return count($blocks);
+    }
+
     public function updateSettings(array $data): void
     {
         $this->configSettings->setTitle($data['title'] ?? '');
