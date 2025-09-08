@@ -47,7 +47,7 @@ class ProcessorForEach
 
                     $blockCopy = $block;
                     foreach ($flatItem as $k => $v) {
-                        $safeValue = $this->security->antiXSS((string)$v);
+                        $safeValue = $this->security->sanitize((string)$v);
                         $blockCopy = str_replace('{' . $k . '}', $safeValue, $blockCopy);
                     }
 
@@ -56,7 +56,7 @@ class ProcessorForEach
                         '/<!--\s*@if\s+defaultTheme\s*==\s*t\.value\s*-->/i',
                         function() use ($flatItem, $itemKey) {
                             $val = $flatItem[$itemKey . '.value'] ?? '';
-                            $val = $this->security->antiXSS($val);
+                            $val = $this->security->sanitize($val);
                             return "<!-- @if defaultTheme == '{$val}' -->";
                         },
                         $blockCopy

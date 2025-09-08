@@ -31,7 +31,7 @@ class ProcessorVariables
     public function process(string $content, array $flatParams): string
     {
         foreach ($flatParams as $key => $value) {
-            $safeValue = $this->security->antiXSS((string)$value);
+            $safeValue = $this->security->sanitize((string)$value);
             $content = str_replace('{' . $key . '}', $safeValue, $content);
         }
 

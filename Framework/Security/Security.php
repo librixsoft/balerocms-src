@@ -64,7 +64,7 @@ class Security {
     }
 
     public function sanitize(string $val): string {
-        return htmlspecialchars($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return htmlspecialchars($val);
     }
 
     /**
