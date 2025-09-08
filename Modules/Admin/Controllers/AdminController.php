@@ -169,7 +169,7 @@ class AdminController extends Controller
         $data = [
             'name' => $this->request->post('name'),
             'sort_order' => $this->request->post('sort_order'),
-            'content' => $this->request->post('content'),
+            'content' => $this->request->raw('content'),
         ];
 
         $this->model->createBlock($data);
@@ -189,7 +189,7 @@ class AdminController extends Controller
         $data = [
             'name' => $this->request->post('name'),
             'sort_order' => $this->request->post('sort_order'),
-            'content' => $this->request->post('content'),
+            'content' => $this->request->raw('content'),
         ];
 
         $this->model->updateBlock($id, $data);
