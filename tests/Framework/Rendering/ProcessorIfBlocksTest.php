@@ -80,4 +80,28 @@ class ProcessorIfBlocksTest extends TestCase
         $this->assertStringContainsString('Inactive or Light Mode', $result);
     }
 
+    public function testIfNested()
+    {
+        $template = $this->loadTemplate('if_nested.html');
+
+        // Caso: theme active, mode dark, installed yes
+        $flatParams = ['theme' => 'active', 'mode' => 'dark', 'installed' => 'yes'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Theme', $result);
+        $this->assertStringContainsString('Installed', $result);
+
+        // Caso: theme active, mode dark, installed no
+        $flatParams['installed'] = 'no';
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Theme', $result);
+        $this->assertStringContainsString('Not Installed', $result);
+
+        // Caso: theme inactive
+        $flatParams = ['theme' => 'inactive', 'mode' => 'dark', 'installed' => 'yes'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive Dark Theme', $result);
+        $this->assertStringNotContainsString('Active Dark Theme', $result);
+    }
+
+
 }
