@@ -304,8 +304,8 @@ footer {
 /** fin de pag-bar **/
 
 .logo {
-    height: 500px;
-    width: 200px;
+    height: auto;
+    width: auto;
 }
 
 
