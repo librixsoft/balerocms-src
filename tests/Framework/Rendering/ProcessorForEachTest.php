@@ -89,4 +89,59 @@ class ProcessorForEachTest extends TestCase
         $this->assertStringContainsString('Theme: Light, Value: light (Not Default)', $resultNormalized);
         $this->assertStringContainsString('Theme: Dark, Value: dark (Default)', $resultNormalized);
     }
+
+    public function testForeachWithIfNested()
+    {
+        $template = $this->loadTemplate('foreach_with_if_nested.html');
+
+        $params = [
+            'themes' => [
+                ['name' => 'Blue', 'value' => 'blue'],
+                ['name' => 'Dark', 'value' => 'dark'],
+                ['name' => 'Light', 'value' => 'light'],
+            ],
+            'defaultTheme' => 'dark'
+        ];
+
+        $result = '';
+
+        // Extraer solo el bloque foreach
+        preg_match('/<!-- @foreach themes as t -->(.*)<!-- @endforeach -->/s', $template, $matches);
+        $templateIteration = $matches[1] ?? '';
+
+        // Procesar cada iteración
+        foreach ($params['themes'] as $t) {
+            // Aplanar parámetros de la iteración
+            $flatParams = [
+                't.name' => $t['name'],
+                't.value' => $t['value'],
+                'defaultTheme' => $params['defaultTheme']
+            ];
+
+            // Reemplazar placeholders {t.name}, {t.value}, etc.
+            $iterTemplate = str_replace(
+                array_map(fn($k) => '{'.$k.'}', array_keys($flatParams)),
+                array_values($flatParams),
+                $templateIteration
+            );
+
+            // Procesar bloques @if dentro de la iteración
+            $result .= $this->processorIfBlocks->process($iterTemplate, $flatParams);
+        }
+
+        // Normalizar espacios y saltos de línea
+        $resultNormalized = preg_replace('/\s+/', ' ', $result);
+
+        // Comprobaciones
+        $this->assertStringContainsString('Theme: Blue, Value: blue', $resultNormalized);
+        $this->assertStringContainsString('Theme: Dark, Value: dark', $resultNormalized);
+        $this->assertStringContainsString('Theme: Light, Value: light', $resultNormalized);
+
+        $this->assertStringContainsString('(Not Default)', $resultNormalized);
+        $this->assertStringContainsString('(Default)', $resultNormalized);
+
+        $this->assertStringContainsString('- Dark Mode Active', $resultNormalized);
+        $this->assertStringContainsString('- Light Mode', $resultNormalized);
+    }
+
 }
