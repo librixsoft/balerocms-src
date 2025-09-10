@@ -159,5 +159,67 @@ class ProcessorIfBlocksTest extends TestCase
         $this->assertStringNotContainsString('Not Installed and Not Version 2.0', $result);
     }
 
+    public function testFiveNestedIfs()
+    {
+        $template = $this->loadTemplate('if_5_nested.html');
+
+        // Caso 1: Todos cumplen para niveles 1-5
+        $flatParams = [
+            'theme' => 'active',
+            'mode' => 'dark',
+            'admin' => 'yes',
+            'installed' => 'yes',
+            'version' => '2.0',
+            'beta' => 'no',
+            'premium' => 'yes'
+        ];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Level 1: Active Dark Theme', $result);
+        $this->assertStringContainsString('Level 2: Admin Access', $result);
+        $this->assertStringContainsString('Level 3: Installed or Version 2.0', $result);
+        $this->assertStringContainsString('Level 4: Not Beta', $result);
+        $this->assertStringContainsString('Level 5: Premium User', $result);
+
+        // Caso 2: beta = yes → Nivel 4 cambia a Beta User, Nivel 5 no se ejecuta
+        $flatParams['beta'] = 'yes';
+        $flatParams['premium'] = 'yes';
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Level 4: Beta User', $result);
+        $this->assertStringNotContainsString('Level 5: Premium User', $result);
+        $this->assertStringNotContainsString('Level 5: Regular User', $result);
+
+        // Caso 3: beta = no, premium = no → Nivel 5 Regular User
+        $flatParams['beta'] = 'no';
+        $flatParams['premium'] = 'no';
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Level 5: Regular User', $result);
+
+        // Caso 4: admin = no → Nivel 2 cambia a No Admin Access, bloques internos no se ejecutan
+        $flatParams = [
+            'theme' => 'active',
+            'mode' => 'dark',
+            'admin' => 'no',
+            'installed' => 'yes',
+            'version' => '2.0',
+            'beta' => 'no',
+            'premium' => 'yes'
+        ];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Level 2: No Admin Access', $result);
+        $this->assertStringNotContainsString('Level 3:', $result);
+        $this->assertStringNotContainsString('Level 4:', $result);
+        $this->assertStringNotContainsString('Level 5:', $result);
+
+        // Caso 5: theme inactive → Nivel 1 Inactive Theme
+        $flatParams['theme'] = 'inactive';
+        $flatParams['admin'] = 'yes';
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Level 1: Inactive Theme', $result);
+        $this->assertStringNotContainsString('Level 2:', $result);
+        $this->assertStringNotContainsString('Level 3:', $result);
+        $this->assertStringNotContainsString('Level 4:', $result);
+        $this->assertStringNotContainsString('Level 5:', $result);
+    }
+
 
 }
