@@ -12,7 +12,7 @@ class ProcessorIfBlocksTest extends TestCase
     {
         $this->processor = new ProcessorIfBlocks();
         // Ruta relativa a los templates
-        $this->viewsDir = __DIR__ . '/../../resources/views/';
+        $this->viewsDir = __DIR__ . '/../../resources/views/if/';
     }
 
     private function loadTemplate(string $filename): string

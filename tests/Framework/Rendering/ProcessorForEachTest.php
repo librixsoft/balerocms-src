@@ -34,7 +34,7 @@ class ProcessorForEachTest extends TestCase
         $this->processorForEach = new ProcessorForEach($this->mockFlatten);
         $this->processorIfBlocks = new ProcessorIfBlocks();
 
-        $this->viewsDir = __DIR__ . '/../../resources/views/';
+        $this->viewsDir = __DIR__ . '/../../resources/views/foreach/';
     }
 
     private function loadTemplate(string $filename): string
