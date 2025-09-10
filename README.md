@@ -1,7 +1,12 @@
 Balero CMS
 ==========
 
-New version of Balero CMS
+New version of Balero CMS.
+
+Run
+===
+
+Go to: http//:localhost/balerocms-src/
 
 Update/Install Front-End Libs
 =============================
