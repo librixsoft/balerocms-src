@@ -1,0 +1,23 @@
+{
+    "name": "librix/balerocms-src",
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "Modules\\": "Modules/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "anibal gomez",
+            "email": "balerocms@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^10"
+    }
+}

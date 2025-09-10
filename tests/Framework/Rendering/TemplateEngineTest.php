@@ -1,0 +1,74 @@
+<?php
+
+namespace Tests\Framework\Rendering;
+
+use PHPUnit\Framework\TestCase;
+use Framework\Rendering\TemplateEngine;
+
+use Framework\Rendering\ProcessorIncludes;
+use Framework\Rendering\ProcessorFlattenParams;
+use Framework\Rendering\ProcessorForEach;
+use Framework\Rendering\ProcessorIfBlocks;
+use Framework\Rendering\ProcessorVariables;
+use Framework\Rendering\ProcessorLang;
+use Framework\Rendering\ProcessorKeyPath;
+
+class TemplateEngineTest extends TestCase
+{
+    private function createTemplateEngineWithMocks(): TemplateEngine
+    {
+        $processorIncludes = $this->createMock(ProcessorIncludes::class);
+        $processorFlattenParams = $this->createMock(ProcessorFlattenParams::class);
+        $processorForEach = $this->createMock(ProcessorForEach::class);
+        $processorIfBlocks = $this->createMock(ProcessorIfBlocks::class);
+        $processorVariables = $this->createMock(ProcessorVariables::class);
+        $processorLang = $this->createMock(ProcessorLang::class);
+        $processorKeyPath = $this->createMock(ProcessorKeyPath::class);
+
+        // Simulaciones de comportamiento
+
+        $processorIncludes->method('process')->willReturnCallback(function ($content, $baseDir) {
+            return $content . '[Includes:' . ($baseDir ?? '') . ']';
+        });
+
+        $processorFlattenParams->method('process')->willReturnCallback(fn($params) => $params);
+
+        $processorForEach->method('process')->willReturnCallback(fn($content, $params) => $content . '[ForEach]');
+
+        $processorVariables->method('process')->willReturnCallback(function ($content, $flatParams) {
+            return str_replace('{{ nombre }}', $flatParams['nombre'] ?? '', $content) . '[Variables]';
+        });
+
+        $processorIfBlocks->method('process')->willReturnCallback(fn($content, $flatParams) => $content . '[IfBlocks]');
+
+        $processorLang->method('process')->willReturnCallback(fn($content) => $content . '[Lang]');
+
+        $processorKeyPath->method('process')->willReturnCallback(fn($content, $flatParams) => $content . '[KeyPath]');
+
+        return new TemplateEngine(
+            $processorIncludes,
+            $processorFlattenParams,
+            $processorForEach,
+            $processorIfBlocks,
+            $processorVariables,
+            $processorLang,
+            $processorKeyPath
+        );
+    }
+
+    public function testProcessTemplateFunctional(): void
+    {
+        $engine = $this->createTemplateEngineWithMocks();
+
+        $engine->setBaseDir('/base/path');
+
+        $template = 'Hola, {{ nombre }}!';
+        $params = ['nombre' => 'Aníbal'];
+
+        $output = $engine->processTemplate($template, $params);
+
+        $expected = 'Hola, Aníbal![Includes:/base/path/][ForEach][Variables][IfBlocks][Lang][KeyPath]';
+
+        $this->assertSame($expected, $output); // ✅ corregido para evitar deprecaciones
+    }
+}

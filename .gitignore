@@ -8,3 +8,5 @@ public/images
 .idea
 *.iml
 node_modules/
+/vendor/
+.phpunit.result.cache
