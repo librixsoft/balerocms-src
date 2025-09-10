@@ -17,4 +17,4 @@ Run Unit Tests
 
 Create in tests/Framework and execute:
 
-$ ./vendor/bin/phpunit
+$ composer test
