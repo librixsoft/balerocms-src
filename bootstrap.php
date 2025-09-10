@@ -4,8 +4,6 @@
  * Carga archivos críticos del framework y autoload opcional de Composer
  */
 
-define("LOCAL_DIR", __DIR__);
-
 // Archivos críticos del framework
 require_once LOCAL_DIR . '/Framework/Core/ErrorConsole.php';
 require_once LOCAL_DIR . '/Framework/Core/Boot.php';
