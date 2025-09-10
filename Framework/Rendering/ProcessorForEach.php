@@ -9,20 +9,15 @@
 
 namespace Framework\Rendering;
 
-use Framework\Security\Security;
-
 
 class ProcessorForEach
 {
 
     private ProcessorFlattenParams $processFlattenParams;
-    private Security $security;
 
     public function __construct(
-        ProcessorFlattenParams $processFlattenParams,
-        Security $security) {
+        ProcessorFlattenParams $processFlattenParams) {
         $this->processFlattenParams = $processFlattenParams;
-        $this->security = $security;
     }
 
     /**

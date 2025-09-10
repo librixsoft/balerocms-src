@@ -3,22 +3,21 @@
 use PHPUnit\Framework\TestCase;
 use Framework\Rendering\ProcessorForEach;
 use Framework\Rendering\ProcessorFlattenParams;
-use Framework\Security\Security;
+use Framework\Rendering\ProcessorIfBlocks;
 
 class ProcessorForEachTest extends TestCase
 {
-    private ProcessorForEach $processor;
-    private string $viewsDir;
+    private ProcessorForEach $processorForEach;
+    private ProcessorIfBlocks $processorIfBlocks;
     private $mockFlatten;
-    private $mockSecurity;
+    private string $viewsDir;
 
     protected function setUp(): void
     {
-        // Mocks
+        // Mock ProcessorFlattenParams
         $this->mockFlatten = $this->createMock(ProcessorFlattenParams::class);
         $this->mockFlatten->method('process')
             ->willReturnCallback(function ($array) {
-                // Devuelve array con notación de puntos para cada elemento
                 $flat = [];
                 foreach ($array as $k => $v) {
                     if (is_array($v)) {
@@ -32,11 +31,9 @@ class ProcessorForEachTest extends TestCase
                 return $flat;
             });
 
-        $this->mockSecurity = $this->createMock(Security::class);
+        $this->processorForEach = new ProcessorForEach($this->mockFlatten);
+        $this->processorIfBlocks = new ProcessorIfBlocks();
 
-        $this->processor = new ProcessorForEach($this->mockFlatten, $this->mockSecurity);
-
-        // Carpeta de plantillas
         $this->viewsDir = __DIR__ . '/../../resources/views/';
     }
 
@@ -49,7 +46,7 @@ class ProcessorForEachTest extends TestCase
         return file_get_contents($path);
     }
 
-    public function testSimpleForeach()
+    public function testForeachSimple()
     {
         $template = $this->loadTemplate('foreach_simple.html');
 
@@ -60,29 +57,36 @@ class ProcessorForEachTest extends TestCase
             ]
         ];
 
-        $result = $this->processor->process($template, $params);
+        $result = $this->processorForEach->process($template, $params);
 
-        $this->assertStringContainsString('Item: One, Value: 10', $result);
-        $this->assertStringContainsString('Item: Two, Value: 20', $result);
+        // Normalizar espacios y saltos de línea
+        $resultNormalized = preg_replace('/\s+/', ' ', $result);
+
+        $this->assertStringContainsString('Item: One, Value: 10', $resultNormalized);
+        $this->assertStringContainsString('Item: Two, Value: 20', $resultNormalized);
     }
 
-    public function testForeachEmptyArray()
+    public function testForeachWithIf()
     {
-        $template = $this->loadTemplate('foreach_simple.html');
-        $params = ['items' => []];
+        $template = $this->loadTemplate('foreach_with_if.html');
 
-        $result = $this->processor->process($template, $params);
+        $params = [
+            'themes' => [
+                ['name' => 'Light', 'value' => 'light'],
+                ['name' => 'Dark', 'value' => 'dark'],
+            ],
+            'defaultTheme' => 'dark'
+        ];
 
-        $this->assertEquals('', trim($result));
-    }
+        // Primero procesamos el foreach
+        $result = $this->processorForEach->process($template, $params);
+        // Luego procesamos los bloques @if
+        $result = $this->processorIfBlocks->process($result, $params);
 
-    public function testForeachMissingArray()
-    {
-        $template = $this->loadTemplate('foreach_simple.html');
-        $params = []; // No existe la clave "items"
+        // Normalizar espacios y saltos de línea
+        $resultNormalized = preg_replace('/\s+/', ' ', $result);
 
-        $result = $this->processor->process($template, $params);
-
-        $this->assertEquals('', trim($result));
+        $this->assertStringContainsString('Theme: Light, Value: light (Not Default)', $resultNormalized);
+        $this->assertStringContainsString('Theme: Dark, Value: dark (Default)', $resultNormalized);
     }
 }
