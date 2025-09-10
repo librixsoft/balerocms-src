@@ -103,5 +103,61 @@ class ProcessorIfBlocksTest extends TestCase
         $this->assertStringNotContainsString('Active Dark Theme', $result);
     }
 
+    public function testIfNestedInnerWithAndOr()
+    {
+        $template = $this->loadTemplate('if_nested_inner_and_or.html');
+
+        // Caso 1: theme active, mode dark, installed yes
+        $flatParams = [
+            'theme' => 'active',
+            'mode' => 'dark',
+            'installed' => 'yes',
+            'version' => '1.0',
+            'admin' => 'no'
+        ];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Theme or Admin', $result);
+        $this->assertStringContainsString('Installed or Version 2.0', $result);
+
+        // Caso 2: theme active, mode dark, installed no, version 2.0
+        $flatParams['installed'] = 'no';
+        $flatParams['version'] = '2.0';
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Theme or Admin', $result);
+        $this->assertStringContainsString('Installed or Version 2.0', $result);
+
+        // Caso 3: theme active, mode dark, installed no, version 1.0
+        $flatParams['installed'] = 'no';
+        $flatParams['version'] = '1.0';
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Theme or Admin', $result);
+        $this->assertStringContainsString('Not Installed and Not Version 2.0', $result);
+
+        // Caso 4: theme inactive, admin yes
+        $flatParams = [
+            'theme' => 'inactive',
+            'mode' => 'light',
+            'installed' => 'yes',
+            'version' => '2.0',
+            'admin' => 'yes'
+        ];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Theme or Admin', $result);
+        $this->assertStringContainsString('Installed or Version 2.0', $result);
+
+        // Caso 5: theme inactive, admin no
+        $flatParams = [
+            'theme' => 'inactive',
+            'mode' => 'light',
+            'installed' => 'no',
+            'version' => '1.0',
+            'admin' => 'no'
+        ];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive Dark Theme and Not Admin', $result);
+        $this->assertStringNotContainsString('Installed or Version 2.0', $result);
+        $this->assertStringNotContainsString('Not Installed and Not Version 2.0', $result);
+    }
+
 
 }
