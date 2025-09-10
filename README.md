@@ -17,9 +17,13 @@ $ npm install
 
 It will keep update your local front-end libraries.
 
+
+
 Run Unit Tests
 ==============
 
 Create in tests/Framework and execute:
+
+$ composer install
 
 $ composer test
