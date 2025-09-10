@@ -10,23 +10,36 @@ class AdminViewModel
 {
     private AdminModel $model;
     private ConfigSettings $config;
-    private ViewModel $viewModel;
 
     public function __construct(AdminModel $model, ConfigSettings $config)
     {
         $this->model = $model;
         $this->config = $config;
-        $this->viewModel = new ViewModel();
+    }
+
+    private function createViewModel(): ViewModel
+    {
+        $viewModel = new ViewModel();
+
+        // Parámetros base disponibles en todas las vistas
+        $viewModel->addAll([
+            'username' => $this->config->getUsername(),
+            'email'    => $this->config->getEmail(),
+        ]);
+
+        return $viewModel;
     }
 
     public function getSettingsParams(): array
     {
-        $this->viewModel->addAll([
+        $viewModel = $this->createViewModel();
+
+        $viewModel->addAll([
             'core_version'   => _CORE_VERSION,
             'virtual_pages'  => $this->model->getVirtualPages(),
             'defaultTheme'   => $this->config->getTheme(),
             'pages_count'    => $this->model->getPagesCount(),
-            'blocks_count'    => $this->model->getBlocksCount(),
+            'blocks_count'   => $this->model->getBlocksCount(),
 
             'themes' => [
                 ['value' => 'Default', 'label' => 'Default'],
@@ -50,47 +63,53 @@ class AdminViewModel
             'btn_refresh' => 'Refresh',
         ]);
 
-        return $this->viewModel->all();
+        return $viewModel->all();
     }
 
     public function getPagesParams(): array
     {
-        $this->viewModel->addAll([
+        $viewModel = $this->createViewModel();
+
+        $viewModel->addAll([
             'lbl_title'    => 'Title',
             'current_date' => date('Y-m-d H:i:s'),
             'new_page'     => 'New page',
             'btn_add'      => 'Create',
             'lbl_visible'  => 'Visible',
             'activeMenu'   => 'all_pages',
-            'pages_count'    => $this->model->getPagesCount(),
+            'pages_count'  => $this->model->getPagesCount(),
         ]);
 
-        return $this->viewModel->all();
+        return $viewModel->all();
     }
 
     public function getAllPagesParams(): array
     {
-        $this->viewModel->addAll([
-            'activeMenu' => 'all_pages',
-            'pages'      => $this->model->getVirtualPages(),
-            'pages_count'    => $this->model->getPagesCount(),
-            'blocks_count'    => $this->model->getBlocksCount()
+        $viewModel = $this->createViewModel();
+
+        $viewModel->addAll([
+            'activeMenu'   => 'all_pages',
+            'pages'        => $this->model->getVirtualPages(),
+            'pages_count'  => $this->model->getPagesCount(),
+            'blocks_count' => $this->model->getBlocksCount(),
         ]);
 
-        return $this->viewModel->all();
+        return $viewModel->all();
     }
 
     public function getEditPageParams(int $id): array
     {
+        $viewModel = $this->createViewModel();
+
         $page = $this->model->getPageById($id);
 
-        $this->viewModel->addAll([
-            'activeMenu'   => 'all_pages',
-            'pages_count'    => $this->model->getPagesCount(),
-            'page'       => $page,
+        $viewModel->addAll([
+            'activeMenu'  => 'all_pages',
+            'pages_count' => $this->model->getPagesCount(),
+            'page'        => $page,
         ]);
 
-        return $this->viewModel->all();
+        return $viewModel->all();
     }
 
     public function updatePage(array $data): bool
@@ -100,35 +119,44 @@ class AdminViewModel
 
     public function getAllBlocksParams(): array
     {
-        $this->viewModel->addAll([
-            'blocks' => $this->model->getBlocks(),
-            'lbl_blocks' => 'Blocks',
+        $viewModel = $this->createViewModel();
+
+        $viewModel->addAll([
+            'blocks'        => $this->model->getBlocks(),
+            'lbl_blocks'    => 'Blocks',
             'lbl_new_block' => 'New Block',
-            'activeMenu' => 'all_blocks',
-            'pages_count'    => $this->model->getPagesCount(),
-            'blocks_count'    => $this->model->getBlocksCount()
+            'activeMenu'    => 'all_blocks',
+            'pages_count'   => $this->model->getPagesCount(),
+            'blocks_count'  => $this->model->getBlocksCount(),
         ]);
-        return $this->viewModel->all();
+
+        return $viewModel->all();
     }
 
     public function getNewBlockParams(): array
     {
-        $this->viewModel->addAll([
+        $viewModel = $this->createViewModel();
+
+        $viewModel->addAll([
             'lbl_new_block' => 'New Block',
-            'activeMenu' => 'blocks'
+            'activeMenu'    => 'blocks',
         ]);
-        return $this->viewModel->all();
+
+        return $viewModel->all();
     }
 
     public function getEditBlockParams(int $id): array
     {
-        $block = $this->model->getBlockById($id);
-        $this->viewModel->addAll([
-            'block' => $block,
-            'lbl_edit_block' => 'Edit Block',
-            'activeMenu' => 'blocks'
-        ]);
-        return $this->viewModel->all();
-    }
+        $viewModel = $this->createViewModel();
 
+        $block = $this->model->getBlockById($id);
+
+        $viewModel->addAll([
+            'block'          => $block,
+            'lbl_edit_block' => 'Edit Block',
+            'activeMenu'     => 'blocks',
+        ]);
+
+        return $viewModel->all();
+    }
 }
