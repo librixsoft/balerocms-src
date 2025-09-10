@@ -62,4 +62,22 @@ class ProcessorIfBlocksTest extends TestCase
         $result = $this->processor->process($template, $flatParams);
         $this->assertStringContainsString('Failed!', $result);
     }
+
+    public function testIfConcatenated()
+    {
+        $template = $this->loadTemplate('if_concatenated.html');
+
+        $flatParams = ['theme' => 'active', 'mode' => 'dark'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Dark Mode', $result);
+
+        $flatParams = ['theme' => 'inactive', 'mode' => 'dark'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive or Light Mode', $result);
+
+        $flatParams = ['theme' => 'active', 'mode' => 'light'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive or Light Mode', $result);
+    }
+
 }
