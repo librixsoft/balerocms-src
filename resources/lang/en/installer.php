@@ -7,5 +7,5 @@
  */
 
 return [
-    'welcome' => '¡Welcome!',
+    'finish' => 'Finish!',
 ];
