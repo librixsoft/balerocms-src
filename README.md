@@ -101,3 +101,5 @@ Mirror: [https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
 ](https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
 )
 
+[![Push all branches & tags to Bitbucket via SSH](https://github.com/librixsoft/balerocms-src/actions/workflows/push_to_bitbucket.yml/badge.svg)](https://github.com/librixsoft/balerocms-src/actions/workflows/push_to_bitbucket.yml)
+
