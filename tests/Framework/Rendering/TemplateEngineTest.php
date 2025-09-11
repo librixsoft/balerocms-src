@@ -10,7 +10,6 @@ use Framework\Rendering\ProcessorFlattenParams;
 use Framework\Rendering\ProcessorForEach;
 use Framework\Rendering\ProcessorIfBlocks;
 use Framework\Rendering\ProcessorVariables;
-use Framework\Rendering\ProcessorLang;
 use Framework\Rendering\ProcessorKeyPath;
 
 class TemplateEngineTest extends TestCase
@@ -22,7 +21,6 @@ class TemplateEngineTest extends TestCase
         $processorForEach = $this->createMock(ProcessorForEach::class);
         $processorIfBlocks = $this->createMock(ProcessorIfBlocks::class);
         $processorVariables = $this->createMock(ProcessorVariables::class);
-        $processorLang = $this->createMock(ProcessorLang::class);
         $processorKeyPath = $this->createMock(ProcessorKeyPath::class);
 
         // Simulaciones de comportamiento
@@ -41,8 +39,6 @@ class TemplateEngineTest extends TestCase
 
         $processorIfBlocks->method('process')->willReturnCallback(fn($content, $flatParams) => $content . '[IfBlocks]');
 
-        $processorLang->method('process')->willReturnCallback(fn($content) => $content . '[Lang]');
-
         $processorKeyPath->method('process')->willReturnCallback(fn($content, $flatParams) => $content . '[KeyPath]');
 
         return new TemplateEngine(
@@ -51,7 +47,6 @@ class TemplateEngineTest extends TestCase
             $processorForEach,
             $processorIfBlocks,
             $processorVariables,
-            $processorLang,
             $processorKeyPath
         );
     }
@@ -67,7 +62,7 @@ class TemplateEngineTest extends TestCase
 
         $output = $engine->processTemplate($template, $params);
 
-        $expected = 'Hola, Aníbal![Includes:/base/path/][ForEach][Variables][IfBlocks][Lang][KeyPath]';
+        $expected = 'Hola, Aníbal![Includes:/base/path/][ForEach][Variables][IfBlocks][KeyPath]';
 
         $this->assertSame($expected, $output); // ✅ corregido para evitar deprecaciones
     }

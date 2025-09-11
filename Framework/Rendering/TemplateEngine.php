@@ -17,7 +17,6 @@ class TemplateEngine
     private ProcessorForEach $processorForEach;
     private ProcessorIfBlocks $processorIfBlocks;
     private ProcessorVariables $processorVariables;
-    private ProcessorLang $processorLang;
     private ProcessorKeyPath $processorKeyPath;
 
     public function __construct(
@@ -26,7 +25,6 @@ class TemplateEngine
         ProcessorForEach $processorForEach,
         ProcessorIfBlocks $processorIfBlocks,
         ProcessorVariables $processorVariables,
-        ProcessorLang $processorLang,
         ProcessorKeyPath $processorKeyPath
     ) {
         $this->processorIncludes = $processorIncludes;
@@ -34,7 +32,6 @@ class TemplateEngine
         $this->processorForEach = $processorForEach;
         $this->processorIfBlocks = $processorIfBlocks;
         $this->processorVariables = $processorVariables;
-        $this->processorLang = $processorLang;
         $this->processorKeyPath = $processorKeyPath;
     }
 
@@ -46,8 +43,7 @@ class TemplateEngine
         $content = $this->processorForEach->process($content, $params);
         $content = $this->processorVariables->process($content, $flatParams);
         $content = $this->processorIfBlocks->process($content, $flatParams);
-        $content = $this->processorLang->process($content); // TODO: Unificar
-        $content = $this->processorKeyPath->process($content, $flatParams); // TODO: Unificar
+        $content = $this->processorKeyPath->process($content, $flatParams);
 
         return $content;
     }
