@@ -221,5 +221,34 @@ class ProcessorIfBlocksTest extends TestCase
         $this->assertStringNotContainsString('Level 5:', $result);
     }
 
+    public function testIfNotEquals()
+    {
+        $template = $this->loadTemplate('if_not_equals.html');
+
+        // Caso 1: theme = inactive → bloque != 'active' debe ser true
+        $flatParams = ['theme' => 'inactive'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive Theme', $result);
+        $this->assertStringNotContainsString('Active Theme', $result);
+
+        // Caso 2: theme = active → bloque != 'active' debe ser false
+        $flatParams = ['theme' => 'active'];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Active Theme', $result);
+        $this->assertStringNotContainsString('Inactive Theme', $result);
+
+        // Caso 3: theme = null → != 'active' debe ser true
+        $flatParams = ['theme' => null];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive Theme', $result);
+        $this->assertStringNotContainsString('Active Theme', $result);
+
+        // Caso 4: theme no definido → != 'active' debe ser true
+        $flatParams = [];
+        $result = $this->processor->process($template, $flatParams);
+        $this->assertStringContainsString('Inactive Theme', $result);
+        $this->assertStringNotContainsString('Active Theme', $result);
+    }
+
 
 }

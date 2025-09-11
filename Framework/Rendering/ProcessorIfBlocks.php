@@ -89,6 +89,18 @@ class ProcessorIfBlocks
             return strcasecmp((string)$val1, (string)$val2) === 0;
         }
 
+        // var != 'value' o var != var2
+        if (preg_match('/^([\w\.]+)\s*!=\s*([\'"]?)([\w\.]+)\2$/', $condition, $matches)) {
+            $var1 = $matches[1];
+            $quote = $matches[2];
+            $var2orVal = $matches[3];
+
+            $val1 = $flatParams[$var1] ?? null;
+            $val2 = ($quote !== '') ? $var2orVal : ($flatParams[$var2orVal] ?? null);
+
+            return strcasecmp((string)$val1, (string)$val2) !== 0;
+        }
+
         // var simple (truthy)
         return !empty($flatParams[$condition] ?? null);
     }
