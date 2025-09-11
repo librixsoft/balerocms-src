@@ -93,4 +93,11 @@ class ExampleController extends Controller
 }
 ```
 
+# Reposiroty
+
+GitHub: [https://github.com/librixsoft/balerocms-src](https://github.com/librixsoft/balerocms-src)
+
+Mirror: [https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
+](https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
+)
 
