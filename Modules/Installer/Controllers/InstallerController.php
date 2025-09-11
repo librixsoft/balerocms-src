@@ -40,6 +40,12 @@ class InstallerController extends Controller
             $params['cacheFormData'] = Flash::get('cacheFormData');
         }
 
+        // Obtener el flag de conexión DB desde el modelo
+        $dbOk = $this->model->canConnectToDatabase();
+
+        // Pasar ese dato al ViewModel en extraParams
+        $params['db_ok'] = $dbOk;
+
         // Obtener todos los parámetros del instalador listos para render
         $params = $this->installerViewModel->setInstallerParams($params);
 

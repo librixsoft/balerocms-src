@@ -56,4 +56,20 @@ class InstallerModel extends Model
             );
         }
     }
+
+    public function canConnectToDatabase(): bool
+    {
+        try {
+            $host = $this->configSettings->getDbhost();
+            $user = $this->configSettings->getDbuser();
+            $pass = $this->configSettings->getDbpass();
+            $dbname = $this->configSettings->getDbname();
+
+            $this->db->connect($host, $user, $pass, $dbname);
+            return $this->db->isStatus();
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
 }

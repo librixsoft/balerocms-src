@@ -67,6 +67,24 @@ class InstallerViewModel
             'welcome' => "Welcome to Balero CMS Setup Wizard.",
             'btn_install' => "Instalar",
             'config_writeable' => is_writable(Constant::CONFIG_PATH),
+
+        ]);
+
+        // Obtenemos flags que llegan del Controller o calculamos localmente
+        // NOTA: el flag db_ok lo pasamos desde el Controller, si no está asumimos false
+        $dbOk = $extraParams['db_ok'] ?? false;
+
+        // Estado del sistema
+        $fieldsValid     = $this->areFieldsValid($extraParams);
+        $modRewrite      = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
+        $configWritable  = is_writable(Constant::CONFIG_PATH);
+
+        // Agregar estado como flags
+        $this->viewModel->addAll([
+            'fields_valid'      => $fieldsValid,
+            'db_ok'             => $dbOk,
+            'mod_rewrite_ok'    => $modRewrite,
+            'config_writable'   => $configWritable,
         ]);
 
         // Merge con parámetros extra (por ejemplo errores o datos cacheados)
@@ -76,4 +94,24 @@ class InstallerViewModel
 
         return $this->viewModel->all();
     }
+
+    private function areFieldsValid(array $extraParams = []): bool
+    {
+        if (!empty($extraParams['errors'])) {
+            return false;
+        }
+
+        return
+            $this->config->getDbhost() &&
+            $this->config->getDbuser() &&
+            $this->config->getDbname() &&
+            $this->config->getBasepath() &&
+            $this->config->getUrl() &&
+            $this->config->getUsername() &&
+            $this->config->getFirstname() &&
+            $this->config->getLastname() &&
+            $this->config->getEmail() &&
+            filter_var($this->config->getEmail(), FILTER_VALIDATE_EMAIL);
+    }
+
 }

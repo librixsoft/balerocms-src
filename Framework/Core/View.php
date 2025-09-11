@@ -40,6 +40,7 @@ class View
             'keywords' => $this->configSettings->getKeywords(),
             'description' => $this->configSettings->getDescription(),
             'basepath' => $this->configSettings->getBasepath(),
+            'year' => date('Y')
         ];
     }
 
