@@ -1,23 +1,18 @@
 <?php
 
-/**
- * @author Anibal Gomez <balerocms@gmail.com>
- * @copyright Copyright (c) 2025 Anibal Gomez
- * @license GNU General Public License
- */
-
-
 namespace Framework\Rendering;
-
 
 class ProcessorForEach
 {
-
     private ProcessorFlattenParams $processFlattenParams;
+    private ProcessorIfBlocks $processorIfBlocks;
 
     public function __construct(
-        ProcessorFlattenParams $processFlattenParams) {
+        ProcessorFlattenParams $processFlattenParams,
+        ProcessorIfBlocks $processorIfBlocks
+    ) {
         $this->processFlattenParams = $processFlattenParams;
+        $this->processorIfBlocks = $processorIfBlocks;
     }
 
     /**
@@ -28,43 +23,32 @@ class ProcessorForEach
         return preg_replace_callback(
             '/<!--\s*@foreach\s+(\w+)\s+as\s+(\w+)\s*-->(.*?)<!--\s*@endforeach\s*-->/is',
             function ($matches) use ($params) {
-                $arrayKey = $matches[1];    // ej: 'virtual_pages' o 'themes'
-                $itemKey  = $matches[2];    // ej: 'page' o 't'
-                $block    = $matches[3];    // contenido dentro del foreach
+                $arrayKey = $matches[1]; // ej: 'themes'
+                $itemKey  = $matches[2]; // ej: 't'
+                $block    = $matches[3]; // contenido del foreach
 
                 if (!isset($params[$arrayKey]) || !is_array($params[$arrayKey])) {
-                    return ''; // Si no existe o no es array, no imprime nada
+                    return ''; // No existe o no es array
                 }
 
                 $result = '';
                 foreach ($params[$arrayKey] as $item) {
+                    // Aplanar parámetros del item, ej: ['t.name'=>'...', 't.value'=>'...']
                     $flatItem = $this->processFlattenParams->process([$itemKey => $item]);
 
+                    // Reemplazar placeholders en el bloque
                     $blockCopy = $block;
                     foreach ($flatItem as $k => $v) {
-                        $safeValue = (string)$v;
-                        $blockCopy = str_replace('{' . $k . '}', $safeValue, $blockCopy);
+                        $blockCopy = str_replace('{' . $k . '}', (string)$v, $blockCopy);
                     }
 
-                    // FIX corregido con clave completa
-                    $blockCopy = preg_replace_callback(
-                        '/<!--\s*@if\s+defaultTheme\s*==\s*t\.value\s*-->/i',
-                        function() use ($flatItem, $itemKey) {
-                            $val = $flatItem[$itemKey . '.value'] ?? '';
-                            $val = $val;
-                            return "<!-- @if defaultTheme == '{$val}' -->";
-                        },
-                        $blockCopy
-                    );
-
-                    $result .= $blockCopy;
+                    // Evaluar cualquier @if dentro del bloque con los parámetros combinados
+                    $result .= $this->processorIfBlocks->process($blockCopy, $params + $flatItem);
                 }
-
 
                 return $result;
             },
             $content
         );
     }
-
 }

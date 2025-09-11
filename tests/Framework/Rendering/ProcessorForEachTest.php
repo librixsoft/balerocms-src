@@ -31,8 +31,11 @@ class ProcessorForEachTest extends TestCase
                 return $flat;
             });
 
-        $this->processorForEach = new ProcessorForEach($this->mockFlatten);
         $this->processorIfBlocks = new ProcessorIfBlocks();
+        $this->processorForEach = new ProcessorForEach(
+            $this->mockFlatten,
+            $this->processorIfBlocks
+        );
 
         $this->viewsDir = __DIR__ . '/../../resources/views/foreach/';
     }
@@ -59,7 +62,6 @@ class ProcessorForEachTest extends TestCase
 
         $result = $this->processorForEach->process($template, $params);
 
-        // Normalizar espacios y saltos de línea
         $resultNormalized = preg_replace('/\s+/', ' ', $result);
 
         $this->assertStringContainsString('Item: One, Value: 10', $resultNormalized);
@@ -78,12 +80,8 @@ class ProcessorForEachTest extends TestCase
             'defaultTheme' => 'dark'
         ];
 
-        // Primero procesamos el foreach
         $result = $this->processorForEach->process($template, $params);
-        // Luego procesamos los bloques @if
-        $result = $this->processorIfBlocks->process($result, $params);
 
-        // Normalizar espacios y saltos de línea
         $resultNormalized = preg_replace('/\s+/', ' ', $result);
 
         $this->assertStringContainsString('Theme: Light, Value: light (Not Default)', $resultNormalized);
@@ -103,36 +101,10 @@ class ProcessorForEachTest extends TestCase
             'defaultTheme' => 'dark'
         ];
 
-        $result = '';
+        $result = $this->processorForEach->process($template, $params);
 
-        // Extraer solo el bloque foreach
-        preg_match('/<!-- @foreach themes as t -->(.*)<!-- @endforeach -->/s', $template, $matches);
-        $templateIteration = $matches[1] ?? '';
-
-        // Procesar cada iteración
-        foreach ($params['themes'] as $t) {
-            // Aplanar parámetros de la iteración
-            $flatParams = [
-                't.name' => $t['name'],
-                't.value' => $t['value'],
-                'defaultTheme' => $params['defaultTheme']
-            ];
-
-            // Reemplazar placeholders {t.name}, {t.value}, etc.
-            $iterTemplate = str_replace(
-                array_map(fn($k) => '{'.$k.'}', array_keys($flatParams)),
-                array_values($flatParams),
-                $templateIteration
-            );
-
-            // Procesar bloques @if dentro de la iteración
-            $result .= $this->processorIfBlocks->process($iterTemplate, $flatParams);
-        }
-
-        // Normalizar espacios y saltos de línea
         $resultNormalized = preg_replace('/\s+/', ' ', $result);
 
-        // Comprobaciones
         $this->assertStringContainsString('Theme: Blue, Value: blue', $resultNormalized);
         $this->assertStringContainsString('Theme: Dark, Value: dark', $resultNormalized);
         $this->assertStringContainsString('Theme: Light, Value: light', $resultNormalized);
@@ -163,41 +135,10 @@ class ProcessorForEachTest extends TestCase
             'premium' => 'no',
         ];
 
-        $result = '';
+        $result = $this->processorForEach->process($template, $params);
 
-        // Extraer el bloque foreach
-        preg_match('/<!-- @foreach themes as t -->(.*)<!-- @endforeach -->/s', $template, $matches);
-        $templateIteration = $matches[1] ?? '';
-
-        foreach ($params['themes'] as $t) {
-            $flatParams = [
-                't.name' => $t['name'],
-                't.value' => $t['value'],
-                'defaultTheme' => $params['defaultTheme'],
-                'theme' => $params['theme'],
-                'mode' => $params['mode'],
-                'admin' => $params['admin'],
-                'installed' => $params['installed'],
-                'version' => $params['version'],
-                'beta' => $params['beta'],
-                'premium' => $params['premium'],
-            ];
-
-            // Reemplazar placeholders
-            $iterTemplate = str_replace(
-                array_map(fn($k) => '{'.$k.'}', array_keys($flatParams)),
-                array_values($flatParams),
-                $templateIteration
-            );
-
-            // Procesar IFs internos
-            $result .= $this->processorIfBlocks->process($iterTemplate, $flatParams);
-        }
-
-        // Normalizar espacios y saltos de línea
         $resultNormalized = preg_replace('/\s+/', ' ', $result);
 
-        // Comprobaciones
         $this->assertStringContainsString('Theme: Blue, Value: blue', $resultNormalized);
         $this->assertStringContainsString('Theme: Dark, Value: dark', $resultNormalized);
 
@@ -207,13 +148,10 @@ class ProcessorForEachTest extends TestCase
         $this->assertStringContainsString('- Dark Mode Active', $resultNormalized);
         $this->assertStringContainsString('- Light Mode', $resultNormalized);
 
-        // Verificar niveles de IF anidados con AND/OR
         $this->assertStringContainsString('Level 1: Active Dark Theme', $resultNormalized);
         $this->assertStringContainsString('Level 2: Admin Access', $resultNormalized);
         $this->assertStringContainsString('Level 3: Installed or Version 2.0', $resultNormalized);
         $this->assertStringContainsString('Level 4: Not Beta', $resultNormalized);
         $this->assertStringContainsString('Level 5: Regular User', $resultNormalized);
     }
-
-
 }
