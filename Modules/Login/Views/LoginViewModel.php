@@ -2,7 +2,7 @@
 
 /**
  * Balero CMS
- * @author Anibal Gomez
+ * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
@@ -10,19 +10,16 @@ namespace Modules\Login\Views;
 
 use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
-use Modules\Login\Models\LoginModel;
 
 class LoginViewModel
 {
-    private LoginModel $model;
     private ConfigSettings $config;
     private ViewModel $viewModel;
 
-    public function __construct(LoginModel $model, ConfigSettings $config)
+    public function __construct(ConfigSettings $config, ViewModel $viewModel)
     {
-        $this->model = $model;
         $this->config = $config;
-        $this->viewModel = new ViewModel(); // instanciación interna
+        $this->viewModel = $viewModel;
     }
 
     /**
@@ -40,7 +37,6 @@ class LoginViewModel
             'btn_login'     => 'Sign In',
         ]);
 
-        // Mezclar parámetros adicionales (por ejemplo errores o mensajes de sesión)
         if (!empty($extraParams)) {
             $this->viewModel->addAll($extraParams);
         }
