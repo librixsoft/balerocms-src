@@ -2,60 +2,72 @@
 
 New version of Balero CMS.
 
----
+# Install
 
-# Run
+Unzip and upload  to your /htdocs/ or your /www folder.
 
-Go to: [http://localhost/balerocms-src/](http://localhost/balerocms-src/)
+```bash
+$ unzip balero-cms.zip -d /www
+```
 
----
+Set write permissions to config file.
 
-# Update/Install Front-End Libs
+```bash
+$ chmod +w ./balerocms-src/resources/config/balero.config.xml
+```
+
+Go to: [http://localhost/balerocms-src/](http://localhost/balerocms-src/) and installer will install for you.
+
+Enjoy. Done!
+
+# Extra configuration for developers or customization
+
+## Update/Install Front-End Libs
 
 Adjust your library version in `package.json` and execute:
 
 ```bash
-npm install
+$ npm install
 ```
 
 It will update your local front-end libraries.
 
 ---
 
-# Run Unit Tests
+## Run Unit Tests
 
 Create your tests in `tests/Framework` and execute:
 
 ```bash
-composer install
-composer test
+$ composer install
+$ composer test
 ```
 
 ---
 
-# Using Third-Party Libraries in Balerocms
+## Using Third-Party Libraries in Balerocms
 
 Balerocms is ready to use Composer for managing third-party libraries. Follow these steps to include and use external libraries in your CMS.
 
-## 1. Install libraries
+### 1. Install libraries
 
 Navigate to the root of your project (`balerocms-src/`) and run:
 
 ```bash
-composer install
+$ composer install
 ```
 
-## 1. Add a library with Composer
+### 1. Add a library with Composer
 
 
 ```bash
-composer require vendor/package-name
+$ composer require vendor/package-name
 ```
 
-### Example: Installing Guzzle for HTTP requests (third-party library)
+#### Example: Installing Guzzle for HTTP requests (third-party library)
 
 ```bash
-composer require guzzlehttp/guzzle
+$ composer require guzzlehttp/guzzle
 ```
 
 This will:
@@ -64,7 +76,7 @@ This will:
 
 ---
 
-## 2. Include the library in the CMS
+### 2. Include the library in the CMS
 
 Now you can use the library inside a controller. For example:
 
