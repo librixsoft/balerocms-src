@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
   <base href="{basepath}">
-  <link rel="shortcut icon" href="favicon.ico">
   <meta charset="UTF-8" />
+  <link rel="shortcut icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title} - {page.virtual_title}</title>
+  <title>{title}</title>
   <meta name="description" content="{description}" />
   <meta name="keywords" content="{keywords}" />
-
-  <link rel="stylesheet" href="public/assets/css/style.css" />
 
   <!-- Bootstrap CSS -->
   <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -22,31 +20,41 @@
 
   <!-- Bootstrap Bundle JS (con Popper incluido) -->
   <script src="public/assets/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="public/assets/css/style.css" />
+
 </head>
 <body>
 
-<header class="bg-primary text-white p-3">
-  <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
-    <h1 class="mb-2 mb-md-0">{title}</h1>
+<!-- Navbar estático -->
+<nav class="navbar navbar-expand-md">
+  <div class="container">
+    <a class="navbar-brand" href="{basepath}">{title}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <nav class="navbar navbar-expand-md p-0">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{basepath}">Home</a>
+        </li>
+        <!-- @foreach virtual_pages as page -->
+        <li class="nav-item">
+          <a class="nav-link" href="./page/{page.url}">{page.virtual_title}</a>
+        </li>
+        <!-- @endforeach -->
+      </ul>
+    </div>
+  </div>
+</nav>
 
-      <div class="collapse navbar-collapse" id="navbarMain">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link text-white" href="{basepath}">Home</a>
-          </li>
-          <!-- @foreach virtual_pages as page -->
-          <li class="nav-item">
-            <a class="nav-link text-white" href="./page/{page.url}">{page.virtual_title}</a>
-          </li>
-          <!-- @endforeach -->
-        </ul>
-      </div>
-    </nav>
+<!-- Hero Header con degradado azul -->
+<header class="hero-header">
+  <div class="hero-content">
+    <h1>{title}</h1>
+    <p class="slogan">Aquí va tu slogan inspirador</p>
   </div>
 </header>
 
@@ -64,8 +72,15 @@
 
 </main>
 
-<footer class="bg-light text-center py-3">
-  {footer}
+<!-- Footer -->
+<footer class="text-center">
+  <p>{footer}</p>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+  </div>
 </footer>
 
 </body>
