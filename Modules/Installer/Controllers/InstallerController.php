@@ -36,10 +36,6 @@ class InstallerController extends Controller
             $params['errors'] = Flash::get('errors');
         }
 
-        if (Flash::has('cacheFormData')) {
-            $params['cacheFormData'] = Flash::get('cacheFormData');
-        }
-
         // Obtener el flag de conexión DB desde el modelo
         $dbOk = $this->model->canConnectToDatabase();
 
@@ -66,7 +62,6 @@ class InstallerController extends Controller
 
         if ($validator->fails()) {
             Flash::set('errors', $validator->errors());
-            Flash::set('cacheFormData', $input);
         } else {
             InstallerMapper::map($installerDTO, $this->configSettings);
         }
