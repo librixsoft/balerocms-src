@@ -11,17 +11,20 @@ namespace Modules\Block\Views;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ViewModel;
 use Modules\Block\Models\BlockModel;
+use Modules\Page\Models\PageModel;
 
 class BlockViewModel
 {
     private BlockModel $model;
     private ConfigSettings $config;
     private ViewModel $viewModel;
+    private PageModel $pageModel;
 
-    public function __construct(BlockModel $model, ConfigSettings $config)
+    public function __construct(BlockModel $model, ConfigSettings $config, PageModel $pageModel)
     {
         $this->config = $config;
         $this->model = $model;
+        $this->pageModel = $pageModel;
         $this->viewModel = new ViewModel();
     }
 
@@ -42,6 +45,8 @@ class BlockViewModel
 
             // Botones
             'btn_refresh' => 'Refresh',
+
+            'virtual_pages' => $this->pageModel->getVirtualPages(),
         ]);
 
         if (!empty($extraParams)) {
