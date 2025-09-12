@@ -81,15 +81,24 @@ class Router
     private function checkInstallerRedirect(): void
     {
         try {
-            if ($this->configSettings->getInstalled() === "no") {
-                $currentModule = $this->request->get(self::PARAM_MODULE);
-                if ($currentModule !== 'installer') {
-                    Redirect::to('/installer');
-                    exit;
-                }
+            $currentModule = $this->request->get(self::PARAM_MODULE);
+            $installed = $this->configSettings->getInstalled();
+
+            // Si no está instalado, forzar acceso al instalador
+            if ($installed === "no" && $currentModule !== 'installer') {
+                Redirect::to('/installer');
+                exit;
             }
+
+            // Si ya está instalado, impedir acceder al instalador
+            if ($installed === "yes" && $currentModule === 'installer') {
+                Redirect::to('/');
+                exit;
+            }
+
         } catch (Throwable $e) {
             ErrorConsole::handleException($e);
         }
     }
+
 }
