@@ -154,4 +154,25 @@ class ProcessorForEachTest extends TestCase
         $this->assertStringContainsString('Level 4: Not Beta', $resultNormalized);
         $this->assertStringContainsString('Level 5: Regular User', $resultNormalized);
     }
+
+    public function testForeachKeyValue()
+    {
+        $template = $this->loadTemplate('foreach_key_value.html');
+
+        $params = [
+            'errors' => [
+                'username' => 'El nombre de usuario no puede estar vacío.',
+                'passwd'   => 'La contraseña no puede estar vacía.',
+                'email'    => 'El correo electrónico no es válido.'
+            ]
+        ];
+
+        $result = $this->processorForEach->process($template, $params);
+        $resultNormalized = preg_replace('/\s+/', ' ', $result);
+
+        $this->assertStringContainsString("Error en username: El nombre de usuario no puede estar vacío.", $resultNormalized);
+        $this->assertStringContainsString("Error en passwd: La contraseña no puede estar vacía.", $resultNormalized);
+        $this->assertStringContainsString("Error en email: El correo electrónico no es válido.", $resultNormalized);
+    }
+
 }
