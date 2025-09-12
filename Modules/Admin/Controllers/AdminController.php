@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Balero CMS
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Modules\Admin\Controllers;
 
 use Framework\Core\Controller;
@@ -40,7 +34,6 @@ class AdminController extends Controller
         Redirect::to('/admin/settings');
     }
 
-
     #[Get('/dashboard')]
     public function dashboard()
     {
@@ -50,18 +43,24 @@ class AdminController extends Controller
     #[Get('/settings')]
     public function getSettings()
     {
-        return $this->render("admin/dashboard.html", $this->viewModel->getSettingsParams());
+        $params = $this->viewModel->getSettingsParams([
+            'virtual_pages' => $this->model->getVirtualPages(),
+            'pages_count'   => $this->model->getPagesCount(),
+            'blocks_count'  => $this->model->getBlocksCount(),
+        ]);
+
+        return $this->render("admin/dashboard.html", $params);
     }
 
     #[Post('/settings')]
     public function postSettings()
     {
         $data = [
-            'title' => $this->request->post("title"),
+            'title'       => $this->request->post("title"),
             'description' => $this->request->post("description"),
-            'keywords' => $this->request->post("keywords"),
-            'theme' => $this->request->post("theme"),
-            'footer' => $this->request->post("footer"),
+            'keywords'    => $this->request->post("keywords"),
+            'theme'       => $this->request->post("theme"),
+            'footer'      => $this->request->post("footer"),
         ];
 
         $this->model->updateSettings($data);
@@ -73,13 +72,23 @@ class AdminController extends Controller
     #[Get('/new-page')]
     public function getPages()
     {
-        return $this->render("admin/new_page.html", $this->viewModel->getPagesParams());
+        $params = $this->viewModel->getPagesParams([
+            'pages_count' => $this->model->getPagesCount(),
+        ]);
+
+        return $this->render("admin/new_page.html", $params);
     }
 
     #[Get('/pages')]
     public function getAllPages()
     {
-        return $this->render("admin/pages.html", $this->viewModel->getAllPagesParams());
+        $params = $this->viewModel->getAllPagesParams([
+            'pages'        => $this->model->getVirtualPages(),
+            'pages_count'  => $this->model->getPagesCount(),
+            'blocks_count' => $this->model->getBlocksCount(),
+        ]);
+
+        return $this->render("admin/pages.html", $params);
     }
 
     #[Post('/pages/new')]
@@ -89,33 +98,36 @@ class AdminController extends Controller
             'virtual_title'   => $this->request->post('virtual_title'),
             'static_url'      => $this->request->post('static_url'),
             'virtual_content' => $this->request->raw('virtual_content'),
-            'visible'         => (int) $this->request->post('visible'),  // corregido, valor 1 o 0
+            'visible'         => (int) $this->request->post('visible'),
             'date'            => $this->request->post('date'),
         ];
 
         $this->model->createPage($data);
-
         Redirect::to('/admin/pages');
     }
 
     #[Get('/pages/edit/{id}')]
     public function editPage(int $id)
     {
-        return $this->render("admin/edit_page.html", $this->viewModel->getEditPageParams($id));
+        $params = $this->viewModel->getEditPageParams([
+            'page'        => $this->model->getPageById($id),
+            'pages_count' => $this->model->getPagesCount(),
+        ]);
+
+        return $this->render("admin/edit_page.html", $params);
     }
 
     #[Post('/pages/edit/{id}')]
     public function postEditPage(int $id)
     {
         $data = [
-            'id' => $id,
-            'virtual_title' => $this->request->post("virtual_title"),
-            'static_url' => $this->request->post("static_url"),
-            'virtual_content' => $this->request->raw("virtual_content"),
+            'id'             => $id,
+            'virtual_title'  => $this->request->post("virtual_title"),
+            'static_url'     => $this->request->post("static_url"),
+            'virtual_content'=> $this->request->raw("virtual_content"),
         ];
 
-        $this->viewModel->updatePage($data);
-
+        $this->model->updatePage($id, $data);
         Redirect::to('/admin/pages');
     }
 
@@ -139,16 +151,19 @@ class AdminController extends Controller
     #[Get('/blocks')]
     public function listBlocks()
     {
-        return $this->render("admin/blocks.html", $this->viewModel->getAllBlocksParams());
+        $params = $this->viewModel->getAllBlocksParams([
+            'blocks'       => $this->model->getBlocks(),
+            'pages_count'  => $this->model->getPagesCount(),
+            'blocks_count' => $this->model->getBlocksCount(),
+        ]);
+
+        return $this->render("admin/blocks.html", $params);
     }
 
     #[Get('/blocks/new')]
     public function newBlock()
     {
-        // Obtener todos los bloques existentes
         $blocks = $this->model->getBlocks();
-
-        // Calcular el siguiente sort_order
         $maxSort = 0;
         foreach ($blocks as $b) {
             if ($b['sort_order'] > $maxSort) {
@@ -157,9 +172,9 @@ class AdminController extends Controller
         }
         $nextSort = $maxSort + 1;
 
-        // Obtener parámetros base de la vista
-        $params = $this->viewModel->getNewBlockParams();
-        $params['next_sort_order'] = $nextSort;
+        $params = $this->viewModel->getNewBlockParams([
+            'next_sort_order' => $nextSort,
+        ]);
 
         return $this->render("admin/new_block.html", $params);
     }
@@ -168,36 +183,37 @@ class AdminController extends Controller
     public function createBlock()
     {
         $data = [
-            'name' => $this->request->post('name'),
+            'name'       => $this->request->post('name'),
             'sort_order' => $this->request->post('sort_order'),
-            'content' => $this->request->raw('content'),
+            'content'    => $this->request->raw('content'),
         ];
 
         $this->model->createBlock($data);
-
         Redirect::to('/admin/blocks');
     }
 
     #[Get('/blocks/edit/{id}')]
     public function getEditBlock(int $id)
     {
-        return $this->render("admin/edit_block.html", $this->viewModel->getEditBlockParams($id));
+        $params = $this->viewModel->getEditBlockParams([
+            'block' => $this->model->getBlockById($id),
+        ]);
+
+        return $this->render("admin/edit_block.html", $params);
     }
 
     #[Post('/blocks/edit/{id}')]
     public function postEditBlock(int $id)
     {
         $data = [
-            'name' => $this->request->post('name'),
+            'name'       => $this->request->post('name'),
             'sort_order' => $this->request->post('sort_order'),
-            'content' => $this->request->raw('content'),
+            'content'    => $this->request->raw('content'),
         ];
 
         $this->model->updateBlock($id, $data);
-
         Redirect::to('/admin/blocks');
     }
-
 
     #[Post('/blocks/delete/{id}')]
     public function deleteBlock(int $id)
@@ -205,5 +221,4 @@ class AdminController extends Controller
         $this->model->deleteBlock($id);
         Redirect::to('/admin/blocks');
     }
-
 }

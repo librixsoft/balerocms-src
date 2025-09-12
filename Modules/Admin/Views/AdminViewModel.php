@@ -4,16 +4,13 @@ namespace Modules\Admin\Views;
 
 use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
-use Modules\Admin\Models\AdminModel;
 
 class AdminViewModel
 {
-    private AdminModel $model;
     private ConfigSettings $config;
 
-    public function __construct(AdminModel $model, ConfigSettings $config)
+    public function __construct(ConfigSettings $config)
     {
-        $this->model = $model;
         $this->config = $config;
     }
 
@@ -30,16 +27,13 @@ class AdminViewModel
         return $viewModel;
     }
 
-    public function getSettingsParams(): array
+    public function getSettingsParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
         $viewModel->addAll([
             'core_version'   => _CORE_VERSION,
-            'virtual_pages'  => $this->model->getVirtualPages(),
             'defaultTheme'   => $this->config->getTheme(),
-            'pages_count'    => $this->model->getPagesCount(),
-            'blocks_count'   => $this->model->getBlocksCount(),
 
             'themes' => [
                 ['value' => 'Default', 'label' => 'Default'],
@@ -60,15 +54,19 @@ class AdminViewModel
             'txt_title'       => $this->config->getTitle(),
             'txt_keywords'    => $this->config->getKeywords(),
             'txt_description' => $this->config->getDescription(),
-            'txt_footer' => $this->config->getFooter(),
+            'txt_footer'      => $this->config->getFooter(),
 
             'btn_refresh' => 'Refresh',
         ]);
 
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
+
         return $viewModel->all();
     }
 
-    public function getPagesParams(): array
+    public function getPagesParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
@@ -79,63 +77,63 @@ class AdminViewModel
             'btn_add'      => 'Create',
             'lbl_visible'  => 'Visible',
             'activeMenu'   => 'all_pages',
-            'pages_count'  => $this->model->getPagesCount(),
         ]);
+
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
 
         return $viewModel->all();
     }
 
-    public function getAllPagesParams(): array
+    public function getAllPagesParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
         $viewModel->addAll([
-            'activeMenu'   => 'all_pages',
-            'pages'        => $this->model->getVirtualPages(),
-            'pages_count'  => $this->model->getPagesCount(),
-            'blocks_count' => $this->model->getBlocksCount(),
+            'activeMenu' => 'all_pages',
         ]);
+
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
 
         return $viewModel->all();
     }
 
-    public function getEditPageParams(int $id): array
+    public function getEditPageParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
-        $page = $this->model->getPageById($id);
-
         $viewModel->addAll([
-            'activeMenu'  => 'all_pages',
-            'pages_count' => $this->model->getPagesCount(),
-            'page'        => $page,
+            'activeMenu' => 'all_pages',
         ]);
+
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
 
         return $viewModel->all();
     }
 
-    public function updatePage(array $data): bool
-    {
-        return $this->model->updatePage((int)($data['id'] ?? 0), $data);
-    }
-
-    public function getAllBlocksParams(): array
+    public function getAllBlocksParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
         $viewModel->addAll([
-            'blocks'        => $this->model->getBlocks(),
             'lbl_blocks'    => 'Blocks',
             'lbl_new_block' => 'New Block',
             'activeMenu'    => 'all_blocks',
-            'pages_count'   => $this->model->getPagesCount(),
-            'blocks_count'  => $this->model->getBlocksCount(),
         ]);
+
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
 
         return $viewModel->all();
     }
 
-    public function getNewBlockParams(): array
+    public function getNewBlockParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
@@ -144,20 +142,25 @@ class AdminViewModel
             'activeMenu'    => 'blocks',
         ]);
 
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
+
         return $viewModel->all();
     }
 
-    public function getEditBlockParams(int $id): array
+    public function getEditBlockParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
-        $block = $this->model->getBlockById($id);
-
         $viewModel->addAll([
-            'block'          => $block,
             'lbl_edit_block' => 'Edit Block',
             'activeMenu'     => 'blocks',
         ]);
+
+        if (!empty($extraParams)) {
+            $viewModel->addAll($extraParams);
+        }
 
         return $viewModel->all();
     }
