@@ -46,8 +46,8 @@ class Flash
     }
 
     /**
-     * Elimina un valor flash específico usando clave aplanada
-     * Ej: 'errors.username'
+     * Elimina un valor flash específico usando clave aplanada y clave simple
+     * Ej: 'errors.username' o 'campo'
      */
     public static function delete(string $flatKey): void
     {
@@ -57,18 +57,16 @@ class Flash
             return;
         }
 
-        // Crear instancia de ProcessorFlattenParams
-        $flattener = new ProcessorFlattenParams();
-        $all = $_SESSION[self::FLASH_KEY];
-        $flattened = $flattener->process($all);
-
-        if (!array_key_exists($flatKey, $flattened)) {
-            return;
-        }
-
         $keys = explode('.', $flatKey);
         $ref =& $_SESSION[self::FLASH_KEY];
 
+        // 🔹 Cambio relevante: si la clave es simple y existe, la eliminamos directamente
+        if (count($keys) === 1 && isset($ref[$flatKey])) {
+            unset($ref[$flatKey]);
+            return;
+        }
+
+        // Mantener compatibilidad con arrays anidados
         foreach ($keys as $k) {
             if (isset($ref[$k])) {
                 if ($k === end($keys)) {

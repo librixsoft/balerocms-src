@@ -98,4 +98,29 @@ class FlashTest extends TestCase
             $errors['username']
         );
     }
+
+    /**
+     * verifica que Flash pueda guardar y recuperar valores simples
+     * usando set() y get(), y que delete() pueda borrar valores simples directamente.
+     */
+    public function testSimpleValueSetGetAndDelete(): void
+    {
+        // guardar valores simples
+        Flash::set('email', 'test@example.com'); // valor simple
+        Flash::set('flag', true); // valor simple tipo flag
+
+        $this->assertTrue(Flash::has('email'));
+        $this->assertEquals('test@example.com', Flash::get('email'));
+
+        $this->assertTrue(Flash::has('flag'));
+        $this->assertTrue(Flash::get('flag'));
+
+        // borrar valores simples
+        Flash::delete('email'); // eliminar valor simple
+        Flash::delete('flag');  // eliminar valor simple
+
+        $this->assertFalse(Flash::has('email'));
+        $this->assertFalse(Flash::has('flag'));
+    }
+
 }
