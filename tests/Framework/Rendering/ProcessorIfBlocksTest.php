@@ -2,6 +2,9 @@
 
 use PHPUnit\Framework\TestCase;
 use Framework\Rendering\ProcessorIfBlocks;
+use Framework\Rendering\Conditions\OrCondition;
+use Framework\Rendering\Conditions\AndCondition;
+use Framework\Rendering\Conditions\ConditionFactory;
 
 class ProcessorIfBlocksTest extends TestCase
 {
@@ -10,7 +13,16 @@ class ProcessorIfBlocksTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->processor = new ProcessorIfBlocks();
+        // Crear prototipos de Or y And
+        $orPrototype = new OrCondition();
+        $andPrototype = new AndCondition();
+
+        // Crear la fábrica con prototipos inyectados
+        $factory = new ConditionFactory($orPrototype, $andPrototype);
+
+        // Inyectar la fábrica en ProcessorIfBlocks
+        $this->processor = new ProcessorIfBlocks($factory);
+
         // Ruta relativa a los templates
         $this->viewsDir = __DIR__ . '/../../resources/views/if/';
     }

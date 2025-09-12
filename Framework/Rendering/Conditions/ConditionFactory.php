@@ -4,18 +4,30 @@ namespace Framework\Rendering\Conditions;
 
 class ConditionFactory
 {
-    private static array $conditionClasses = [
-        NotCondition::class,
-        EqualsCondition::class,
-        NotEqualsCondition::class,
-        TruthyCondition::class
-    ];
+    private array $conditionClasses;
+    private OrCondition $orPrototype;
+    private AndCondition $andPrototype;
 
-    public static function create(string $expression): ConditionInterface
+    public function __construct(
+        OrCondition $orPrototype,
+        AndCondition $andPrototype,
+        array $conditionClasses = [
+            NotCondition::class,
+            EqualsCondition::class,
+            NotEqualsCondition::class,
+            TruthyCondition::class
+        ]
+    ) {
+        $this->orPrototype = $orPrototype;
+        $this->andPrototype = $andPrototype;
+        $this->conditionClasses = $conditionClasses;
+    }
+
+    public function create(string $expression): ConditionInterface
     {
         $expression = trim($expression);
 
-        foreach (self::$conditionClasses as $class) {
+        foreach ($this->conditionClasses as $class) {
             if ($class::supports($expression)) {
                 return $class::fromExpression($expression);
             }
@@ -24,24 +36,24 @@ class ConditionFactory
         throw new \InvalidArgumentException("Expresión no soportada: $expression");
     }
 
-    public static function createOr(): OrCondition
+    public function createOr(): OrCondition
     {
-        return new OrCondition();
+        return clone $this->orPrototype;
     }
 
-    public static function createAnd(): AndCondition
+    public function createAnd(): AndCondition
     {
-        return new AndCondition();
+        return clone $this->andPrototype;
     }
 
-    public static function parseExpression(string $expression): ConditionInterface
+    public function parseExpression(string $expression): ConditionInterface
     {
-        $orCondition = self::createOr();
+        $orCondition = $this->createOr();
 
         foreach (OrCondition::splitExpression($expression) as $orPart) {
-            $andCondition = self::createAnd();
+            $andCondition = $this->createAnd();
             foreach (AndCondition::splitExpression($orPart) as $and) {
-                $andCondition->addCondition(self::create(trim($and)));
+                $andCondition->addCondition($this->create(trim($and)));
             }
             $orCondition->addCondition($andCondition);
         }
