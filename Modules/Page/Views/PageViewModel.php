@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
+ * Balero CMS
+ * @author Anibal Gomez
  * @license GNU General Public License
  */
 
@@ -10,20 +10,16 @@ namespace Modules\Page\Views;
 
 use Framework\Core\ConfigSettings;
 use Framework\Core\ViewModel;
-use Modules\Page\Models\PageModel;
 
 class PageViewModel
 {
-
-    private PageModel $model;
     private ConfigSettings $config;
     private ViewModel $viewModel;
 
-    public function __construct(PageModel $model, ConfigSettings $config)
+    public function __construct(ConfigSettings $config, ViewModel $viewModel)
     {
         $this->config = $config;
-        $this->model = $model;
-        $this->viewModel = new ViewModel();
+        $this->viewModel = $viewModel;
     }
 
     /**
@@ -34,24 +30,19 @@ class PageViewModel
     public function setPageParams(array $extraParams = []): array
     {
         $this->viewModel->addAll([
-            // Colecciones
-            'virtual_pages' => $this->model->getVirtualPages(),
-
             // Etiquetas comunes
             'lbl_virtual_pages' => 'Virtual Pages',
-            'lbl_home' => 'Home',
-            'lbl_no_pages' => 'No virtual pages available.',
+            'lbl_home'          => 'Home',
+            'lbl_no_pages'      => 'No virtual pages available.',
 
             // Botones
-            'btn_refresh' => 'Refresh',
+            'btn_refresh'       => 'Refresh',
         ]);
 
-        // Mezclar parámetros adicionales (por ejemplo, página actual o errores)
         if (!empty($extraParams)) {
             $this->viewModel->addAll($extraParams);
         }
 
         return $this->viewModel->all();
     }
-
 }

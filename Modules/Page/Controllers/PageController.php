@@ -12,12 +12,11 @@ use Framework\Core\Controller;
 use Modules\Page\Models\PageModel;
 use Modules\Page\Views\PageViewModel;
 use Framework\Http\Get;
-use Exception;
 
 class PageController extends Controller
 {
-    protected PageViewModel $viewModel;
     protected PageModel $model;
+    protected PageViewModel $viewModel;
 
     public function __construct(
         PageModel $model,
@@ -30,7 +29,9 @@ class PageController extends Controller
     #[Get('/')]
     public function home()
     {
-        return $this->render("layouts/main.html", $this->viewModel->setPageParams());
+        return $this->render("layouts/main.html", $this->viewModel->setPageParams([
+            'virtual_pages' => $this->model->getVirtualPages(),
+        ]));
     }
 
     #[Get('/{staticUrl}')]
@@ -39,15 +40,15 @@ class PageController extends Controller
         $page = $this->model->getVirtualPageBySlug($staticUrl);
 
         if (empty($page)) {
-            // Página no encontrada → pasar mensaje al ViewModel
             return $this->render("layouts/page_detail.html", $this->viewModel->setPageParams([
-                'error_message' => "La página solicitada no existe.",
+                'error_message'   => "La página solicitada no existe.",
+                'virtual_pages'   => $this->model->getVirtualPages(),
             ]));
         }
 
         return $this->render("layouts/page_detail.html", $this->viewModel->setPageParams([
-            'page' => $page,
+            'page'            => $page,
+            'virtual_pages'   => $this->model->getVirtualPages(),
         ]));
     }
-
 }
