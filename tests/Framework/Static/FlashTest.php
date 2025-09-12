@@ -123,4 +123,41 @@ class FlashTest extends TestCase
         $this->assertFalse(Flash::has('flag'));
     }
 
+    /**
+     * Verifica que se puedan almacenar tanto arrays como valores simples
+     * en Flash, recuperarlos y luego eliminarlos correctamente.
+     */
+    public function testArrayAndSimpleValueInFlash(): void
+    {
+        // Agregar array al flash
+        Flash::set('errors', [
+            'username' => 'Username is required.',
+            'email'    => 'Email is invalid.',
+        ]);
+
+        // Agregar valor simple al flash
+        Flash::set('email', 'user@example.com');
+
+        // Comprobamos existencia
+        $this->assertTrue(Flash::has('errors'));
+        $this->assertTrue(Flash::has('email'));
+
+        // Comprobamos valores
+        $errors = Flash::get('errors');
+        $this->assertArrayHasKey('username', $errors);
+        $this->assertArrayHasKey('email', $errors);
+
+        $this->assertEquals('user@example.com', Flash::get('email'));
+
+        // Eliminar un valor del array
+        Flash::delete('errors.username');
+        $errors = Flash::get('errors');
+        $this->assertArrayNotHasKey('username', $errors);
+        $this->assertArrayHasKey('email', $errors);
+
+        // Eliminar valor simple
+        Flash::delete('email');
+        $this->assertFalse(Flash::has('email'));
+    }
+
 }
