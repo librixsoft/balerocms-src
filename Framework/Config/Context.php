@@ -1,26 +1,38 @@
 <?php
 
 /**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
+ * Balero CMS
+ * Context - Contenedor de dependencias global
+ *
+ * Proporciona acceso global a servicios registrados en el contenedor,
+ * especialmente útil en métodos estáticos o clases que no pasan por DI.
+ *
+ * Esta clase registra los processors principales y las condiciones necesarias
+ * para la evaluación de templates:
+ * - Se crean prototipos de OrCondition y AndCondition.
+ * - Se instancia ConditionFactory pasando los prototipos.
+ * - Se instancia ProcessorIfBlocks con ConditionFactory.
+ * - Se instancian ProcessorFlattenParams y ProcessorForEach, pasando
+ *   ProcessorIfBlocks donde corresponde.
+ *
+ * Nota: Esta misma forma de instanciación se usa en los tests unitarios
+ *       de ProcessorForEachTest, por lo que el contexto refleja el mismo
+ *       flujo de dependencias que los tests.
+ *
+ * @author Anibal Gomez
  * @license GNU General Public License
  */
 
 namespace Framework\Config;
 
 use Framework\Core\Container;
-use Framework\Core\Redirect;
+use Framework\Rendering\Conditions\OrCondition;
+use Framework\Rendering\Conditions\AndCondition;
+use Framework\Rendering\Conditions\ConditionFactory;
+use Framework\Rendering\ProcessorIfBlocks;
+use Framework\Rendering\ProcessorFlattenParams;
+use Framework\Rendering\ProcessorForEach;
 
-use Framework\Core\ErrorConsole;
-
-/**
- * Clase Context
- *
- * Proporciona un acceso global al contenedor de dependencias cuando la inyección
- * directa no es posible, como en métodos estáticos o clases no gestionadas por el contenedor.
- *
- * También permite registrar servicios como singletons para uso global, como helpers o utilidades.
- */
 class Context
 {
     /**
@@ -31,27 +43,15 @@ class Context
     protected static Container $container;
 
     /**
-     * Lista de servicios que se registrarán automáticamente como singleton.
+     * Inicializa el Context con el contenedor y registra todos los servicios globales.
      *
-     * Formato: ['alias' => Clase::class]
-     * Estos servicios estarán disponibles globalmente mediante Context::get().
+     * - Instancia los prototipos OrCondition y AndCondition.
+     * - Crea ConditionFactory a partir de los prototipos.
+     * - Registra ProcessorIfBlocks con ConditionFactory.
+     * - Registra ProcessorFlattenParams y ProcessorForEach.
      *
-     * @var array<string, class-string>
-     */
-    protected static array $services = [
-        // Como en PHP no hay clases estaticas, instanciar clases con solo metodos estaticos, services o clases
-        // que se obtengan de manera global sin inyectar
-        // sino deseas instanciar la clase colocala en Static para que el contenedor omita la instancia simulando una clase estatica
-        // Aqui se define alguna clase que no se inyecte en ningun lado pero que necesite ser instancia para estar disponible
-        // Solo si una clase no tiene dependencias debe crearse en FRamework/Static
-        //'redirect' => Redirect::class,
-        //'errorConsole' => ErrorConsole::class,
-    ];
-
-    /**
-     * Inicializa el Context con el contenedor y registra los servicios definidos como singletons.
-     *
-     * Debe llamarse durante el bootstrapping (por ejemplo, en Boot.php)
+     * Esto garantiza que los processors y condiciones estén disponibles
+     * globalmente mediante Context::get() y replicando la DI usada en tests.
      *
      * @param Container $container Contenedor de la aplicación
      */
@@ -59,29 +59,61 @@ class Context
     {
         self::$container = $container;
 
-        foreach (self::$services as $alias => $class) {
-            // Instancia el servicio y lo registra como singleton
-            $instance = $container->resolveInstance($class);
-            $container->registerSingletonInstance($class, $instance);
-        }
+        // Instancia prototipos
+        $container->registerSingletonInstance(OrCondition::class, new OrCondition());
+        $container->registerSingletonInstance(AndCondition::class, new AndCondition());
+
+        /** @var OrCondition $or */
+        $or = $container->resolveInstance(OrCondition::class);
+        /** @var AndCondition $and */
+        $and = $container->resolveInstance(AndCondition::class);
+
+        // ConditionFactory
+        $container->registerSingletonInstance(
+            ConditionFactory::class,
+            new ConditionFactory($or, $and)
+        );
+
+        /** @var ConditionFactory $conditionFactory */
+        $conditionFactory = $container->resolveInstance(ConditionFactory::class);
+
+        // ProcessorIfBlocks
+        $container->registerSingletonInstance(
+            ProcessorIfBlocks::class,
+            new ProcessorIfBlocks($conditionFactory)
+        );
+
+        // ProcessorFlattenParams
+        $container->registerSingletonInstance(
+            ProcessorFlattenParams::class,
+            new ProcessorFlattenParams()
+        );
+
+        /** @var ProcessorFlattenParams $flatten */
+        $flatten = $container->resolveInstance(ProcessorFlattenParams::class);
+        /** @var ProcessorIfBlocks $ifBlocks */
+        $ifBlocks = $container->resolveInstance(ProcessorIfBlocks::class);
+
+        // ProcessorForEach
+        $container->registerSingletonInstance(
+            ProcessorForEach::class,
+            new ProcessorForEach($flatten, $ifBlocks)
+        );
     }
 
     /**
-     * Obtiene un servicio desde el contenedor por su alias o por su clase.
+     * Obtiene un servicio desde el contenedor.
      *
-     * Ejemplos:
-     * - Context::get('redirect')       ← por alias
-     * - Context::get(Redirect::class)  ← por clase
+     * Ejemplo de uso:
+     * ```php
+     * $processor = Context::get(ProcessorForEach::class);
+     * ```
      *
-     * Si se pasa un alias, se resuelve con la clase correspondiente en $services.
-     * Si se pasa directamente una clase, se resuelve desde el contenedor.
-     *
-     * @param string $aliasOrClass Alias registrado o nombre completo de la clase
+     * @param string $class Clase del servicio a obtener
      * @return object Instancia del servicio solicitado
      */
-    public static function get(string $aliasOrClass): object
+    public static function get(string $class): object
     {
-        $class = self::$services[$aliasOrClass] ?? $aliasOrClass;
         return self::$container->resolveInstance($class);
     }
 }
