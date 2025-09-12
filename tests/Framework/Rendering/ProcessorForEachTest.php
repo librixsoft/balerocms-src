@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 use Framework\Rendering\ProcessorForEach;
 use Framework\Rendering\ProcessorFlattenParams;
 use Framework\Rendering\ProcessorIfBlocks;
+use Framework\Rendering\Conditions\OrCondition;
+use Framework\Rendering\Conditions\AndCondition;
+use Framework\Rendering\Conditions\ConditionFactory;
 
 class ProcessorForEachTest extends TestCase
 {
@@ -31,7 +34,17 @@ class ProcessorForEachTest extends TestCase
                 return $flat;
             });
 
-        $this->processorIfBlocks = new ProcessorIfBlocks();
+        // Crear prototipos de Or y And
+        $orPrototype = new OrCondition();
+        $andPrototype = new AndCondition();
+
+        // Crear la fábrica de condiciones
+        $conditionFactory = new ConditionFactory($orPrototype, $andPrototype);
+
+        // Crear ProcessorIfBlocks con la fábrica
+        $this->processorIfBlocks = new ProcessorIfBlocks($conditionFactory);
+
+        // Crear ProcessorForEach con sus dependencias
         $this->processorForEach = new ProcessorForEach(
             $this->mockFlatten,
             $this->processorIfBlocks
