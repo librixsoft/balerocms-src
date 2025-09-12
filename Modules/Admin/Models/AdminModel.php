@@ -111,6 +111,7 @@ class AdminModel extends Model
         $this->configSettings->setDescription($data['description'] ?? '');
         $this->configSettings->setKeywords($data['keywords'] ?? '');
         $this->configSettings->setTheme($data['theme'] ?? '');
+        $this->configSettings->setFooter($data['footer'] ?? '');
     }
 
     public function deletePage(int $id): bool

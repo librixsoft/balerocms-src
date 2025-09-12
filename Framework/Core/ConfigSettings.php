@@ -37,6 +37,7 @@ class ConfigSettings
     private string $keywords;
     private string $basepath;
     private string $theme;
+    private string $footer;
 
     // Options
     private string $multilang;
@@ -73,6 +74,7 @@ class ConfigSettings
             $this->title      = $xml->Child("site", "title");
             $this->url        = $xml->Child("site", "url");
             $this->description= $xml->Child("site", "description");
+            $this->footer= $xml->Child("site", "footer");
             $this->keywords   = $xml->Child("site", "keywords");
             $this->basepath   = $xml->Child("site", "basepath");
             $this->theme   = $xml->Child("site", "theme");
@@ -194,5 +196,11 @@ class ConfigSettings
     public function setKeywords(string $value): void {
         $this->keywords = $value;
         $this->xml->editChild("/config/site/keywords", $value);
+    }
+
+    public function getFooter(): string { return $this->footer; }
+    public function setFooter(string $value): void {
+        $this->footer = $value;
+        $this->xml->editChild("/config/site/footer", $value);
     }
 }

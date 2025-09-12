@@ -61,6 +61,7 @@ class AdminController extends Controller
             'description' => $this->request->post("description"),
             'keywords' => $this->request->post("keywords"),
             'theme' => $this->request->post("theme"),
+            'footer' => $this->request->post("footer"),
         ];
 
         $this->model->updateSettings($data);

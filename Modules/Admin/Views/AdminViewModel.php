@@ -55,10 +55,12 @@ class AdminViewModel
             'lbl_title'     => 'Title',
             'lbl_keywords'  => 'Keywords',
             'lbl_description' => 'Description',
+            'lbl_footer' => 'Footer',
 
             'txt_title'       => $this->config->getTitle(),
             'txt_keywords'    => $this->config->getKeywords(),
             'txt_description' => $this->config->getDescription(),
+            'txt_footer' => $this->config->getFooter(),
 
             'btn_refresh' => 'Refresh',
         ]);
