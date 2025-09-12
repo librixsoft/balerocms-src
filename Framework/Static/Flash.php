@@ -1,23 +1,8 @@
 <?php
 
-/**
- * @author Anibal Gomez <balerocms@gmail.com>
- * @copyright Copyright (c) 2025 Anibal Gomez
- * @license GNU General Public License
- */
-
-
-/**
- * Balero CMS - Flash helper
- *
- * Clase estática para almacenar mensajes temporales en sesión
- * (como errores y datos de formularios) siguiendo el patrón PRG.
- *
- * @author Anibal ...
- * @license GNU General Public License
- */
-
 namespace Framework\Static;
+
+use Framework\Rendering\ProcessorFlattenParams;
 
 class Flash
 {
@@ -33,24 +18,17 @@ class Flash
     }
 
     /**
-     * Obtiene un valor flash (y lo elimina).
+     * Obtiene un valor flash (y lo elimina)
      */
     public static function get(string $key, mixed $default = null): mixed
     {
         self::ensureSessionStarted();
-
-        // TODO: Add $_SESSION wrapper to RequestHelper
-        if (isset($_SESSION[self::FLASH_KEY][$key])) {
-            $value = $_SESSION[self::FLASH_KEY][$key];
-            unset($_SESSION[self::FLASH_KEY][$key]);
-            return $value;
-        }
-
-        return $default;
+        //var_dump($_SESSION[self::FLASH_KEY]);
+        return $_SESSION[self::FLASH_KEY][$key] ?? $default;
     }
 
     /**
-     * Verifica si existe un valor flash.
+     * Verifica si existe un valor flash
      */
     public static function has(string $key): bool
     {
@@ -59,7 +37,7 @@ class Flash
     }
 
     /**
-     * Limpia todos los valores flash.
+     * Limpia todos los valores flash
      */
     public static function clear(): void
     {
@@ -68,7 +46,44 @@ class Flash
     }
 
     /**
-     * Asegura que la sesión esté iniciada.
+     * Elimina un valor flash específico usando clave aplanada
+     * Ej: 'errors.username'
+     */
+    public static function delete(string $flatKey): void
+    {
+        self::ensureSessionStarted();
+
+        if (!isset($_SESSION[self::FLASH_KEY])) {
+            return;
+        }
+
+        // Crear instancia de ProcessorFlattenParams
+        $flattener = new ProcessorFlattenParams();
+        $all = $_SESSION[self::FLASH_KEY];
+        $flattened = $flattener->process($all);
+
+        if (!array_key_exists($flatKey, $flattened)) {
+            return;
+        }
+
+        $keys = explode('.', $flatKey);
+        $ref =& $_SESSION[self::FLASH_KEY];
+
+        foreach ($keys as $k) {
+            if (isset($ref[$k])) {
+                if ($k === end($keys)) {
+                    unset($ref[$k]);
+                } else {
+                    $ref =& $ref[$k];
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Asegura que la sesión esté iniciada
      */
     private static function ensureSessionStarted(): void
     {

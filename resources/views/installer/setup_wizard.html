@@ -90,9 +90,9 @@
   <!-- @endif -->
 
   <!-- @if errors.username -->
-  <div class="alert alert-danger alert-dismissible fade show">
+  <div class="alert alert-danger alert-dismissible fade show" id="alert-errors.username">
     <i class="fas fa-user-times"></i> {errors.username}.
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="deleteMessage('errors.username')"></button>
   </div>
   <!-- @endif -->
 
@@ -270,6 +270,37 @@
 <script src="public/assets/js/bs-stepper.min.js"></script>
 
 <script>
+  function deleteMessage(key) {
+    const formData = new FormData();
+    formData.append('key', key);
+
+    fetch('installer/delete_flash_message', {
+      method: 'POST',
+      body: formData
+    })
+            .then(res => res.json())
+            .then(data => {
+              console.log(data.status, data.message);
+            })
+            .catch(err => console.error('Error al borrar flash:', err));
+  }
+
+  // Opcional: eliminar automáticamente si el usuario cierra la alerta manualmente con Bootstrap
+  document.addEventListener('DOMContentLoaded', () => {
+    const alerts = document.querySelectorAll('.alert-dismissible');
+
+    alerts.forEach(alert => {
+      alert.addEventListener('closed.bs.alert', () => {
+        const key = alert.id.replace('alert-', '');
+        deleteMessage(key);
+      });
+    });
+  });
+</script>
+
+
+<script>
+
   var stepper;
   document.addEventListener('DOMContentLoaded', function () {
     stepper = new Stepper(document.querySelector('#installerWizard'), {
