@@ -1,43 +1,43 @@
 <div class="col-md-3" id="sidebar">
     <div class="rounded p-3" style="margin-top: -15px;">
         <ul class="nav flex-column nav-pills bg-white">
-            <!-- @if activeMenu == "settings" -->
+            <%-- @if activeMenu == "settings" -->
             <li class="nav-item w-100">
                 <a class="nav-link active w-100" href="./admin/settings">Dashboard</a>
             </li>
-            <!-- @else -->
+            <%-- @else -->
             <li class="nav-item w-100">
                 <a class="nav-link w-100" href="./admin/settings">Dashboard</a>
             </li>
-            <!-- @endif -->
+            <%-- @endif -->
 
-            <!-- @if activeMenu == "all_pages" -->
+            <%-- @if activeMenu == "all_pages" -->
             <li class="nav-item w-100">
                 <a class="nav-link active w-100" href="./admin/pages">
                     <span class="badge bg-danger float-end">{pages_count}</span>Pages
                 </a>
             </li>
-            <!-- @else -->
+            <%-- @else -->
             <li class="nav-item w-100">
                 <a class="nav-link w-100" href="./admin/pages">
                     <span class="badge bg-danger float-end">{pages_count}</span> Pages
                 </a>
             </li>
-            <!-- @endif -->
+            <%-- @endif -->
 
-            <!-- @if activeMenu == "all_blocks" -->
+            <%-- @if activeMenu == "all_blocks" -->
             <li class="nav-item w-100">
                 <a class="nav-link active w-100" href="./admin/blocks">
                     <span class="badge bg-danger float-end">{blocks_count}</span>Blocks
                 </a>
             </li>
-            <!-- @else -->
+            <%-- @else -->
             <li class="nav-item w-100">
                 <a class="nav-link w-100" href="./admin/blocks">
                     <span class="badge bg-danger float-end">{blocks_count}</span>Blocks
                 </a>
             </li>
-            <!-- @endif -->
+            <%-- @endif -->
 
         </ul>
     </div>

@@ -40,11 +40,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{basepath}">Home</a>
         </li>
-        <!-- @foreach virtual_pages as page -->
+        <%-- @foreach virtual_pages as page -->
         <li class="nav-item">
           <a class="nav-link" href="./page/{page.url}">{page.virtual_title}</a>
         </li>
-        <!-- @endforeach -->
+        <%-- @endforeach -->
       </ul>
     </div>
   </div>
@@ -61,9 +61,9 @@
 
 <!-- Main dinámico de páginas -->
 <main class="container my-5">
-  <!-- @foreach blocks as block -->
+  <%-- @foreach blocks as block -->
   <p>{block.content}</p>
-  <!-- @endforeach -->
+  <%-- @endforeach -->
 </main>
 
 <!-- Footer -->

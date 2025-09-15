@@ -24,7 +24,7 @@ class ProcessorForEach
     {
         return preg_replace_callback(
         // Captura `@foreach array as item` o `@foreach array as key => value`
-            '/<!--\s*@foreach\s+(\w+)\s+as\s+(\w+)(?:\s*=>\s*(\w+))?\s*-->(.*?)<!--\s*@endforeach\s*-->/is',
+            '/<%--\s*@foreach\s+(\w+)\s+as\s+(\w+)(?:\s*=>\s*(\w+))?\s*-->(.*?)<%--\s*@endforeach\s*-->/is',
             function ($matches) use ($params) {
                 $arrayKey = $matches[1]; // ej: 'errors'
                 $firstVar = $matches[2]; // ej: 'field'

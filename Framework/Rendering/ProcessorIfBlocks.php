@@ -15,16 +15,16 @@ class ProcessorIfBlocks
 
     public function process(string $content, array $flatParams): string
     {
-        while (preg_match('/<!--\s*@if\b.*?<!--\s*@endif\s*-->/is', $content)) {
+        while (preg_match('/<%--\s*@if\b.*?<%--\s*@endif\s*-->/is', $content)) {
             $content = preg_replace_callback(
-                '/<!--\s*@if\s+([^\n]+?)\s*-->(?:(?:(?!<!--\s*@if).)*?)'
-                . '(?:<!--\s*@else\s*-->(?:(?:(?!<!--\s*@if).)*?))?<!--\s*@endif\s*-->/is',
+                '/<%--\s*@if\s+([^\n]+?)\s*-->(?:(?:(?!<%--\s*@if).)*?)'
+                . '(?:<%--\s*@else\s*-->(?:(?:(?!<%--\s*@if).)*?))?<%--\s*@endif\s*-->/is',
                 function ($matches) use ($flatParams) {
                     $fullMatch = $matches[0];
 
                     if (preg_match(
-                        '/<!--\s*@if\s+(.*?)\s*-->(.*?)'
-                        . '(?:<!--\s*@else\s*-->(.*?))?<!--\s*@endif\s*-->/is',
+                        '/<%--\s*@if\s+(.*?)\s*-->(.*?)'
+                        . '(?:<%--\s*@else\s*-->(.*?))?<%--\s*@endif\s*-->/is',
                         $fullMatch,
                         $parts
                     )) {

@@ -1,51 +1,51 @@
-<!-- @foreach themes as t -->
+<%-- @foreach themes as t -->
 Theme: {t.name}, Value: {t.value}
 
-    <!-- @if defaultTheme == t.value -->
+    <%-- @if defaultTheme == t.value -->
         (Default)
-    <!-- @else -->
+    <%-- @else -->
         (Not Default)
-    <!-- @endif -->
+    <%-- @endif -->
 
-    <!-- @if t.value == 'dark' -->
+    <%-- @if t.value == 'dark' -->
         - Dark Mode Active
-    <!-- @else -->
+    <%-- @else -->
         - Light Mode
-    <!-- @endif -->
+    <%-- @endif -->
 
     <!-- Condiciones anidadas con AND / OR -->
-    <!-- @if theme == 'active' AND mode == 'dark' -->
+    <%-- @if theme == 'active' AND mode == 'dark' -->
         Level 1: Active Dark Theme
 
-        <!-- @if admin == 'yes' -->
+        <%-- @if admin == 'yes' -->
             Level 2: Admin Access
 
-            <!-- @if installed == 'yes' OR version == '2.0' -->
+            <%-- @if installed == 'yes' OR version == '2.0' -->
                 Level 3: Installed or Version 2.0
 
-                <!-- @if beta == 'no' -->
+                <%-- @if beta == 'no' -->
                     Level 4: Not Beta
 
-                    <!-- @if premium == 'yes' -->
+                    <%-- @if premium == 'yes' -->
                         Level 5: Premium User
-                    <!-- @else -->
+                    <%-- @else -->
                         Level 5: Regular User
-                    <!-- @endif -->
+                    <%-- @endif -->
 
-                <!-- @else -->
+                <%-- @else -->
                     Level 4: Beta User
-                <!-- @endif -->
+                <%-- @endif -->
 
-            <!-- @else -->
+            <%-- @else -->
                 Level 3: Not Installed and Not Version 2.0
-            <!-- @endif -->
+            <%-- @endif -->
 
-        <!-- @else -->
+        <%-- @else -->
             Level 2: No Admin Access
-        <!-- @endif -->
+        <%-- @endif -->
 
-    <!-- @else -->
+    <%-- @else -->
         Level 1: Inactive Theme
-    <!-- @endif -->
+    <%-- @endif -->
 
-<!-- @endforeach -->
+<%-- @endforeach -->

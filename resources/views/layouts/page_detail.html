@@ -40,11 +40,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{basepath}">Home</a>
         </li>
-        <!-- @foreach virtual_pages as page -->
+        <%-- @foreach virtual_pages as page -->
         <li class="nav-item">
           <a class="nav-link" href="./page/{page.url}">{page.virtual_title}</a>
         </li>
-        <!-- @endforeach -->
+        <%-- @endforeach -->
       </ul>
     </div>
   </div>
@@ -62,13 +62,13 @@
 
   <h1>{page.virtual_title}</h1>
 
-  <!-- @if page.virtual_content -->
+  <%-- @if page.virtual_content -->
   <div class="vp-content">
     {page.virtual_content}
   </div>
-  <!-- @else -->
+  <%-- @else -->
   <p>No hay contenido disponible.</p>
-  <!-- @endif -->
+  <%-- @endif -->
 
 </main>
 
