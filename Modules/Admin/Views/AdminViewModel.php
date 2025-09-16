@@ -4,14 +4,17 @@ namespace Modules\Admin\Views;
 
 use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
+use Framework\Core\ThemesReader;
 
 class AdminViewModel
 {
     private ConfigSettings $config;
+    private ThemesReader $themesReader;
 
-    public function __construct(ConfigSettings $config)
+    public function __construct(ConfigSettings $config, ThemesReader $themesReader)
     {
         $this->config = $config;
+        $this->themesReader = $themesReader;
     }
 
     private function createViewModel(): ViewModel
@@ -34,16 +37,8 @@ class AdminViewModel
         $viewModel->addAll([
             'core_version'   => _CORE_VERSION,
             'defaultTheme'   => $this->config->getTheme(),
-
-            'themes' => [
-                ['value' => 'Default', 'label' => 'Default'],
-                ['value' => 'Dark',    'label' => 'Dark'],
-                ['value' => 'Light',   'label' => 'Light'],
-                ['value' => 'Modern',  'label' => 'Modern'],
-            ],
-
+            'themes' => $this->themesReader->getThemes(),
             'activeMenu'    => 'settings',
-
             'lbl_theme'     => "Theme",
             'lbl_settings'  => __('admin.settings'),
             'lbl_title'     => 'Title',
