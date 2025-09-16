@@ -41,7 +41,7 @@ class BlockController extends Controller
             'blocks'        => $this->blockModel->getBlocks(),
             'virtual_pages' => $this->pageModel->getVirtualPages(),
         ]);
-        return $this->render("layouts/main.html", $params);
+        return $this->render("main.html", $params);
     }
 
 }

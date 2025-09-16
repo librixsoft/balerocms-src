@@ -49,7 +49,7 @@ class AdminController extends Controller
             'blocks_count'  => $this->model->getBlocksCount(),
         ]);
 
-        return $this->render("admin/dashboard.html", $params);
+        return $this->render("admin/dashboard.html", $params, false);
     }
 
     #[Post('/settings')]
@@ -76,7 +76,7 @@ class AdminController extends Controller
             'pages_count' => $this->model->getPagesCount(),
         ]);
 
-        return $this->render("admin/new_page.html", $params);
+        return $this->render("admin/new_page.html", $params, false);
     }
 
     #[Get('/pages')]
@@ -88,7 +88,7 @@ class AdminController extends Controller
             'blocks_count' => $this->model->getBlocksCount(),
         ]);
 
-        return $this->render("admin/pages.html", $params);
+        return $this->render("admin/pages.html", $params, false);
     }
 
     #[Post('/pages/new')]
@@ -114,7 +114,7 @@ class AdminController extends Controller
             'pages_count' => $this->model->getPagesCount(),
         ]);
 
-        return $this->render("admin/edit_page.html", $params);
+        return $this->render("admin/edit_page.html", $params, false);
     }
 
     #[Post('/pages/edit/{id}')]
@@ -157,7 +157,7 @@ class AdminController extends Controller
             'blocks_count' => $this->model->getBlocksCount(),
         ]);
 
-        return $this->render("admin/blocks.html", $params);
+        return $this->render("admin/blocks.html", $params, false);
     }
 
     #[Get('/blocks/new')]
@@ -176,7 +176,7 @@ class AdminController extends Controller
             'next_sort_order' => $nextSort,
         ]);
 
-        return $this->render("admin/new_block.html", $params);
+        return $this->render("admin/new_block.html", $params, false);
     }
 
     #[Post('/blocks/new')]
@@ -199,7 +199,7 @@ class AdminController extends Controller
             'block' => $this->model->getBlockById($id),
         ]);
 
-        return $this->render("admin/edit_block.html", $params);
+        return $this->render("admin/edit_block.html", $params, false);
     }
 
     #[Post('/blocks/edit/{id}')]

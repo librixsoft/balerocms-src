@@ -25,7 +25,7 @@ class LoginController extends Controller
     #[Get('/')]
     public function home()
     {
-        return $this->render("admin/login.html", $this->viewModel->setLoginParams());
+        return $this->render("admin/login.html", $this->viewModel->setLoginParams(), false);
     }
 
     #[Post('/')]
@@ -38,7 +38,7 @@ class LoginController extends Controller
                 "admin/login.html",
                 $this->viewModel->setLoginParams([
                     'error_message' => 'Usuario o contraseña incorrectos.'
-                ])
+                ]), false
             );
         }
     }

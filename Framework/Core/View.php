@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Framework\Core;
 
 use Framework\Core\ConfigSettings;
@@ -14,53 +8,93 @@ use Framework\Rendering\TemplateEngine;
 
 class View
 {
-
+    /**
+     * Carpeta base de todas las vistas (sin "themes/")
+     * Ej: /path/to/balerocms/resources/views/
+     */
     private string $baseDir;
+
     private ConfigSettings $configSettings;
     private TemplateEngine $templateEngine;
 
-    public function __construct(
-        ConfigSettings $config,
-        TemplateEngine $templateEngine
-    )
+    public function __construct(ConfigSettings $config, TemplateEngine $templateEngine)
     {
-        $this->baseDir = $this->normalizePath(Constant::VIEWS_PATH);
         $this->configSettings = $config;
-        $this->templateEngine= $templateEngine;
+        $this->templateEngine = $templateEngine;
+
+        // Solo la carpeta base de vistas, sin temas ni default
+        $this->baseDir = $this->normalizePath(Constant::VIEWS_PATH);
+
+        // Cargar settings y setear baseDir en el template engine
         $this->configSettings->LoadSettings();
         $this->templateEngine->setBaseDir($this->baseDir);
     }
 
-    public function getDefaultParams(): array
+    /**
+     * Devuelve los parámetros por defecto de todas las vistas
+     * y mezcla con parámetros dinámicos si se pasan.
+     */
+    public function getDefaultParams(array $params = []): array
     {
-        return [
-            'title' => $this->configSettings->getTitle(),
-            'url' => $this->configSettings->getUrl(),
-            'page' => defined('_PAGE') ? _PAGE : '',
-            'keywords' => $this->configSettings->getKeywords(),
+        return array_merge([
+            'title'       => $this->configSettings->getTitle(),
+            'url'         => $this->configSettings->getUrl(),
+            'page'        => defined('_PAGE') ? _PAGE : '',
+            'keywords'    => $this->configSettings->getKeywords(),
             'description' => $this->configSettings->getDescription(),
-            'basepath' => $this->configSettings->getBasepath(),
-            'year' => date('Y'),
-            'footer' => $this->configSettings->getFooter(),
-        ];
+            'basepath'    => $this->configSettings->getBasepath(),
+            'year'        => date('Y'),
+            'footer'      => $this->configSettings->getFooter(),
+            'theme'       => $this->configSettings->getTheme(),
+            'assets'      => "/resources/views/themes/" . $this->configSettings->getTheme() . "/assets/",
+        ], $params);
     }
 
-    public function render(string $templatePath, array $params = []): string
+    /**
+     * Renderiza una plantilla.
+     *
+     * @param string $templatePath Path relativo dentro de views o themes.
+     * @param array $params Parámetros dinámicos a pasar a la plantilla.
+     * @param bool $useTheme Si es true, buscará en themes/{theme}/, fallback a themes/default/.
+     *                       Si es false, buscará directamente en la carpeta base de vistas.
+     */
+    public function render(string $templatePath, array $params = [], bool $useTheme = true): string
     {
         try {
-            $templateFullPath = $this->baseDir . ltrim($templatePath, '/');
+            // Determinar path final según si se usa theme o no
+            if ($useTheme) {
+                // Carpeta del theme activo
+                $themeDir = $this->baseDir . "themes/" . $this->configSettings->getTheme() . "/";
+                $templateFullPath = $themeDir . ltrim($templatePath, '/');
 
-            if (!file_exists($templateFullPath)) {
-                throw new \RuntimeException("Plantilla no encontrada: $templateFullPath");
+                // Fallback a default si no existe en theme activo
+                if (!file_exists($templateFullPath)) {
+                    $fallbackPath = $this->baseDir . "themes/default/" . ltrim($templatePath, '/');
+                    if (file_exists($fallbackPath)) {
+                        $templateFullPath = $fallbackPath;
+                    } else {
+                        throw new \RuntimeException("Plantilla no encontrada en theme activo ni en default: $templateFullPath");
+                    }
+                }
+            } else {
+                // Render directo, **sin theme ni fallback**
+                $templateFullPath = $this->baseDir . ltrim($templatePath, '/');
+
+                if (!file_exists($templateFullPath)) {
+                    throw new \RuntimeException("Plantilla no encontrada en vistas base: $templateFullPath");
+                }
             }
 
+            // Leer contenido de la plantilla
             $content = file_get_contents($templateFullPath);
             if ($content === false) {
                 throw new \RuntimeException("No se pudo leer la plantilla: $templateFullPath");
             }
 
-            $params = array_merge($this->getDefaultParams(), $params);
+            // Merge de parámetros por defecto + dinámicos
+            $params = $this->getDefaultParams($params);
 
+            // Procesar plantilla con template engine
             return $this->templateEngine->processTemplate($content, $params);
         } catch (\Throwable $e) {
             ErrorConsole::handleException($e);
@@ -75,5 +109,4 @@ class View
     {
         return rtrim($path, '/') . '/';
     }
-
 }

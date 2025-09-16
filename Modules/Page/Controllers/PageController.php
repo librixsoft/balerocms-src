@@ -29,7 +29,7 @@ class PageController extends Controller
     #[Get('/')]
     public function home()
     {
-        return $this->render("layouts/main.html", $this->viewModel->setPageParams([
+        return $this->render("main.html", $this->viewModel->setPageParams([
             'virtual_pages' => $this->model->getVirtualPages(),
         ]));
     }
@@ -40,13 +40,13 @@ class PageController extends Controller
         $page = $this->model->getVirtualPageBySlug($staticUrl);
 
         if (empty($page)) {
-            return $this->render("layouts/page_detail.html", $this->viewModel->setPageParams([
+            return $this->render("page_detail.html", $this->viewModel->setPageParams([
                 'error_message'   => "La página solicitada no existe.",
                 'virtual_pages'   => $this->model->getVirtualPages(),
             ]));
         }
 
-        return $this->render("layouts/page_detail.html", $this->viewModel->setPageParams([
+        return $this->render("page_detail.html", $this->viewModel->setPageParams([
             'page'            => $page,
             'virtual_pages'   => $this->model->getVirtualPages(),
         ]));

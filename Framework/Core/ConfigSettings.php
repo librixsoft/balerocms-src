@@ -36,7 +36,7 @@ class ConfigSettings
     private string $url;
     private string $keywords;
     private string $basepath;
-    private string $theme;
+    private string $theme = 'default';
     private string $footer;
 
     // Options

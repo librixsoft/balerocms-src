@@ -45,7 +45,7 @@ class InstallerController extends Controller
         // Obtener todos los parámetros del instalador listos para render
         $params = $this->installerViewModel->setInstallerParams($params);
 
-        return $this->render("installer/setup_wizard.html", $params);
+        return $this->render("installer/setup_wizard.html", $params, false);
     }
 
     #[Post('/install')]
@@ -74,7 +74,7 @@ class InstallerController extends Controller
     public function getProgressBar()
     {
         $params = $this->installerViewModel->setInstallerParams();
-        return $this->render("installer/progressBar.html", $params);
+        return $this->render("installer/progressBar.html", $params, false);
     }
 
     #[Post('progressBar')]
