@@ -1,0 +1,110 @@
+/* Aplicar fondo oscuro a todo el sitio */
+html, body {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Navbar transparente y estático con texto blanco */
+.navbar {
+    background: transparent !important;
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand {
+    color: #ffffff !important; /* blanco */
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.navbar .nav-link:hover {
+    color: #0d6efd !important; /* azul al pasar el mouse */
+}
+
+/* Hero Header con degradado oscuro */
+header.hero-header {
+    background: linear-gradient(135deg, #0a0a0a, #1c1c1c); /* degradado oscuro */
+    color: #ffffff;
+    text-align: center;
+    padding: 120px 20px;
+    position: relative;
+}
+
+header.hero-header::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); /* overlay más oscuro */
+    z-index: 1;
+}
+
+header.hero-header .hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+header.hero-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+header.hero-header p.slogan {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+/* Sección de bloques sin borde ni sombra, texto blanco */
+.features .card {
+    border: none !important;
+    box-shadow: none !important;
+    text-align: center !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    transition: none !important;
+}
+
+.features .card h5,
+.features .card p {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+/* Main dinámico limpio con fondo oscuro */
+main.container {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Footer oscuro con texto blanco */
+footer {
+    background: #1c1c1c;
+    color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+footer .social-icons a {
+    color: #ffffff;
+    margin: 0 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+footer .social-icons a:hover {
+    color: #0d6efd;
+}
+
+/* Links en general */
+a {
+    color: #0d6efd;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #66b2ff;
+}

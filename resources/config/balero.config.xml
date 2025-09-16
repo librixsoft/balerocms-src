@@ -33,7 +33,7 @@
 		<keywords>content, management, system</keywords>
 		<!-- basepath for url friendly -->
 		<basepath>http://localhost/balerocms-src/</basepath>
-		<theme>Dark</theme>
+		<theme>default</theme>
 		<footer>© 2025 Your Company. All rights reserved.&#13;
 &#13;
 </footer>
