@@ -1,110 +1,103 @@
-/* Aplicar fondo oscuro a todo el sitio */
-html, body {
-    background-color: #121212 !important;
+/* Fondo global */
+body {
+    background: #121212;
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Cards del blog */
+.card {
+    background-color: #1e1e1e !important; /* fondo oscuro */
+    color: #ffffff !important;           /* texto blanco */
+    border: none !important;             /* quitar borde blanco */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+    border-radius: 12px !important;
+}
+
+/* Asegurarte que los elementos internos también tengan color blanco */
+.card h5,
+.card p,
+.card a {
     color: #ffffff !important;
 }
 
-/* Navbar transparente y estático con texto blanco */
-.navbar {
-    background: transparent !important;
-}
-
-.navbar .nav-link,
-.navbar .navbar-brand {
-    color: #ffffff !important; /* blanco */
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.navbar .nav-link:hover {
-    color: #0d6efd !important; /* azul al pasar el mouse */
-}
-
-/* Hero Header con degradado oscuro */
-header.hero-header {
-    background: linear-gradient(135deg, #0a0a0a, #1c1c1c); /* degradado oscuro */
-    color: #ffffff;
-    text-align: center;
-    padding: 120px 20px;
-    position: relative;
-}
-
-header.hero-header::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5); /* overlay más oscuro */
-    z-index: 1;
-}
-
-header.hero-header .hero-content {
-    position: relative;
-    z-index: 2;
-}
-
-header.hero-header h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-
-header.hero-header p.slogan {
-    font-size: 1.5rem;
-    font-weight: 400;
-}
-
-/* Sección de bloques sin borde ni sombra, texto blanco */
 .features .card {
-    border: none !important;
-    box-shadow: none !important;
-    text-align: center !important;
-    background: transparent !important;
-    color: #ffffff !important;
-    transition: none !important;
-}
-
-.features .card h5,
-.features .card p {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: #ffffff !important;
-}
-
-/* Main dinámico limpio con fondo oscuro */
-main.container {
-    background: transparent !important;
+    background-color: #1e1e1e !important;
     color: #ffffff !important;
     border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+    border-radius: 12px !important;
 }
 
-/* Footer oscuro con texto blanco */
-footer {
-    background: #1c1c1c;
-    color: #ffffff;
-    padding: 40px 20px;
+
+/* Navbar con transparencia */
+.navbar {
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(6px);
+}
+.navbar .nav-link, .navbar .navbar-brand {
+    color: #fff !important;
+}
+.navbar .nav-link:hover { color: #0d6efd; }
+
+/* Hero Header */
+.hero-header {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
     text-align: center;
+    padding: 140px 20px;
+    position: relative;
+}
+.hero-header::after {
+    content: "";
+    position: absolute; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.6);
+}
+.hero-content { position: relative; z-index:2; }
+.hero-header h1 { font-size: 3.5rem; font-weight:700; margin-bottom:10px; }
+.hero-header p.slogan { font-size:1.25rem; color:#ccc; font-style:italic; }
+
+/* Bloques destacados */
+.blog-featured {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
+/* Posts individuales en grid */
+.blog-posts .blog-post {
+    background: #1c1c1c;
+    padding: 20px;
+    border-radius: 8px;
+    height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.blog-posts .blog-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+.blog-post h3 { font-weight:600; margin-bottom:15px; }
+.blog-post p { flex-grow:1; }
+.blog-post .read-more {
+    margin-top:15px;
+    color:#0d6efd; font-weight:500; text-decoration:none;
+}
+.blog-post .read-more:hover { color:#66b2ff; }
+
+/* Footer */
+footer {
+    background: #181818;
+    padding: 60px 20px;
+    color: #c0c0c0;
+    text-align:center;
+    border-top:1px solid rgba(255,255,255,0.05);
+}
 footer .social-icons a {
-    color: #ffffff;
-    margin: 0 10px;
-    font-size: 1.2rem;
-    transition: color 0.3s;
+    color:#fff; margin:0 10px; font-size:1.3rem;
+    transition: transform 0.3s, color 0.3s;
 }
-
-footer .social-icons a:hover {
-    color: #0d6efd;
-}
-
-/* Links en general */
-a {
-    color: #0d6efd;
-    transition: color 0.3s;
-}
-
-a:hover {
-    color: #66b2ff;
-}
+footer .social-icons a:hover { color:#0d6efd; transform: scale(1.2); }

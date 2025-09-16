@@ -18,62 +18,76 @@
   <!-- jQuery -->
   <script src="public/assets/js/jquery.min.js"></script>
 
-  <!-- Bootstrap Bundle JS (con Popper incluido) -->
+  <!-- Bootstrap Bundle JS -->
   <script src="public/assets/js/bootstrap.bundle.min.js"></script>
 
   <!-- Custom styles -->
   <link rel="stylesheet" href="public/assets/themes/{theme}/style.css" />
-
 </head>
 <body>
 
-<!-- Navbar estático -->
-<nav class="navbar navbar-expand-md">
-  <div class="container">
-    <a class="navbar-brand" href="{basepath}">{title}</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<div class="container-fluid">
+  <div class="row">
 
-    <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav ms-auto">
+    <!-- Contenido principal -->
+    <main class="col-md-10 py-4">
+      <!-- Hero Header oscuro tipo blog -->
+      <header class="hero-header mb-4">
+        <div class="hero-content text-center">
+          <h1>{title}</h1>
+          <p class="slogan">Reflexiones y tutoriales de programación</p>
+        </div>
+      </header>
+
+      <!-- Main dinámico estilo blog -->
+      <div class="row">
+        <%-- @foreach blocks as block -->
+        <div class="col-md-6 mb-4">
+          <div class="card p-3" style="background:#1e1e1e; color:#ffffff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.5);">
+            {block.content}
+            <a href="#" class="text-info">Leer más...</a>
+          </div>
+        </div>
+        <%-- @endforeach -->
+      </div>
+    </main>
+
+    <!-- Sidebar derecho más angosto -->
+    <aside class="col-md-2 bg-dark text-white p-3" style="min-height:100vh;">
+      <h4 class="mb-3">Menú</h4>
+      <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link" href="{basepath}">Home</a>
+          <a class="nav-link text-white" href="{basepath}">Home</a>
         </li>
         <%-- @foreach virtual_pages as page -->
         <li class="nav-item">
-          <a class="nav-link" href="./page/{page.url}">{page.virtual_title}</a>
+          <a class="nav-link text-white" href="./page/{page.url}">{page.virtual_title}</a>
         </li>
         <%-- @endforeach -->
       </ul>
-    </div>
+
+      <!-- Opcional: sección de destacados o categorías -->
+      <div class="mt-4">
+        <h5>Categorías</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link text-white" href="#">Programación</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Tutoriales</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#">Noticias</a></li>
+        </ul>
+      </div>
+    </aside>
+
   </div>
-</nav>
+</div>
 
-<!-- Hero Header con degradado azul -->
-<header class="hero-header">
-  <div class="hero-content">
-    <h1>{title}</h1>
-    <p class="slogan">Aquí va tu slogan inspirador</p>
-  </div>
-</header>
-
-
-<!-- Main dinámico de páginas -->
-<main class="container my-5">
-  <%-- @foreach blocks as block -->
-  <p>{block.content}</p>
-  <%-- @endforeach -->
-</main>
-
-<!-- Footer -->
-<footer class="text-center">
+<!-- Footer oscuro -->
+<footer class="text-center py-4" style="background:#121212; color:#ffffff;">
   <p>{footer}</p>
   <div class="social-icons">
-    <a href="#"><i class="fab fa-facebook-f"></i></a>
-    <a href="#"><i class="fab fa-twitter"></i></a>
-    <a href="#"><i class="fab fa-instagram"></i></a>
-    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <a href="#"><i class="fab fa-facebook-f text-white me-2"></i></a>
+    <a href="#"><i class="fab fa-twitter text-white me-2"></i></a>
+    <a href="#"><i class="fab fa-instagram text-white me-2"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in text-white"></i></a>
   </div>
 </footer>
 
