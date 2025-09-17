@@ -4,11 +4,13 @@ use PHPUnit\Framework\TestCase;
 use Modules\Installer\Controllers\InstallerController;
 use Modules\Installer\Models\InstallerModel;
 use Modules\Installer\Views\InstallerViewModel;
+use Framework\Core\View;
 
 class InstallerControllerTest extends TestCase
 {
     private $modelMock;
     private $viewModelMock;
+    private $viewStub;
     private $controller;
 
     protected function setUp(): void
@@ -22,21 +24,26 @@ class InstallerControllerTest extends TestCase
         $this->viewModelMock->method('setInstallerParams')
             ->willReturn(['db_ok' => true]);
 
-        // Controller con render() sobrescrito
+        // Stub de View que devuelve HTML genérico
+        $this->viewStub = $this->createStub(View::class);
+        $this->viewStub->method('render')->willReturn('<html>HTML de prueba</html>');
+
+        // Controller con render() que llama al View real
         $this->controller = new class($this->modelMock, $this->viewModelMock) extends InstallerController {
+            public View $view;
+
             protected function render($template, $params = [], $useTheme = true): string {
-                return json_encode($params);
+                return $this->view->render($template, $params, $useTheme);
             }
         };
+
+        // Inyectamos el stub
+        $this->controller->view = $this->viewStub;
     }
 
-    public function testHomeReturnsDbOkParam()
+    public function testHomeReturnsHtml()
     {
-        $resultJson = $this->controller->home();
-        $result = json_decode($resultJson, true);
-
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('db_ok', $result);
-        $this->assertTrue($result['db_ok']);
+        $html = $this->controller->home();
+        $this->assertStringContainsString('HTML', $html);
     }
 }
