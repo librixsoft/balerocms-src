@@ -73,14 +73,19 @@ class InstallerController extends Controller
     #[Get('progressBar')]
     public function getProgressBar()
     {
+        if (!Flash::has('install_in_progress')) {
+            Redirect::to("/installer/");
+        }
         $this->model->setInstalled();
         $params = $this->installerViewModel->setInstallerParams();
+        Flash::delete('install_in_progress');
         return $this->render("installer/progressBar.html", $params, false);
     }
 
     #[Post('progressBar')]
     public function postProgressBar()
     {
+        Flash::set('install_in_progress', true);
         $this->model->install();
         Redirect::to("/installer/progressBar");
     }
