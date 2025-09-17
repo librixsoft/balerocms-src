@@ -5,6 +5,7 @@ use Modules\Installer\Controllers\InstallerController;
 use Modules\Installer\Models\InstallerModel;
 use Modules\Installer\Views\InstallerViewModel;
 use Framework\Core\View;
+use Framework\Static\Flash;
 
 class InstallerControllerTest extends TestCase
 {
@@ -46,4 +47,30 @@ class InstallerControllerTest extends TestCase
         $html = $this->controller->home();
         $this->assertStringContainsString('HTML', $html);
     }
+
+    public function testHomeFlowWithFlashErrors()
+    {
+        // Expectation: el método del modelo será llamado
+        $this->modelMock->expects($this->once())
+            ->method('canConnectToDatabase');
+
+        // Expectation: setInstallerParams será llamado y recibirá los errores de Flash
+        $this->viewModelMock->expects($this->once())
+            ->method('setInstallerParams')
+            ->with($this->callback(fn($params) => isset($params['errors']) && $params['errors'] === ['username' => 'required']))
+            ->willReturnCallback(fn($params) => $params);
+
+        // Simular errores en Flash
+        Flash::set('errors', ['username' => 'required']);
+
+        // Llamar al método
+        $html = $this->controller->home();
+
+        // Revisar que la salida sigue siendo HTML
+        $this->assertStringContainsString('<html>', $html);
+
+        // Limpiar Flash para otros tests
+        Flash::delete('errors');
+    }
+
 }
