@@ -82,7 +82,7 @@ class Router
     {
         try {
             $currentModule = $this->request->get(self::PARAM_MODULE);
-            $installed = $this->configSettings->getInstalled();
+            $installed = $this->configSettings->installed;
 
             // Si no está instalado, forzar acceso al instalador
             if ($installed === "no" && $currentModule !== 'installer') {

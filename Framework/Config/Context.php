@@ -32,6 +32,8 @@ use Framework\Rendering\Conditions\ConditionFactory;
 use Framework\Rendering\ProcessorIfBlocks;
 use Framework\Rendering\ProcessorFlattenParams;
 use Framework\Rendering\ProcessorForEach;
+use Framework\Core\ConfigSettings;
+use Framework\Static\Constant;
 
 class Context
 {
@@ -99,6 +101,12 @@ class Context
             ProcessorForEach::class,
             new ProcessorForEach($flatten, $ifBlocks)
         );
+
+        $container->registerSingletonInstance(
+            ConfigSettings::class,
+            new ConfigSettings(Constant::CONFIG_PATH)
+        );
+
     }
 
     /**

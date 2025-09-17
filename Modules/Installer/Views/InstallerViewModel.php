@@ -46,18 +46,18 @@ class InstallerViewModel
             'lbl_email' => 'Email Address',
 
             // Valores configurables
-            'txt_dbhost' => $this->config->getDbhost(),
-            'txt_dbuser' => $this->config->getDbuser(),
-            'txt_dbpass' => $this->config->getDbpass(),
-            'txt_dbname' => $this->config->getDbname(),
-            'txt_basepath' => $this->config->getBasepath(),
-            'txt_url' => $this->config->getUrl(),
-            'username' => $this->config->getUsername(),
+            'txt_dbhost' => $this->config->dbhost,
+            'txt_dbuser' => $this->config->dbuser,
+            'txt_dbpass' => $this->config->dbpass,
+            'txt_dbname' => $this->config->dbname,
+            'txt_basepath' => $this->config->basepath,
+            'txt_url' => $this->config->url,
+            'username' => $this->config->username,
             'txt_pass' => '',
             'txt_retype' => '',
-            'txt_firstname' => $this->config->getFirstname(),
-            'txt_lastname' => $this->config->getLastname(),
-            'txt_email' => $this->config->getEmail(),
+            'txt_firstname' => $this->config->firstname,
+            'txt_lastname' => $this->config->lastname,
+            'txt_email' => $this->config->email,
 
             // Botones
             'btn_save' => "Guardar",
@@ -102,16 +102,16 @@ class InstallerViewModel
         }
 
         return
-            $this->config->getDbhost() &&
-            $this->config->getDbuser() &&
-            $this->config->getDbname() &&
-            $this->config->getBasepath() &&
-            $this->config->getUrl() &&
-            $this->config->getUsername() &&
-            $this->config->getFirstname() &&
-            $this->config->getLastname() &&
-            $this->config->getEmail() &&
-            filter_var($this->config->getEmail(), FILTER_VALIDATE_EMAIL);
+            $this->config->dbhost &&
+            $this->config->dbuser &&
+            $this->config->dbname &&
+            $this->config->basepath &&
+            $this->config->url &&
+            $this->config->username &&
+            $this->config->firstname &&
+            $this->config->lastname &&
+            $this->config->email &&
+            filter_var($this->config->email, FILTER_VALIDATE_EMAIL);
     }
 
 }

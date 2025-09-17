@@ -23,8 +23,8 @@ class AdminViewModel
 
         // Parámetros base disponibles en todas las vistas
         $viewModel->addAll([
-            'username' => $this->config->getUsername(),
-            'email'    => $this->config->getEmail(),
+            'username' => $this->config->username,
+            'email'    => $this->config->email,
         ]);
 
         return $viewModel;
@@ -36,7 +36,7 @@ class AdminViewModel
 
         $viewModel->addAll([
             'core_version'   => _CORE_VERSION,
-            'defaultTheme'   => $this->config->getTheme(),
+            'defaultTheme'   => $this->config->theme,
             'themes' => $this->themesReader->getThemes(),
             'activeMenu'    => 'settings',
             'lbl_theme'     => "Theme",
@@ -46,10 +46,10 @@ class AdminViewModel
             'lbl_description' => 'Description',
             'lbl_footer' => 'Footer',
 
-            'txt_title'       => $this->config->getTitle(),
-            'txt_keywords'    => $this->config->getKeywords(),
-            'txt_description' => $this->config->getDescription(),
-            'txt_footer'      => $this->config->getFooter(),
+            'txt_title'       => $this->config->title,
+            'txt_keywords'    => $this->config->keywords,
+            'txt_description' => $this->config->description,
+            'txt_footer'      => $this->config->footer,
 
             'btn_refresh' => 'Refresh',
         ]);

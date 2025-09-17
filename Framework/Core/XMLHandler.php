@@ -1,81 +1,52 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Framework\Core;
 
 use Exception;
-use Framework\Static\Constant;
 
 class XMLHandler
 {
-
     private string $file;
     private \SimpleXMLElement|null $obj = null;
-    private array $node = [];
 
-    public function __construct()
+    public function __construct(string $xmlFile)
     {
-        $this->file = Constant::CONFIG_PATH;
-
-        if (!file_exists($this->file )) {
-            ErrorConsole::handleException(new Exception(get_class($this) . ": No existe el archivo: " . $file));
-        } else {
-            $this->readXML($this->file );
+        if (!file_exists($xmlFile)) {
+            throw new Exception("Archivo no encontrado: " . $xmlFile);
         }
+
+        $this->file = $xmlFile;
+        $this->readXML();
     }
 
-    public function readXML($file = "")
+    private function readXML(): void
     {
-        $this->node = [];
-
-        if (!file_exists($file)) {
-            ErrorConsole::handleException(new Exception(_FILE_DONT_EXIST . " " . $file));
-        }
-
-        $this->obj = @simplexml_load_file($file);
+        $this->obj = @simplexml_load_file($this->file);
 
         if (!$this->obj) {
-            ErrorConsole::handleException(new Exception(_WARNING_LOADING_FILE . " <b>$file</b>"));
+            throw new Exception("Error cargando XML: " . $this->file);
         }
     }
 
-    public function Child($child, $subchild)
+    public function get(string $path): string
     {
-        if (!$this->obj) {
-            ErrorConsole::handleException(new Exception(_XML_ERROR_CHILD));
+        $nodes = $this->obj->xpath($path);
+        if (!$nodes || !isset($nodes[0])) {
+            return '';
         }
 
-        $_value = "";
-
-        foreach ($this->obj->$child as $key => $value) {
-            $_value = $value->$subchild;
-            if ($_value == "_blank") {
-                $_value = "";
-            }
-        }
-
-        return $_value;
+        $value = (string)$nodes[0];
+        return $value === '_blank' ? '' : $value;
     }
 
-    public function editChild($path, $value)
+    public function set(string $path, string $value): void
     {
-        try {
-            $this->node = $this->obj->xpath($path);
-
-            if (!$this->node || !isset($this->node[0][0])) {
-                throw new Exception("No se encontró el nodo XML en el path: $path");
-            }
-
-            $this->node[0][0] = empty($value) ? "_blank" : htmlspecialchars($value);
-            $this->obj->asXML($this->file);
-
-        } catch (Throwable $e) {
-            ErrorConsole::handleException($e);
+        $nodes = $this->obj->xpath($path);
+        if (!$nodes || !isset($nodes[0])) {
+            throw new Exception("No se encontró el nodo XML en el path: $path");
         }
+
+        $nodes[0][0] = $value === '' ? '_blank' : htmlspecialchars($value);
+        $this->obj->asXML($this->file);
     }
 }

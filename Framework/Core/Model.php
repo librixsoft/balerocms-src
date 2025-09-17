@@ -22,12 +22,12 @@ class Model
         $this->db = $db;
 
         // Solo conecta si la app ya está instalada
-        if ($this->configSettings->getInstalled() === 'yes') {
+        if ($this->configSettings->installed === 'yes') {
             $this->db->connect(
-                $this->configSettings->getDbhost(),
-                $this->configSettings->getDbuser(),
-                $this->configSettings->getDbpass(),
-                $this->configSettings->getDbname()
+                $this->configSettings->dbhost,
+                $this->configSettings->dbuser,
+                $this->configSettings->dbpass,
+                $this->configSettings->dbname
             );
         }
     }

@@ -53,10 +53,16 @@ class Controller
 
     private function initBasePath(): void
     {
-        if (empty($this->configSettings->getBasepath())) {
-            $this->configSettings->setBasepath($this->configSettings->getFullBasepath());
+        // Obtener basepath y limpiar espacios o saltos de línea
+        $basepath = trim($this->configSettings->basepath ?? ''); // TODO: Paasar a todo el xml read
+
+        if ($basepath === '') {
+            $basepath = $this->configSettings->getFullBasepath();
         }
+
+        $this->configSettings->basepath = $basepath;
     }
+
 
     public function run(): void
     {
@@ -127,10 +133,10 @@ class Controller
     protected function render(string $template, array $params = [], bool $useTheme = true): string
     {
         $common = [
-            'title' => $this->configSettings->getTitle(),
-            'keywords' => $this->configSettings->getKeywords(),
-            'description' => $this->configSettings->getDescription(),
-            'basepath' => $this->configSettings->getBasepath(),
+            'title' => $this->configSettings->title,
+            'keywords' => $this->configSettings->keywords,
+            'description' => $this->configSettings->description,
+            'basepath' => $this->configSettings->basepath,
         ];
 
         $langParams = LangSelector::getLanguageParams($this->request);

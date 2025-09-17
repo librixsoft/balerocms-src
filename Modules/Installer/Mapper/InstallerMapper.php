@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -15,21 +15,26 @@ class InstallerMapper
 {
     public static function map(InstallerDTO $dto, ConfigSettings $config): void
     {
-        $config->setDbhost($dto->dbhost);
-        $config->setDbuser($dto->dbuser);
-        $config->setDbpass($dto->dbpass);
-        $config->setDbname($dto->dbname);
-        $config->setTitle($dto->title);
-        $config->setUrl($dto->url);
-        $config->setDescription($dto->description);
-        $config->setKeywords($dto->keywords);
-        $config->setBasepath($dto->basepath ?: $config->getFullBasepath());
-        $config->setLastname($dto->lastname);
-        $config->setFirstname($dto->firstname);
-        $config->setUsername($dto->username);
-        $config->setEmail($dto->email);
+        // Database
+        $config->dbhost   = $dto->dbhost;
+        $config->dbuser   = $dto->dbuser;
+        $config->dbpass   = $dto->dbpass;
+        $config->dbname   = $dto->dbname;
 
-        $pwd = Hash::genpwd($dto->passwd);
-        $config->setPass($pwd);
+        // Site
+        $config->title       = $dto->title;
+        $config->url         = $dto->url;
+        $config->description = $dto->description;
+        $config->keywords    = $dto->keywords;
+        $config->basepath    = $dto->basepath ?: $config->getFullBasepath();
+
+        // Admin
+        $config->lastname  = $dto->lastname;
+        $config->firstname = $dto->firstname;
+        $config->username  = $dto->username;
+        $config->email     = $dto->email;
+
+        // Password
+        $config->pass = Hash::genpwd($dto->passwd);
     }
 }

@@ -10,14 +10,20 @@ use Throwable;
 
 class InstallerModel extends Model
 {
+
+    public function setInstalled(): void
+    {
+        $this->configSettings->installed = "yes";
+    }
+
     public function install(): void
     {
         try {
             // Obtener parámetros de conexión desde ConfigSettings
-            $host = $this->configSettings->getDbhost();
-            $user = $this->configSettings->getDbuser();
-            $pass = $this->configSettings->getDbpass();
-            $dbname = $this->configSettings->getDbname();
+            $host = $this->configSettings->dbhost;
+            $user = $this->configSettings->dbuser;
+            $pass = $this->configSettings->dbpass;
+            $dbname = $this->configSettings->dbname;
 
             // 1. Conectar sin base de datos (solo al servidor)
             $this->db->connect($host, $user, $pass);
@@ -47,10 +53,8 @@ class InstallerModel extends Model
             $query = str_replace("{dbname}", $dbname, $query);
             $this->db->create($query);
 
-            // 5. Marcar la instalación como exitosa
-            $this->configSettings->setInstalled("yes");
         } catch (Throwable $e) {
-            $this->configSettings->setInstalled("no");
+            $this->configSettings->istalled = "no";
             ErrorConsole::handleException(
                 new Exception("Installation failed: " . $e->getMessage(), 0, $e)
             );
@@ -60,10 +64,10 @@ class InstallerModel extends Model
     public function canConnectToDatabase(): bool
     {
         try {
-            $host = $this->configSettings->getDbhost();
-            $user = $this->configSettings->getDbuser();
-            $pass = $this->configSettings->getDbpass();
-            $dbname = $this->configSettings->getDbname();
+            $host = $this->configSettings->dbhost;
+            $user = $this->configSettings->dbuser;
+            $pass = $this->configSettings->dbpass;
+            $dbname = $this->configSettings->dbname;
 
             $this->db->connect($host, $user, $pass, $dbname);
             return $this->db->isStatus();

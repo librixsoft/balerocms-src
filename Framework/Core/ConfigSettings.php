@@ -1,167 +1,78 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Framework\Core;
 
-use Framework\Core\XMLHandler;
+use Framework\Static\Constant;
+use Exception;
 
-class ConfigSettings
+class ConfigSettings extends XMLHandler
 {
-    private XMLHandler $xml;
+    private array $fields = [
+        // Database
+        'dbhost' => '/config/database/dbhost',
+        'dbuser' => '/config/database/dbuser',
+        'dbpass' => '/config/database/dbpass',
+        'dbname' => '/config/database/dbname',
 
-    // DB Configuration
-    private string $dbhost;
-    private string $dbuser;
-    private string $dbpass;
-    private string $dbname;
+        // Admin
+        'username' => '/config/admin/username',
+        'pass'     => '/config/admin/passwd',
+        'email'    => '/config/admin/email',
+        'firstname'=> '/config/admin/firstname',
+        'lastname' => '/config/admin/lastname',
 
-    // Admin
-    private string $username;
-    private string $pass;
-    private string $email;
-    private string $firstname;
-    private string $lastname;
+        // System
+        'installed'=> '/config/system/installed',
 
-    // System
-    private string $installed;
+        // Site
+        'title'     => '/config/site/title',
+        'description'=> '/config/site/description',
+        'url'       => '/config/site/url',
+        'keywords'  => '/config/site/keywords',
+        'basepath'  => '/config/site/basepath',
+        'theme'     => '/config/site/theme',
+        'footer'    => '/config/site/footer',
+        'multilang' => '/config/site/multilang',
+        'editor'    => '/config/site/editor'
+    ];
 
-    // Site
-    private string $title;
-    private string $description;
-    private string $url;
-    private string $keywords;
-    private string $basepath;
-    private string $theme = 'default';
-    private string $footer;
-
-    // Options
-    private string $multilang;
-    private string $editor;
-
-    public function __construct(XMLHandler $xml)
-    {
-        $this->xml = $xml;
-        try {
-            $this->LoadSettings();
-        } catch (Throwable $e) {
-            ErrorConsole::handleException($e);
-        }
-    }
-
-    public function LoadSettings(): void
-    {
-        try {
-            $xml = $this->xml;
-
-            $this->dbhost     = $xml->Child("database", "dbhost");
-            $this->dbuser     = $xml->Child("database", "dbuser");
-            $this->dbpass     = $xml->Child("database", "dbpass");
-            $this->dbname     = $xml->Child("database", "dbname");
-
-            $this->username       = $xml->Child("admin", "username");
-            $this->pass       = $xml->Child("admin", "passwd");
-            $this->email      = $xml->Child("admin", "email");
-            $this->firstname  = $xml->Child("admin", "firstname");
-            $this->lastname   = $xml->Child("admin", "lastname");
-
-            $this->installed  = $xml->Child("system", "installed");
-
-            $this->title      = $xml->Child("site", "title");
-            $this->url        = $xml->Child("site", "url");
-            $this->description= $xml->Child("site", "description");
-            $this->footer= $xml->Child("site", "footer");
-            $this->keywords   = $xml->Child("site", "keywords");
-            $this->basepath   = $xml->Child("site", "basepath");
-            $this->theme   = $xml->Child("site", "theme");
-            $this->multilang  = $xml->Child("site", "multilang");
-            $this->editor     = $xml->Child("site", "editor");
-
-        } catch (Throwable $e) {
-            ErrorConsole::handleException(new Exception("Failed to load configuration in ConfigSettings: " . $e->getMessage(), 0, $e));
-        }
-    }
-
-    // Getters and setters
-
-    public function getDbhost(): string { return $this->dbhost; }
-    public function setDbhost(string $value): void {
-        $this->dbhost = $value;
-        $this->xml->editChild("/config/database/dbhost", $value);
-    }
-
-    public function getDbuser(): string { return $this->dbuser; }
-    public function setDbuser(string $value): void {
-        $this->dbuser = $value;
-        $this->xml->editChild("/config/database/dbuser", $value);
-    }
-
-    public function getDbpass(): string { return $this->dbpass; }
-    public function setDbpass(string $value): void {
-        $this->dbpass = $value;
-        $this->xml->editChild("/config/database/dbpass", $value);
-    }
-
-    public function getDbname(): string { return $this->dbname; }
-    public function setDbname(string $value): void {
-        $this->dbname = $value;
-        $this->xml->editChild("/config/database/dbname", $value);
-    }
-
-    public function getUsername(): string { return $this->username; }
-    public function setUsername(string $value): void {
-        $this->username = $value;
-        $this->xml->editChild("/config/admin/username", $value);
-    }
-
-    public function getPass(): string { return $this->pass; }
-    public function setPass(string $value): void {
-        $this->pass = $value;
-        $this->xml->editChild("/config/admin/passwd", $value);
-    }
-
-    public function getEmail(): string { return $this->email; }
-    public function setEmail(string $value): void {
-        $this->email = $value;
-        $this->xml->editChild("/config/admin/email", $value);
-    }
-
-    public function getInstalled(): string { return $this->installed; }
-    public function setInstalled(string $value): void {
-        $this->installed = $value;
-        $this->xml->editChild("/config/system/installed", $value);
-    }
-
-    public function getTitle(): string { return $this->title; }
-    public function setTitle(string $value): void {
-        $this->title = $value;
-        $this->xml->editChild("/config/site/title", $value);
-    }
-
-    public function getUrl(): string { return $this->url; }
-    public function setUrl(string $value): void {
-        $this->url = $value;
-        $this->xml->editChild("/config/site/url", $value);
-    }
+    private array $data = [];
 
     /**
-     * Return remote basepath http://yourdomain...
-     * @return string
+     * Constructor flexible
+     * @param string|null $xmlFile Ruta del XML de configuración (opcional)
      */
-    public function getBasepath(): string { return $this->basepath; }
-    public function setBasepath(string $value): void {
-        $this->basepath = $value;
-        $this->xml->editChild("/config/site/basepath", $value);
+    public function __construct(?string $xmlFile = null)
+    {
+        // Si se pasa XML, usarlo; si no, fallback a la constante
+        parent::__construct($xmlFile ?? Constant::CONFIG_PATH);
+
+        // Cargar todos los valores del XML
+        $this->loadSettings();
     }
 
-    public function getTheme(): string { return $this->theme; }
-    public function setTheme(string $value): void {
-        $this->theme = $value;
-        $this->xml->editChild("/config/site/theme", $value);
+    public function loadSettings(): void
+    {
+        foreach ($this->fields as $prop => $xpath) {
+            $this->data[$prop] = $this->get($xpath);  // usa get() heredado de XMLHandler
+        }
+    }
+
+    // Magic getter dinámico
+    public function __get(string $name)
+    {
+        return $this->data[$name] ?? null;
+    }
+
+    // Magic setter dinámico
+    public function __set(string $name, string $value)
+    {
+        if (!isset($this->fields[$name])) {
+            throw new Exception("Propiedad no existe: $name");
+        }
+
+        $this->data[$name] = $value;
+        $this->set($this->fields[$name], $value); // usa set() heredado
     }
 
     public function getFullBasepath(): string
@@ -174,33 +85,4 @@ class ConfigSettings
         return str_replace("index.php", "", $segments[0]);
     }
 
-    public function getFirstname(): string { return $this->firstname; }
-    public function setFirstname(string $value): void {
-        $this->firstname = $value;
-        $this->xml->editChild("/config/admin/firstname", $value);
-    }
-
-    public function getLastname(): string { return $this->lastname; }
-    public function setLastname(string $value): void {
-        $this->lastname = $value;
-        $this->xml->editChild("/config/admin/lastname", $value);
-    }
-
-    public function getDescription(): string { return $this->description; }
-    public function setDescription(string $value): void {
-        $this->description = $value;
-        $this->xml->editChild("/config/site/description", $value);
-    }
-
-    public function getKeywords(): string { return $this->keywords; }
-    public function setKeywords(string $value): void {
-        $this->keywords = $value;
-        $this->xml->editChild("/config/site/keywords", $value);
-    }
-
-    public function getFooter(): string { return $this->footer; }
-    public function setFooter(string $value): void {
-        $this->footer = $value;
-        $this->xml->editChild("/config/site/footer", $value);
-    }
 }

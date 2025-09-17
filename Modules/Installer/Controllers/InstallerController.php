@@ -73,6 +73,7 @@ class InstallerController extends Controller
     #[Get('progressBar')]
     public function getProgressBar()
     {
+        $this->model->setInstalled();
         $params = $this->installerViewModel->setInstallerParams();
         return $this->render("installer/progressBar.html", $params, false);
     }

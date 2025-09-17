@@ -23,7 +23,7 @@ class Redirect
     {
         $config = self::getConfig();
 
-        $basepath = rtrim($config->getBasepath(), '/');
+        $basepath = rtrim($config->basepath, '/');
         $url = ltrim($url, '/');
         $combinedUrl = $basepath . '/' . $url;
         $normalizedUrl = preg_replace('#(?<!:)//+#', '/', $combinedUrl);

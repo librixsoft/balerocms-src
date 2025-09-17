@@ -37,16 +37,16 @@ class View
     public function getDefaultParams(array $params = []): array
     {
         return array_merge([
-            'title'       => $this->configSettings->getTitle(),
-            'url'         => $this->configSettings->getUrl(),
+            'title'       => $this->configSettings->title,
+            'url'         => $this->configSettings->url,
             'page'        => defined('_PAGE') ? _PAGE : '',
-            'keywords'    => $this->configSettings->getKeywords(),
-            'description' => $this->configSettings->getDescription(),
-            'basepath'    => $this->configSettings->getBasepath(),
+            'keywords'    => $this->configSettings->keywords,
+            'description' => $this->configSettings->description,
+            'basepath'    => $this->configSettings->basepath,
             'year'        => date('Y'),
-            'footer'      => $this->configSettings->getFooter(),
-            'theme'       => $this->configSettings->getTheme(),
-            'assets'      => "/resources/views/themes/" . $this->configSettings->getTheme() . "/assets/",
+            'footer'      => $this->configSettings->footer,
+            'theme'       => $this->configSettings->theme,
+            'assets'      => "/resources/views/themes/" . $this->configSettings->theme . "/assets/",
         ], $params);
     }
 
@@ -64,7 +64,7 @@ class View
             // Determinar path final según si se usa theme o no
             if ($useTheme) {
                 // Carpeta del theme activo
-                $themeDir = $this->baseDir . "themes/" . $this->configSettings->getTheme() . "/";
+                $themeDir = $this->baseDir . "themes/" . $this->configSettings->theme . "/";
                 $templateFullPath = $themeDir . ltrim($templatePath, '/');
 
                 // Fallback a default si no existe en theme activo

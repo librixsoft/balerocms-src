@@ -107,11 +107,11 @@ class AdminModel extends Model
 
     public function updateSettings(array $data): void
     {
-        $this->configSettings->setTitle($data['title'] ?? '');
-        $this->configSettings->setDescription($data['description'] ?? '');
-        $this->configSettings->setKeywords($data['keywords'] ?? '');
-        $this->configSettings->setTheme($data['theme'] ?? '');
-        $this->configSettings->setFooter($data['footer'] ?? '');
+        $this->configSettings->title = $data['title'] ?? '';
+        $this->configSettings->description = $data['description'] ?? '';
+        $this->configSettings->keywords = $data['keywords'] ?? '';
+        $this->configSettings->theme = $data['theme'] ?? '';
+        $this->configSettings->footer = $data['footer'] ?? '';
     }
 
     public function deletePage(int $id): bool

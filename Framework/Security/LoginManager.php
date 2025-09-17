@@ -39,10 +39,10 @@ class LoginManager
             $usr = $this->request->post('usr', '');
             $pwd = $this->request->post('pwd', '');
 
-            $verify = Hash::verify_hash($pwd, $this->config->getPass());
+            $verify = Hash::verify_hash($pwd, $this->config->pass);
 
-            if ($usr === $this->config->getUsername() && $verify) {
-                $value = base64_encode($usr . ':' . $this->config->getPass());
+            if ($usr === $this->config->username && $verify) {
+                $value = base64_encode($usr . ':' . $this->config->pass);
                 $this->setCookie('admin_god_balero', $value, 86400); // 1 día
                 return true;
             }
@@ -59,7 +59,7 @@ class LoginManager
             if ($decoded !== false && str_contains($decoded, ':')) {
                 [$cookieUsr, $cookiePwd] = explode(':', $decoded, 2);
 
-                if ($cookieUsr === $this->config->getUsername() && $cookiePwd === $this->config->getPass()) {
+                if ($cookieUsr === $this->config->username && $cookiePwd === $this->config->pass) {
                     return true;
                 }
             }
