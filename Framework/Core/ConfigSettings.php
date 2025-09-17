@@ -5,7 +5,7 @@ namespace Framework\Core;
 use Framework\Static\Constant;
 use Exception;
 
-class ConfigSettings extends XMLHandler
+class ConfigSettings
 {
     private array $fields = [
         // Database
@@ -38,6 +38,8 @@ class ConfigSettings extends XMLHandler
 
     private array $data = [];
 
+    private XMLHandler $xmlHandler;
+
     /**
      * Constructor flexible
      * @param string|null $xmlFile Ruta del XML de configuración (opcional)
@@ -45,7 +47,7 @@ class ConfigSettings extends XMLHandler
     public function __construct(?string $xmlFile = null)
     {
         // Si se pasa XML, usarlo; si no, fallback a la constante
-        parent::__construct($xmlFile ?? Constant::CONFIG_PATH);
+        $this->xmlHandler = new XMLHandler($xmlFile ?? Constant::CONFIG_PATH);
 
         // Cargar todos los valores del XML
         $this->loadSettings();
@@ -54,7 +56,7 @@ class ConfigSettings extends XMLHandler
     public function loadSettings(): void
     {
         foreach ($this->fields as $prop => $xpath) {
-            $this->data[$prop] = $this->get($xpath);  // usa get() heredado de XMLHandler
+            $this->data[$prop] = $this->xmlHandler->get($xpath);
         }
     }
 
@@ -72,7 +74,7 @@ class ConfigSettings extends XMLHandler
         }
 
         $this->data[$name] = $value;
-        $this->set($this->fields[$name], $value); // usa set() heredado
+        $this->xmlHandler->set($this->fields[$name], $value);
     }
 
     public function getFullBasepath(): string
@@ -85,4 +87,11 @@ class ConfigSettings extends XMLHandler
         return str_replace("index.php", "", $segments[0]);
     }
 
+    /**
+     * Guardar cambios en el XML
+     */
+    public function save(): void
+    {
+        $this->xmlHandler->save();
+    }
 }
