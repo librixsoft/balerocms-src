@@ -22,6 +22,7 @@ class Controller
     /****************************
      * Serán heredadas al controller hijo
      ***************************/
+    // TODO: Implements autowiring
     protected View $view;
     protected RequestHelper $request;
     protected ConfigSettings $configSettings;
@@ -33,6 +34,7 @@ class Controller
      */
     public function initControllerAndInject(): void
     {
+        // TODO: Implements autowiring
         $this->request = Context::get(RequestHelper::class);
         $this->view = Context::get(View::class);
         $this->configSettings = Context::get(ConfigSettings::class);
