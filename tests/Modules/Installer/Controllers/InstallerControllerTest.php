@@ -136,6 +136,60 @@ class InstallerControllerTest extends TestCase
         Flash::delete('errors');
     }
 
+    /**
+     * Testea InstallerController::postInstall con datos válidos
+     */
+    public function testPostInstallWithValidData()
+    {
+        // Mock del RequestHelper para simular POST
+        $requestMock = $this->createMock(\Framework\Http\RequestHelper::class);
+        $requestMock->method('post')->willReturnMap([
+            ['dbhost', null, 'localhost'],
+            ['dbuser', null, 'root'],
+            ['dbpass', null, ''],
+            ['dbname', null, 'balerocms'],
+            ['title', null, 'Mi sitio'],
+            ['url', null, 'http://localhost'],
+            ['description', null, 'Descripción'],
+            ['keywords', null, 'cms,php'],
+            ['basepath', null, '/'],
+            ['username', null, 'anibal'],
+            ['passwd', null, '123456'],
+            ['passwd2', null, '123456'],
+            ['firstname', null, 'Anibal'],
+            ['lastname', null, 'Gomez'],
+            ['email', null, 'anibal@example.com'],
+        ]);
+
+        // Mock del ConfigSettings
+        $configMock = $this->createMock(\Framework\Core\ConfigSettings::class);
+
+        // Mock de RedirectService y set en la fachada
+        $redirectMock = $this->createMock(\Framework\Services\RedirectService::class);
+        $redirectMock->expects($this->once())
+            ->method('to')
+            ->with('/installer/', true);
+
+        \Framework\Static\Redirect::setInstance($redirectMock);
+
+        // Inyectar mocks en el controller mediante reflection
+        $refController = new \ReflectionObject($this->controller);
+
+        $propRequest = $refController->getProperty('request');
+        $propRequest->setAccessible(true);
+        $propRequest->setValue($this->controller, $requestMock);
+
+        $propConfig = $refController->getProperty('configSettings');
+        $propConfig->setAccessible(true);
+        $propConfig->setValue($this->controller, $configMock);
+
+        // Llamada al método postInstall
+        $this->controller->postInstall();
+
+        // Comprobamos que Flash no tenga errores
+        $errors = \Framework\Static\Flash::get('errors', []);
+        $this->assertEmpty($errors);
+    }
 
 
 }
