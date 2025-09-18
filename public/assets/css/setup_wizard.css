@@ -46,3 +46,42 @@ body {
     cursor: help;
     color: #6c757d; /* gris bootstrap */
 }
+
+.hd-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.hd-btn:hover {
+    transform: translateY(-5px);
+}
+
+.hd-body {
+    width: 180px;
+    height: 160px;
+    background: #f5f5f5;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column; /* icono arriba, texto abajo */
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+}
+
+.hd-body i {
+    font-size: 4rem;
+    color: #007aff;
+}
+
+.hd-text {
+    margin-top: 8px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #888;          /* gris más suave */
+    text-align: center;
+}

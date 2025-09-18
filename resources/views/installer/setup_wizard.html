@@ -13,9 +13,6 @@
   <!-- Font Awesome 6 -->
   <link href="public/assets/css/all.min.css" rel="stylesheet">
 
-  <!-- Custom styles -->
-  <link href="public/assets/css/styles.css" rel="stylesheet">
-
   <!-- bs-stepper CSS -->
   <link href="public/assets/css/bs-stepper.min.css" rel="stylesheet">
 
@@ -38,18 +35,15 @@
   </div>
 
   <%-- @if fields_valid AND db_ok AND mod_rewrite_ok AND config_writable -->
-  <!-- Card Bienvenida -->
-  <div class="card mb-4">
-    <div class="card-header">
-      <h5 class="mb-0">{installer.finish}</h5>
-    </div>
-    <div class="card-body">
-      <form method="POST" action="installer/progressBar">
-        <button type="submit" class="btn btn-success">
-          <i class="fas fa-download"></i> {btn_install}
-        </button>
-      </form>
-    </div>
+  <div class="text-center my-5">
+    <form method="POST" action="installer/progressBar">
+      <button type="submit" class="hd-btn" aria-label="{btn_install}">
+        <div class="hd-body">
+          <i class="fas fa-download"></i>
+          <div class="hd-text">{btn_install}</div>
+        </div>
+      </button>
+    </form>
   </div>
   <%-- @endif -->
 
