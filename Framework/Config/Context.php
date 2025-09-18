@@ -34,6 +34,8 @@ use Framework\Rendering\ProcessorFlattenParams;
 use Framework\Rendering\ProcessorForEach;
 use Framework\Core\ConfigSettings;
 use Framework\Static\Constant;
+use Framework\Static\Redirect;
+use Framework\Services\RedirectService;
 
 class Context
 {
@@ -106,6 +108,16 @@ class Context
             ConfigSettings::class,
             new ConfigSettings(Constant::CONFIG_PATH)
         );
+
+        $config = new ConfigSettings(Constant::CONFIG_PATH);
+        $container->registerSingletonInstance(ConfigSettings::class, $config);
+
+        /**
+         * Inicializar RedirectService y asociarlo a la fachada Redirect
+         * Esto reemplaza la necesidad de tener RedirectService en Context.
+         */
+        $redirectService = new RedirectService($config);
+        Redirect::setInstance($redirectService);
 
     }
 

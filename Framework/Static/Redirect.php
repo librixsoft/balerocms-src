@@ -1,45 +1,24 @@
 <?php
 
-/**
- * Balero CMS
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 namespace Framework\Static;
 
-use Framework\Config\Context;
-use Framework\Core\ConfigSettings;
+use Framework\Services\RedirectService;
 
 class Redirect
 {
+    protected static ?RedirectService $instance = null;
 
-    /**
-     * Redirige a una URL relativa al basepath.
-     *
-     * @param string $url Ruta relativa (ej. 'admin/dashboard')
-     */
-    public static function to(string $url): void
+    public static function setInstance(RedirectService $service): void
     {
-        $config = self::getConfig();
-
-        $basepath = rtrim($config->basepath, '/');
-        $url = ltrim($url, '/');
-        $combinedUrl = $basepath . '/' . $url;
-        $normalizedUrl = preg_replace('#(?<!:)//+#', '/', $combinedUrl);
-
-        header("Location: " . $normalizedUrl);
-        exit;
+        self::$instance = $service;
     }
 
-    private static function getConfig(): ConfigSettings
+    public static function to(string $url): void
     {
-        $config = Context::get(ConfigSettings::class);
-
-        if (!$config) {
-            throw new \RuntimeException('No se pudo acceder a ConfigSettings desde Redirect.');
+        if (!self::$instance) {
+            throw new \RuntimeException("Redirect instance not set.");
         }
 
-        return $config;
+        self::$instance->to($url, true);
     }
 }
