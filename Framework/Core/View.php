@@ -51,6 +51,16 @@ class View
     }
 
     /**
+     * 🔹 Nuevo método global para procesar cualquier texto dinámico
+     *     (ej: contenido de posts con placeholders como {year}, {title}, etc.)
+     */
+    public function parsePlaceholders(string $text, array $extraParams = []): string
+    {
+        $params = $this->getDefaultParams($extraParams);
+        return $this->templateEngine->processTemplate($text, $params);
+    }
+
+    /**
      * Renderiza una plantilla.
      *
      * @param string $templatePath Path relativo dentro de views o themes.
@@ -63,7 +73,6 @@ class View
         try {
             // Determinar path final según si se usa theme o no
             if ($useTheme) {
-                // Carpeta del theme activo
                 $themeDir = $this->baseDir . "themes/" . $this->configSettings->theme . "/";
                 $templateFullPath = $themeDir . ltrim($templatePath, '/');
 
@@ -95,7 +104,15 @@ class View
             $params = $this->getDefaultParams($params);
 
             // Procesar plantilla con template engine
-            return $this->templateEngine->processTemplate($content, $params);
+            $output = $this->templateEngine->processTemplate($content, $params);
+
+            /**
+             * 🔹 Nuevo: Pasar el resultado final otra vez por parsePlaceholders
+             *     Esto asegura que si hay placeholders dentro del contenido dinámico
+             *     (ej: posts guardados con {year}), también se reemplazan.
+             */
+            return $this->parsePlaceholders($output, $params);
+
         } catch (\Throwable $e) {
             ErrorConsole::handleException($e);
             return '';
