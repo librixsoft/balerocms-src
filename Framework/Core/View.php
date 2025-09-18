@@ -39,14 +39,12 @@ class View
         return array_merge([
             'title'       => $this->configSettings->title,
             'url'         => $this->configSettings->url,
-            'page'        => defined('_PAGE') ? _PAGE : '',
             'keywords'    => $this->configSettings->keywords,
             'description' => $this->configSettings->description,
             'basepath'    => $this->configSettings->basepath,
             'year'        => date('Y'),
             'footer'      => $this->configSettings->footer,
             'theme'       => $this->configSettings->theme,
-            'assets'      => "/resources/views/themes/" . $this->configSettings->theme . "/assets/",
         ], $params);
     }
 
