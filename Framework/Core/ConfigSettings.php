@@ -9,54 +9,54 @@ class ConfigSettings
 {
     private array $fields = [
         // Database
-        'dbhost' => '/config/database/dbhost',
-        'dbuser' => '/config/database/dbuser',
-        'dbpass' => '/config/database/dbpass',
-        'dbname' => '/config/database/dbname',
+        'dbhost'    => '/config/database/dbhost',
+        'dbuser'    => '/config/database/dbuser',
+        'dbpass'    => '/config/database/dbpass',
+        'dbname'    => '/config/database/dbname',
 
         // Admin
-        'username' => '/config/admin/username',
-        'pass'     => '/config/admin/passwd',
-        'email'    => '/config/admin/email',
-        'firstname'=> '/config/admin/firstname',
-        'lastname' => '/config/admin/lastname',
+        'username'  => '/config/admin/username',
+        'pass'      => '/config/admin/passwd',
+        'email'     => '/config/admin/email',
+        'firstname' => '/config/admin/firstname',
+        'lastname'  => '/config/admin/lastname',
 
         // System
-        'installed'=> '/config/system/installed',
+        'installed' => '/config/system/installed',
 
         // Site
-        'title'     => '/config/site/title',
+        'title'      => '/config/site/title',
         'description'=> '/config/site/description',
-        'url'       => '/config/site/url',
-        'keywords'  => '/config/site/keywords',
-        'basepath'  => '/config/site/basepath',
-        'theme'     => '/config/site/theme',
-        'footer'    => '/config/site/footer',
-        'multilang' => '/config/site/multilang',
-        'editor'    => '/config/site/editor'
+        'url'        => '/config/site/url',
+        'keywords'   => '/config/site/keywords',
+        'basepath'   => '/config/site/basepath',
+        'theme'      => '/config/site/theme',
+        'footer'     => '/config/site/footer',
+        'multilang'  => '/config/site/multilang',
+        'editor'     => '/config/site/editor'
     ];
 
     private array $data = [];
 
-    private XMLHandler $xmlHandler;
+    private JSONHandler $handler;
 
     /**
      * Constructor flexible
-     * @param string|null $xmlFile Ruta del XML de configuración (opcional)
+     * @param string|null $file Ruta del JSON de configuración (opcional)
      */
-    public function __construct(?string $xmlFile = null)
+    public function __construct(?string $file = null)
     {
-        // Si se pasa XML, usarlo; si no, fallback a la constante
-        $this->xmlHandler = new XMLHandler($xmlFile ?? Constant::CONFIG_PATH);
+        // Usar JSONHandler como handler por defecto
+        $this->handler = new JSONHandler($file ?? Constant::CONFIG_PATH);
 
-        // Cargar todos los valores del XML
+        // Cargar todos los valores del JSON
         $this->loadSettings();
     }
 
     public function loadSettings(): void
     {
-        foreach ($this->fields as $prop => $xpath) {
-            $this->data[$prop] = $this->xmlHandler->get($xpath);
+        foreach ($this->fields as $prop => $path) {
+            $this->data[$prop] = $this->handler->get($path);
         }
     }
 
@@ -74,7 +74,7 @@ class ConfigSettings
         }
 
         $this->data[$name] = $value;
-        $this->xmlHandler->set($this->fields[$name], $value);
+        $this->handler->set($this->fields[$name], $value);
     }
 
     public function getFullBasepath(): string
@@ -87,11 +87,4 @@ class ConfigSettings
         return str_replace("index.php", "", $segments[0]);
     }
 
-    /**
-     * Guardar cambios en el XML
-     */
-    public function save(): void
-    {
-        $this->xmlHandler->save();
-    }
 }

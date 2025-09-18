@@ -1,84 +1,83 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use Framework\Core\XMLHandler;
+use Framework\Core\JSONHandler;
 use Framework\Core\ConfigSettings;
 
 final class ConfigTest extends TestCase
 {
-    private string $xmlFile;
+    private string $jsonFile;
 
     public function setUp(): void
     {
-        // Ruta temporal para el XML de prueba
-        $this->xmlFile = __DIR__ . '/../../resources/config/test_configsettings.xml';
+        // Ruta temporal para el JSON de prueba
+        $this->jsonFile = __DIR__ . '/../../resources/config/test_configsettings.json';
 
-        // Creamos un XML de prueba dinámicamente
-        $xmlContent = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-    <database>
-        <dbhost>localhost</dbhost>
-        <dbuser>root</dbuser>
-        <dbpass>1234</dbpass>
-        <dbname>cms</dbname>
-    </database>
-    <admin>
-        <username>admin</username>
-        <passwd>admin123</passwd>
-        <email>admin@test.com</email>
-        <firstname>Anibal</firstname>
-        <lastname>Gomez</lastname>
-    </admin>
-    <system>
-        <installed>1</installed>
-    </system>
-    <site>
-        <title>Mi CMS</title>
-        <description>Descripción del sitio</description>
-        <url>http://localhost/</url>
-        <keywords>cms,php</keywords>
-        <basepath>/</basepath>
-        <theme>default</theme>
-        <footer>© 2025 Mi CMS</footer>
-        <multilang>0</multilang>
-        <editor>tiny</editor>
-    </site>
-</config>
-XML;
+        // Creamos un JSON de prueba dinámicamente
+        $jsonContent = [
+            'config' => [
+                'database' => [
+                    'dbhost' => 'localhost',
+                    'dbuser' => 'root',
+                    'dbpass' => '1234',
+                    'dbname' => 'cms',
+                ],
+                'admin' => [
+                    'username'  => 'admin',
+                    'pass'      => 'admin123',
+                    'email'     => 'admin@test.com',
+                    'firstname' => 'Anibal',
+                    'lastname'  => 'Gomez',
+                ],
+                'system' => [
+                    'installed' => '1'
+                ],
+                'site' => [
+                    'title'      => 'Mi CMS',
+                    'description'=> 'Descripción del sitio',
+                    'url'        => 'http://localhost/',
+                    'keywords'   => 'cms,php',
+                    'basepath'   => '/',
+                    'theme'      => 'default',
+                    'footer'     => '© 2025 Mi CMS',
+                    'multilang'  => '0',
+                    'editor'     => 'tiny'
+                ]
+            ]
+        ];
 
         // Crear directorio si no existe
-        if (!is_dir(dirname($this->xmlFile))) {
-            mkdir(dirname($this->xmlFile), 0777, true);
+        if (!is_dir(dirname($this->jsonFile))) {
+            mkdir(dirname($this->jsonFile), 0777, true);
         }
 
-        file_put_contents($this->xmlFile, $xmlContent);
+        file_put_contents($this->jsonFile, json_encode($jsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 
     public function tearDown(): void
     {
-        if (file_exists($this->xmlFile)) {
-            unlink($this->xmlFile);
+        if (file_exists($this->jsonFile)) {
+            unlink($this->jsonFile);
         }
     }
 
-    public function testXMLHandlerGetAndSet(): void
+    public function testJSONHandlerGetAndSet(): void
     {
-        $xml = new XMLHandler($this->xmlFile);
+        $json = new JSONHandler($this->jsonFile);
 
         // Leer valor
-        $dbHost = $xml->get('/config/database/dbhost');
+        $dbHost = $json->get('/config/database/dbhost');
         $this->assertEquals('localhost', $dbHost);
 
         // Modificar valor
-        $xml->set('/config/database/dbhost', '127.0.0.1');
-        $dbHostModified = $xml->get('/config/database/dbhost');
+        $json->set('/config/database/dbhost', '127.0.0.1');
+        $dbHostModified = $json->get('/config/database/dbhost');
         $this->assertEquals('127.0.0.1', $dbHostModified);
     }
 
     public function testConfigSettingsGetAndSet(): void
     {
-        // Pasamos la ruta del XML de prueba al constructor
-        $config = new ConfigSettings($this->xmlFile);
+        // Pasamos la ruta del JSON de prueba al constructor
+        $config = new ConfigSettings($this->jsonFile);
 
         // Comprobamos lectura inicial
         $this->assertEquals('localhost', $config->dbhost);
@@ -95,18 +94,18 @@ XML;
         $this->assertEquals('darkmode', $config->theme);
         $this->assertEquals('superadmin', $config->username);
 
-        // Validar que también se modificó en el XML
-        $xml = new XMLHandler($this->xmlFile);
-        $this->assertEquals('192.168.0.1', $xml->get('/config/database/dbhost'));
-        $this->assertEquals('darkmode', $xml->get('/config/site/theme'));
-        $this->assertEquals('superadmin', $xml->get('/config/admin/username'));
+        // Validar que también se modificó en el JSON
+        $json = new JSONHandler($this->jsonFile);
+        $this->assertEquals('192.168.0.1', $json->get('/config/database/dbhost'));
+        $this->assertEquals('darkmode', $json->get('/config/site/theme'));
+        $this->assertEquals('superadmin', $json->get('/config/admin/username'));
     }
 
     public function testInvalidPropertyThrowsException(): void
     {
         $this->expectException(\Exception::class);
 
-        $config = new ConfigSettings($this->xmlFile);
+        $config = new ConfigSettings($this->jsonFile);
         $config->nonexistent = 'value'; // debería lanzar Exception
     }
 }

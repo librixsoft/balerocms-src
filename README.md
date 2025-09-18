@@ -13,7 +13,7 @@ $ unzip balero-cms.zip -d /www
 Set write permissions to config file.
 
 ```bash
-$ chmod +w ./balerocms-src/resources/config/balero.config.xml
+$ chmod +w ./balerocms-src/resources/config/balero.config.json
 ```
 
 Go to: [http://localhost/balerocms-src/](http://localhost/balerocms-src/) and installer will install for you.
