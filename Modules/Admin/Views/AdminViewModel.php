@@ -34,6 +34,8 @@ class AdminViewModel
     {
         $viewModel = $this->createViewModel();
 
+        $currentLang = $_SESSION['lang'] ?? $this->config->language ?? 'en';
+
         $viewModel->addAll([
             'core_version'   => _CORE_VERSION,
             'defaultTheme'   => $this->config->theme,
@@ -45,6 +47,10 @@ class AdminViewModel
             'lbl_keywords'  => 'Keywords',
             'lbl_description' => 'Description',
             'lbl_footer' => 'Footer',
+
+            'lbl_language'    => 'Default System Language',
+            'languages'       => ['en' => 'English', 'es' => 'Español'],
+            'defaultLanguage' => $currentLang,
 
             'txt_title'       => $this->config->title,
             'txt_keywords'    => $this->config->keywords,

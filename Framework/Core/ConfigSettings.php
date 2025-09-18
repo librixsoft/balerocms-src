@@ -25,6 +25,7 @@ class ConfigSettings
         'installed' => '/config/system/installed',
 
         // Site
+        'language'      => '/config/site/language',
         'title'      => '/config/site/title',
         'description'=> '/config/site/description',
         'url'        => '/config/site/url',

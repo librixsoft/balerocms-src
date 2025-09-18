@@ -17,6 +17,7 @@
             "installed": "no"
         },
         "site": {
+            "language": "en",
             "title": "Balero CMS",
             "url": "http:\/\/www.balerocms.com\/",
             "description": "Description...",
