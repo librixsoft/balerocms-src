@@ -8,7 +8,6 @@
 
 namespace Framework\Core;
 
-use Framework\Config\Context;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
@@ -22,10 +21,16 @@ class Controller
     /****************************
      * Serán heredadas al controller hijo
      ***************************/
-    // TODO: Implements autowiring
+    #[Inject]
     protected View $view;
+
+    #[Inject]
     protected RequestHelper $request;
+
+    #[Inject]
     protected ConfigSettings $configSettings;
+
+    #[Inject]
     protected LoginManager $loginManager;
 
 
@@ -34,12 +39,6 @@ class Controller
      */
     public function initControllerAndInject(): void
     {
-        // TODO: Implements autowiring
-        $this->request = Context::get(RequestHelper::class);
-        $this->view = Context::get(View::class);
-        $this->configSettings = Context::get(ConfigSettings::class);
-        $this->loginManager = Context::get(LoginManager::class);
-
         $this->run();
     }
 
