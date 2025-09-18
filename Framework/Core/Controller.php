@@ -132,16 +132,8 @@ class Controller
 
     protected function render(string $template, array $params = [], bool $useTheme = true): string
     {
-        $common = [
-            'title' => $this->configSettings->title,
-            'keywords' => $this->configSettings->keywords,
-            'description' => $this->configSettings->description,
-            'basepath' => $this->configSettings->basepath,
-        ];
-
         $langParams = LangSelector::getLanguageParams($this->request);
-
-        return $this->view->render($template, array_merge($common, $langParams, $params), $useTheme);
+        return $this->view->render($template, array_merge($langParams, $params), $useTheme);
     }
 
 
