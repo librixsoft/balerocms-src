@@ -51,7 +51,7 @@ class View
     }
 
     /**
-     * 🔹 Nuevo método global para procesar cualquier texto dinámico
+     * Método global para procesar cualquier texto dinámico
      *     (ej: contenido de posts con placeholders como {year}, {title}, etc.)
      */
     public function parsePlaceholders(string $text, array $extraParams = []): string
@@ -107,7 +107,7 @@ class View
             $output = $this->templateEngine->processTemplate($content, $params);
 
             /**
-             * 🔹 Nuevo: Pasar el resultado final otra vez por parsePlaceholders
+             * Pasar el resultado final otra vez por parsePlaceholders
              *     Esto asegura que si hay placeholders dentro del contenido dinámico
              *     (ej: posts guardados con {year}), también se reemplazan.
              */
