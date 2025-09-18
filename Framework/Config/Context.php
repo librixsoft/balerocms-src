@@ -129,8 +129,9 @@ class Context
      * $processor = Context::get(ProcessorForEach::class);
      * ```
      *
-     * @param string $class Clase del servicio a obtener
-     * @return object Instancia del servicio solicitado
+     * @template T
+     * @param class-string<T> $class
+     * @return T
      */
     public static function get(string $class): object
     {

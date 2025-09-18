@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
 namespace Framework\Core;
 
+use Framework\Config\Context;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
@@ -16,53 +17,38 @@ use Framework\I18n\LangSelector;
 
 class Controller
 {
-
-    /**
-     * Constante que define el nombre del parámetro secundario index.php?module=module&target={target}
-     */
     private const PARAM_TARGET = 'target';
 
     /****************************
-     * Seran heredado al controller
-     * hijo no se necesita redeclarar
+     * Serán heredadas al controller hijo
      ***************************/
     protected View $view;
     protected RequestHelper $request;
     protected ConfigSettings $configSettings;
     protected LoginManager $loginManager;
 
+
     /**
-     * Called from Boot::loadController()
-     * @param RequestHelper $request
-     * @param View $view
+     * Construye la plantilla base de los controllers de Balero CMS
      */
-    public function initControllerAndInject(
-        RequestHelper $request,
-        View $view,
-        ConfigSettings $configSettings,
-        LoginManager $loginManager
-    )
+    public function initControllerAndInject(): void
     {
-        $this->request = $request;
-        $this->view = $view;
-        $this->configSettings = $configSettings;
-        $this->loginManager = $loginManager;
+        $this->request = Context::get(RequestHelper::class);
+        $this->view = Context::get(View::class);
+        $this->configSettings = Context::get(ConfigSettings::class);
+        $this->loginManager = Context::get(LoginManager::class);
 
         $this->run();
     }
 
     private function initBasePath(): void
     {
-        // Obtener basepath y limpiar espacios o saltos de línea
-        $basepath = trim($this->configSettings->basepath ?? ''); // TODO: Paasar a todo el xml read
-
+        $basepath = trim($this->configSettings->basepath ?? '');
         if ($basepath === '') {
             $basepath = $this->configSettings->getFullBasepath();
         }
-
         $this->configSettings->basepath = $basepath;
     }
-
 
     public function run(): void
     {
@@ -74,14 +60,11 @@ class Controller
         $reflection = new \ReflectionClass($this);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 
-        // Leer atributo Auth a nivel de clase
         $classAuthAttr = $reflection->getAttributes(\Framework\Http\Auth::class);
         $classAuth = !empty($classAuthAttr) ? $classAuthAttr[0]->newInstance() : null;
 
         foreach ($methods as $method) {
-            $attributes = $method->getAttributes();
-
-            foreach ($attributes as $attribute) {
+            foreach ($method->getAttributes() as $attribute) {
                 $attrName = $attribute->getName();
                 $instance = $attribute->newInstance();
 
@@ -89,7 +72,6 @@ class Controller
                     ($attrName === Get::class && $httpMethod === 'GET') ||
                     ($attrName === Post::class && $httpMethod === 'POST')
                 ) {
-                    // $target = index.php?controller=...&target=$method
                     $routePattern = trim($instance->target, '/');
                     $regex = preg_replace('#\{([^}]+)\}#', '(?P<$1>[^/]+)', $routePattern);
                     $regex = '#^' . $regex . '$#';
@@ -97,7 +79,6 @@ class Controller
                     if (preg_match($regex, $requestedTarget, $matches)) {
                         $params = array_filter($matches, fn($key) => !is_int($key), ARRAY_FILTER_USE_KEY);
 
-                        // Chequeo Auth a nivel de método
                         $methodAuthAttr = $method->getAttributes(\Framework\Http\Auth::class);
                         $auth = !empty($methodAuthAttr) ? $methodAuthAttr[0]->newInstance() : $classAuth;
 
@@ -112,7 +93,9 @@ class Controller
             }
         }
 
-        ErrorConsole::handleException(new \RuntimeException("Ruta no encontrada: '{$requestedTarget}'"));
+        ErrorConsole::handleException(
+            new \RuntimeException("Ruta no encontrada: '{$requestedTarget}'")
+        );
     }
 
     private function runMethod(string $methodName, array $params = []): void
@@ -135,7 +118,5 @@ class Controller
         $langParams = LangSelector::getLanguageParams($this->request);
         return $this->view->render($template, array_merge($langParams, $params), $useTheme);
     }
-
-
 
 }

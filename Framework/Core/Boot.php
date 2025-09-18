@@ -86,35 +86,22 @@ class Boot
     public static function loadController(string $controllerClass): void
     {
         try {
-            // Instancia el controlador con DI en el constructor
+            // Instancia el controller usando DI automática en el constructor
             $instance = self::instantiateClass($controllerClass);
 
-            // Evitar que tener que llamar __parent:: dentro de los modulos/controllers
-            // Si el controlador tiene método initControllerAndInject -> inyectar dependencias y ejecutar
+            // Ejecuta lógica post-constructor opcional
             if (method_exists($instance, 'initControllerAndInject')) {
-                $method = new \ReflectionMethod($instance, 'initControllerAndInject');
-                $parameters = $method->getParameters();
-                $dependencies = [];
-
-                foreach ($parameters as $param) {
-                    $type = $param->getType();
-
-                    if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
-                        throw new \RuntimeException(
-                            "No se puede resolver el parámetro \${$param->getName()} en {$controllerClass}::initControllerAndInject()"
-                        );
-                    }
-
-                    // Reutiliza la DI del contenedor
-                    $dependencies[] = self::instantiateClass($type->getName());
-                }
-
-                $method->invokeArgs($instance, $dependencies);
+                // initControllerAndInject no recibe parámetros; obtiene dependencias desde Context
+                $instance->initControllerAndInject();
             }
 
         } catch (\Throwable $e) {
             ErrorConsole::handleException(
-                new \Exception("Error cargando controlador '$controllerClass': " . $e->getMessage(), 0, $e)
+                new \Exception(
+                    "Error cargando controller '$controllerClass': " . $e->getMessage(),
+                    0,
+                    $e
+                )
             );
             exit;
         }
