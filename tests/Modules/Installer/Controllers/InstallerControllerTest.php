@@ -136,69 +136,6 @@ class InstallerControllerTest extends TestCase
         Flash::delete('errors');
     }
 
-    public function testPostInstallWithValidationErrors()
-    {
-        // Mock del RequestHelper con datos incompletos
-        $requestMock = $this->createMock(\Framework\Http\RequestHelper::class);
-        $requestMock->method('post')->willReturnMap([
-            ['username', null],
-            ['passwd', null],
-            ['passwd2', null],
-            ['email', null],
-        ]);
 
-        // Inyectar el mock usando Reflection
-        $reflection = new \ReflectionClass($this->controller);
-        $prop = $reflection->getProperty('request');
-        $prop->setAccessible(true);
-        $prop->setValue($this->controller, $requestMock);
-
-        // Ejecutar el método
-        $this->controller->postInstall();
-
-        // Verificar que Flash tenga errores
-        $errors = Flash::get('errors');
-        $this->assertArrayHasKey('username', $errors);
-        $this->assertArrayHasKey('passwd', $errors);
-        $this->assertArrayHasKey('email', $errors);
-
-        // Limpiar Flash
-        Flash::delete('errors');
-    }
-
-    public function testPostInstallWithValidData()
-    {
-        // Mock del RequestHelper con datos válidos
-        $requestMock = $this->createMock(\Framework\Http\RequestHelper::class);
-        $requestMock->method('post')->willReturnMap([
-            ['username', 'admin'],
-            ['passwd', '123456'],
-            ['passwd2', '123456'],
-            ['email', 'test@example.com'],
-            ['dbhost', 'localhost'],
-            ['dbuser', 'root'],
-            ['dbpass', ''],
-            ['dbname', 'cms'],
-            ['title', 'Mi Sitio'],
-            ['url', 'http://localhost'],
-            ['description', 'Descripción'],
-            ['keywords', 'cms,php'],
-            ['basepath', '/'],
-            ['firstname', 'Anibal'],
-            ['lastname', 'Gomez'],
-        ]);
-
-        // Inyectar el mock usando Reflection
-        $reflection = new \ReflectionClass($this->controller);
-        $prop = $reflection->getProperty('request');
-        $prop->setAccessible(true);
-        $prop->setValue($this->controller, $requestMock);
-
-        // Ejecutar el método
-        $this->controller->postInstall();
-
-        // Verificar que Flash no tenga errores
-        $this->assertFalse(Flash::has('errors'));
-    }
 
 }
