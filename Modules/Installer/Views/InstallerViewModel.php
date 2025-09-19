@@ -25,7 +25,7 @@ class InstallerViewModel
         $this->viewModel->addAll([
             // Etiquetas
             'lbl_dbconfig' => 'Database Configuration',
-            'lbl_dbhost' => 'Database Host',
+            'lbl_dbhost' => __('installer.dbhost'),
             'lbl_dbusername' => 'Database User',
             'lbl_dbpass' => 'Database Password',
             'lbl_dbname' => 'Database Name',
