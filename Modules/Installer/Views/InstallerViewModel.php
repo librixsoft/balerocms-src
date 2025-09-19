@@ -23,32 +23,10 @@ class InstallerViewModel
     public function setInstallerParams(array $extraParams = []): array
     {
         $this->viewModel->addAll([
-            // Etiquetas
-            'lbl_dbconfig' => __('installer.dbconfig'),
-            'lbl_dbhost' => __('installer.dbhost'),
-            'lbl_dbusername' => __('installer.dbusername'),
-            'lbl_dbpass' => __('installer.dbpass'),
-            'lbl_dbname' => __('installer.dbname'),
-            'lbl_dbname_note' => __('installer.dbname_note'),
-            'lbl_siteinfo' => __('installer.siteinfo'),
-            'lbl_basepath' => __('installer.basepath'),
-            'lbl_basepath_note' => __('installer.basepath_note'),
-            'lbl_title' => __('installer.title'),
-            'lbl_url' => __('installer.url'),
-            'lbl_keywords' => __('installer.keywords'),
-            'lbl_description' => __('installer.description'),
-            'lbl_adminconfig' => __('installer.adminconfig'),
-            'lbl_administrator' => __('installer.administrator'),
-            'lbl_pass' => __('installer.pass'),
-            'lbl_retype' => __('installer.retype'),
-            'lbl_firstname' => __('installer.firstname'),
-            'lbl_lastname' => __('installer.lastname'),
-            'lbl_email' => __('installer.email'),
 
             // Botones
             'btn_save' => __('installer.save'),
             'btn_install' => __('installer.install'),
-            'btn_finish' => __('installer.finish'),
 
             // Valores configurables
             'txt_dbhost' => $this->config->dbhost,

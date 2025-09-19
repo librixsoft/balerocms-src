@@ -2,9 +2,7 @@
 <html class="no-js">
 <head>
   <meta charset="utf-8">
-  <title>{title}</title>
-  <base href="{basepath}">
-
+  <title>{title}</title> <base href="{basepath}">
   <link rel="shortcut icon" href="favicon.ico">
 
   <!-- Bootstrap 5 -->
@@ -34,7 +32,7 @@
     </form>
   </div>
 
-  <%-- @if fields_valid AND db_ok AND mod_rewrite_ok AND config_writable -->
+  <%-- @if fields_valid AND db_ok AND mod_rewrite_enabled AND config_writable -->
   <div class="text-center my-5">
     <form method="POST" action="installer/progressBar">
       <button type="submit" class="hd-btn" aria-label="{btn_install}">
@@ -49,7 +47,6 @@
 
   <!-- Alertas -->
 
-  <!-- Mostrar alerta si falla la conexión a la BD -->
   <%-- @if !db_ok -->
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <i class="fas fa-exclamation-triangle"></i>
@@ -91,59 +88,57 @@
         <div class="step" data-target="#dbconfig-part">
           <button type="button" class="step-trigger" role="tab">
             <span class="bs-stepper-circle"><i class="fas fa-database"></i></span>
-            <span class="bs-stepper-label">{lbl_dbconfig}</span>
+            <span class="bs-stepper-label">{installer.dbconfig}</span>
           </button>
         </div>
         <div class="line"></div>
         <div class="step" data-target="#siteinfo-part">
           <button type="button" class="step-trigger" role="tab">
             <span class="bs-stepper-circle"><i class="fas fa-globe"></i></span>
-            <span class="bs-stepper-label">{lbl_siteinfo}</span>
+            <span class="bs-stepper-label">{installer.siteinfo}</span>
           </button>
         </div>
         <div class="line"></div>
         <div class="step" data-target="#adminconfig-part">
           <button type="button" class="step-trigger" role="tab">
             <span class="bs-stepper-circle"><i class="fas fa-user-shield"></i></span>
-            <span class="bs-stepper-label">{lbl_adminconfig}</span>
+            <span class="bs-stepper-label">{installer.adminconfig}</span>
           </button>
         </div>
       </div>
     </div>
 
     <div class="card-body">
-
-      <!--region WizardTabs-->
       <form method="POST" action="installer/install">
 
         <!-- TAB 1: DB Config -->
         <div id="dbconfig-part" class="content" role="tabpanel">
           <div class="row mb-3 align-items-center">
-            <label for="dbhost" class="col-3 col-form-label">{lbl_dbhost}</label>
+            <label for="dbhost" class="col-3 col-form-label">{installer.dbhost}</label>
             <div class="col-9">
               <input name="dbhost" id="dbhost" class="form-control" value="{txt_dbhost}" required>
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="dbuser" class="col-3 col-form-label">{lbl_dbusername}</label>
+            <label for="dbuser" class="col-3 col-form-label">{installer.dbusername}</label>
             <div class="col-9">
               <input name="dbuser" id="dbuser" class="form-control" value="{txt_dbuser}" required>
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="dbpass" class="col-3 col-form-label">{lbl_dbpass}</label>
+            <label for="dbpass" class="col-3 col-form-label">{installer.dbpass}</label>
             <div class="col-9">
               <input name="dbpass" id="dbpass" class="form-control" type="password" value="{txt_dbpass}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="dbname" class="col-3 col-form-label">{lbl_dbname}</label>
+            <label for="dbname" class="col-3 col-form-label">{installer.dbname}</label>
             <div class="col-9">
               <input name="dbname" id="dbname" class="form-control" value="{txt_dbname}" required>
-              <div class="form-text">{lbl_dbname_note}</div>
+              <div class="form-text">{installer.dbname_note}</div>
             </div>
           </div>
 
@@ -153,100 +148,92 @@
         <!-- TAB 2: Site Info -->
         <div id="siteinfo-part" class="content" role="tabpanel">
           <div class="row mb-3 align-items-center">
-            <label for="basepath" class="col-3 col-form-label text-end">{lbl_basepath}</label>
+            <label for="basepath" class="col-3 col-form-label text-end">{installer.basepath}</label>
             <div class="col-9 input-with-info">
               <input name="basepath" id="basepath" class="form-control" value="{txt_basepath}">
-              <i
-                      class="fas fa-info-circle"
-                      data-bs-toggle="tooltip"
-                      title="{lbl_basepath_note}"
-              ></i>
+              <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="{installer.basepath_note}"></i>
             </div>
           </div>
 
-
           <div class="row mb-3 align-items-center">
-            <label for="title" class="col-3 col-form-label">{lbl_title}</label>
+            <label for="title" class="col-3 col-form-label">{installer.title}</label>
             <div class="col-9">
               <input name="title" id="title" class="form-control" value="{title}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="url" class="col-3 col-form-label">{lbl_url}</label>
+            <label for="url" class="col-3 col-form-label">{installer.url}</label>
             <div class="col-9">
               <input name="url" id="url" class="form-control" placeholder="http://" value="{txt_url}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="keywords" class="col-3 col-form-label">{lbl_keywords}</label>
+            <label for="keywords" class="col-3 col-form-label">{installer.keywords}</label>
             <div class="col-9">
               <input name="keywords" id="keywords" class="form-control" value="{keywords}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="description" class="col-3 col-form-label">{lbl_description}</label>
+            <label for="description" class="col-3 col-form-label">{installer.description}</label>
             <div class="col-9">
               <textarea name="description" id="description" class="form-control" rows="4">{description}</textarea>
             </div>
           </div>
 
-          <button type="button" class="btn btn-primary" onclick="stepper.next()">{btn_save}</button>
+          <button type="button" class="btn btn-primary" onclick="stepper.next()">{installer.save}</button>
         </div>
 
         <!-- TAB 3: Admin Config -->
         <div id="adminconfig-part" class="content" role="tabpanel">
           <div class="row mb-3 align-items-center">
-            <label for="username" class="col-3 col-form-label">{lbl_administrator}</label>
+            <label for="username" class="col-3 col-form-label">{installer.administrator}</label>
             <div class="col-9">
               <input name="username" id="username" class="form-control" value="{username}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="passwd" class="col-3 col-form-label">{lbl_pass}</label>
+            <label for="passwd" class="col-3 col-form-label">{installer.pass}</label>
             <div class="col-9">
               <input name="passwd" id="passwd" class="form-control" type="password">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="passwd2" class="col-3 col-form-label">{lbl_retype}</label>
+            <label for="passwd2" class="col-3 col-form-label">{installer.retype}</label>
             <div class="col-9">
               <input name="passwd2" id="passwd2" class="form-control" type="password">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="firstname" class="col-3 col-form-label">{lbl_firstname}</label>
+            <label for="firstname" class="col-3 col-form-label">{installer.firstname}</label>
             <div class="col-9">
               <input name="firstname" id="firstname" class="form-control" value="{txt_firstname}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="lastname" class="col-3 col-form-label">{lbl_lastname}</label>
+            <label for="lastname" class="col-3 col-form-label">{installer.lastname}</label>
             <div class="col-9">
               <input name="lastname" id="lastname" class="form-control" value="{txt_lastname}">
             </div>
           </div>
 
           <div class="row mb-3 align-items-center">
-            <label for="email" class="col-3 col-form-label">{lbl_email}</label>
+            <label for="email" class="col-3 col-form-label">{installer.email}</label>
             <div class="col-9">
               <input name="email" id="email" class="form-control" type="email" value="{txt_email}">
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success">{btn_save}</button>
+          <button type="submit" class="btn btn-success">{installer.save}</button>
         </div>
 
       </form>
-      <!--/region WizardTabs-->
-
-
     </div>
   </div>
 
@@ -262,7 +249,6 @@
 <script src="public/assets/js/bs-stepper.min.js"></script>
 
 <script>
-
   document.addEventListener('DOMContentLoaded', function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -279,16 +265,12 @@
       body: formData
     })
             .then(res => res.json())
-            .then(data => {
-              console.log(data.status, data.message);
-            })
+            .then(data => { console.log(data.status, data.message); })
             .catch(err => console.error('Error al borrar flash:', err));
   }
 
-  // Opcional: eliminar automáticamente si el usuario cierra la alerta manualmente con Bootstrap
   document.addEventListener('DOMContentLoaded', () => {
     const alerts = document.querySelectorAll('.alert-dismissible');
-
     alerts.forEach(alert => {
       alert.addEventListener('closed.bs.alert', () => {
         const key = alert.id.replace('alert-', '');
@@ -300,11 +282,10 @@
   var stepper;
   document.addEventListener('DOMContentLoaded', function () {
     stepper = new Stepper(document.querySelector('#installerWizard'), {
-      linear: false, // <--- esto permite ir a cualquier tab
+      linear: false,
       animation: true
     });
   });
-
 </script>
 </body>
 </html>
