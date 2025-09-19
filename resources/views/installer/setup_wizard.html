@@ -53,28 +53,27 @@
   <%-- @if !db_ok -->
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <i class="fas fa-exclamation-triangle"></i>
-    {err_db_connection}
+    {installer.err_db_connection}
   </div>
   <%-- @endif -->
 
   <%-- @if mod_rewrite_enabled -->
   <div class="alert alert-success alert-dismissible fade show">
-    <i class="fas fa-check-circle"></i> {mod_rewrite_ok}
+    <i class="fas fa-check-circle"></i> {installer.mod_rewrite_ok}
   </div>
   <%-- @else -->
   <div class="alert alert-warning alert-dismissible fade show">
-    <i class="fas fa-exclamation-triangle"></i> {mod_rewrite_not_ok}
+    <i class="fas fa-exclamation-triangle"></i> {installer.mod_rewrite_not_ok}
   </div>
   <%-- @endif -->
 
   <%-- @if !config_writeable -->
   <div class="alert alert-danger alert-dismissible fade show">
-    <i class="fas fa-times-circle"></i>
-    <strong>{warning}:</strong> {config_file_not_writable}
+    <i class="fas fa-times-circle"></i> <strong>{installer.warning}:</strong> {installer.config_file_not_writable}
   </div>
   <%-- @else -->
   <div class="alert alert-success alert-dismissible fade show">
-    <i class="fas fa-info-circle"></i> {config_file_writable}
+    <i class="fas fa-info-circle"></i> {installer.config_file_writable}
   </div>
   <%-- @endif -->
 
