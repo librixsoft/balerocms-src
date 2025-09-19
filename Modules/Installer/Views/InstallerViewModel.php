@@ -24,26 +24,31 @@ class InstallerViewModel
     {
         $this->viewModel->addAll([
             // Etiquetas
-            'lbl_dbconfig' => 'Database Configuration',
+            'lbl_dbconfig' => __('installer.dbconfig'),
             'lbl_dbhost' => __('installer.dbhost'),
-            'lbl_dbusername' => 'Database User',
-            'lbl_dbpass' => 'Database Password',
-            'lbl_dbname' => 'Database Name',
-            'lbl_dbname_note' => 'If database does not exist, it will be created',
-            'lbl_siteinfo' => 'Site Information',
-            'lbl_basepath' => 'Base Path',
-            'lbl_basepath_note' => 'Note about base path',
-            'lbl_title' => 'Site Title',
-            'lbl_url' => 'Site URL',
-            'lbl_keywords' => 'Keywords',
-            'lbl_description' => 'Description',
-            'lbl_adminconfig' => 'Administrator Configuration',
-            'lbl_administrator' => 'Administrator',
-            'lbl_pass' => 'Password',
-            'lbl_retype' => 'Retype Password',
-            'lbl_firstname' => 'First Name',
-            'lbl_lastname' => 'Last Name',
-            'lbl_email' => 'Email Address',
+            'lbl_dbusername' => __('installer.dbusername'),
+            'lbl_dbpass' => __('installer.dbpass'),
+            'lbl_dbname' => __('installer.dbname'),
+            'lbl_dbname_note' => __('installer.dbname_note'),
+            'lbl_siteinfo' => __('installer.siteinfo'),
+            'lbl_basepath' => __('installer.basepath'),
+            'lbl_basepath_note' => __('installer.basepath_note'),
+            'lbl_title' => __('installer.title'),
+            'lbl_url' => __('installer.url'),
+            'lbl_keywords' => __('installer.keywords'),
+            'lbl_description' => __('installer.description'),
+            'lbl_adminconfig' => __('installer.adminconfig'),
+            'lbl_administrator' => __('installer.administrator'),
+            'lbl_pass' => __('installer.pass'),
+            'lbl_retype' => __('installer.retype'),
+            'lbl_firstname' => __('installer.firstname'),
+            'lbl_lastname' => __('installer.lastname'),
+            'lbl_email' => __('installer.email'),
+
+            // Botones
+            'btn_save' => __('installer.save'),
+            'btn_install' => __('installer.install'),
+            'btn_finish' => __('installer.finish'),
 
             // Valores configurables
             'txt_dbhost' => $this->config->dbhost,
@@ -59,13 +64,8 @@ class InstallerViewModel
             'txt_lastname' => $this->config->lastname,
             'txt_email' => $this->config->email,
 
-            // Botones
-            'btn_save' => "Guardar",
-
             // Setup Wizard
             'mod_rewrite_enabled' => function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()),
-            'welcome' => "Welcome to Balero CMS Setup Wizard.",
-            'btn_install' => "Instalar",
             'config_writeable' => is_writable(Constant::CONFIG_PATH),
 
         ]);
