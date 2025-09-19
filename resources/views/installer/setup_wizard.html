@@ -53,28 +53,28 @@
   <%-- @if !db_ok -->
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <i class="fas fa-exclamation-triangle"></i>
-    Error: No se pudo conectar a la base de datos. Por favor verifica tu configuración.
+    {err_db_connection}
   </div>
   <%-- @endif -->
 
   <%-- @if mod_rewrite_enabled -->
   <div class="alert alert-success alert-dismissible fade show">
-    <i class="fas fa-check-circle"></i> mod_rewrite is enabled.
+    <i class="fas fa-check-circle"></i> {mod_rewrite_ok}
   </div>
   <%-- @else -->
   <div class="alert alert-warning alert-dismissible fade show">
-    <i class="fas fa-exclamation-triangle"></i> mod_rewrite is not enabled, installation cannot continue.
+    <i class="fas fa-exclamation-triangle"></i> {mod_rewrite_not_ok}
   </div>
   <%-- @endif -->
 
   <%-- @if !config_writeable -->
   <div class="alert alert-danger alert-dismissible fade show">
     <i class="fas fa-times-circle"></i>
-    <strong>Warning:</strong> The file <code>balero.config.json</code> is not writable.
+    <strong>{warning}:</strong> {config_file_not_writable}
   </div>
   <%-- @else -->
   <div class="alert alert-success alert-dismissible fade show">
-    <i class="fas fa-info-circle"></i> The file <code>balero.config.json</code> is writable. You can proceed.
+    <i class="fas fa-info-circle"></i> {config_file_writable}
   </div>
   <%-- @endif -->
 

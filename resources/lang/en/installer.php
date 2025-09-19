@@ -37,5 +37,10 @@ return [
 
     // Flags del sistema
     'mod_rewrite_ok' => 'mod_rewrite is enabled',
-    'config_writable'=> 'Configuration file is writable',
+    'mod_rewrite_not_ok'  => 'mod_rewrite is not enabled, installation cannot continue', // NUEVO
+    'config_writable'     => 'Configuration file is writable',
+    'config_file_writable'=> 'The file <code>balero.config.json</code> is writable. You can proceed.', // NUEVO
+    'config_file_not_writable'=> 'The file <code>balero.config.json</code> is not writable.', // NUEVO
+    'err_db_connection'   => 'Error: Could not connect to the database. Please check your configuration.', // NUEVO
+    'warning'             => 'Warning', // NUEVO
 ];

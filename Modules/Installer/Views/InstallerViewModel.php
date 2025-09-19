@@ -64,6 +64,13 @@ class InstallerViewModel
             'txt_lastname' => $this->config->lastname,
             'txt_email' => $this->config->email,
 
+            'err_db_connection'       => __('installer.err_db_connection'),         // NUEVO
+            'mod_rewrite_ok'      => __('installer.mod_rewrite_ok'),       // NUEVO
+            'mod_rewrite_not_ok'      => __('installer.mod_rewrite_not_ok'),       // NUEVO
+            'config_file_writable'    => __('installer.config_file_writable'),     // NUEVO
+            'config_file_not_writable'=> __('installer.config_file_not_writable'), // NUEVO
+            'warning'                  => __('installer.warning'),                 // NUEVO
+
             // Setup Wizard
             'mod_rewrite_enabled' => function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()),
             'config_writeable' => is_writable(Constant::CONFIG_PATH),
@@ -83,7 +90,7 @@ class InstallerViewModel
         $this->viewModel->addAll([
             'fields_valid'      => $fieldsValid,
             'db_ok'             => $dbOk,
-            'mod_rewrite_ok'    => $modRewrite,
+            'mod_rewrite_enabled'    => $modRewrite,
             'config_writable'   => $configWritable,
         ]);
 

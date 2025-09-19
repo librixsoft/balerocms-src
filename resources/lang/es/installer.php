@@ -37,5 +37,10 @@ return [
 
     // Flags del sistema
     'mod_rewrite_ok' => 'mod_rewrite está habilitado',
-    'config_writable'=> 'El archivo de configuración es escribible',
+    'mod_rewrite_not_ok'   => 'mod_rewrite no está habilitado, la instalación no puede continuar',
+    'config_writable'      => 'El archivo de configuración es escribible',
+    'config_file_writable' => 'El archivo <code>balero.config.json</code> es escribible. Puedes continuar.',
+    'config_file_not_writable' => 'El archivo <code>balero.config.json</code> no es escribible.',
+    'err_db_connection'    => 'Error: No se pudo conectar a la base de datos. Por favor verifica tu configuración.',
+    'warning'              => 'Advertencia',
 ];
