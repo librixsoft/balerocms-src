@@ -80,12 +80,35 @@ class ConfigSettings
 
     public function getFullBasepath(): string
     {
-        $s = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 's' : '';
-        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
-        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":" . $_SERVER["SERVER_PORT"]);
-        $uri = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
-        $segments = explode('?', $uri, 2);
-        return str_replace("index.php", "", $segments[0]);
+        // Protocolo
+        $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        $scheme = $https ? 'https' : 'http';
+
+        // Host (prefiere HTTP_HOST porque puede traer puerto)
+        $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+
+        // Si HTTP_HOST ya trae puerto, no añadimos otro; si no, lo añadimos solo si no es 80/443
+        $port = '';
+        if (strpos($host, ':') === false) {
+            $serverPort = $_SERVER['SERVER_PORT'] ?? null;
+            if ($serverPort && $serverPort !== '80' && $serverPort !== '443') {
+                $port = ':' . $serverPort;
+            }
+        }
+
+        // Ruta del script (ej: /balerocms-src/index.php)
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? $_SERVER['PHP_SELF'] ?? '/';
+        // Normalizar separadores y sacar directorio
+        $dir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+
+        // Construir base con slash final
+        if ($dir === '' || $dir === '.' ) {
+            $dir = '/';
+        } else {
+            $dir .= '/';
+        }
+
+        return $scheme . '://' . $host . $port . $dir;
     }
 
 }

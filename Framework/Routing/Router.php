@@ -81,6 +81,14 @@ class Router
     private function checkInstallerRedirect(): void
     {
         try {
+
+            if (
+                !isset($this->configSettings->basepath) ||
+                $this->configSettings->basepath === ''
+            ) {
+                $this->configSettings->basepath = rtrim($this->configSettings->getFullBasepath(), '/') . '/';
+            }
+
             $currentModule = $this->request->get(self::PARAM_MODULE);
             $installed = $this->configSettings->installed;
 
