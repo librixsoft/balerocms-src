@@ -12,7 +12,7 @@ return [
     // Información del Sitio
     'siteinfo'       => 'Site Information',
     'basepath'       => 'Base Path',
-    'basepath_note'  => 'Note about base path',
+    'basepath_note'  => 'Leave it empty to regenerate basepath',
     'title'          => 'Site Title',
     'url'            => 'Site URL',
     'keywords'       => 'Keywords',

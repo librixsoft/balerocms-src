@@ -157,7 +157,11 @@
             <label for="basepath" class="col-3 col-form-label text-end">{lbl_basepath}</label>
             <div class="col-9 input-with-info">
               <input name="basepath" id="basepath" class="form-control" value="{txt_basepath}">
-              <i class="fas fa-info-circle" title="{lbl_basepath_note}"></i>
+              <i
+                      class="fas fa-info-circle"
+                      data-bs-toggle="tooltip"
+                      title="{lbl_basepath_note}"
+              ></i>
             </div>
           </div>
 
@@ -259,6 +263,14 @@
 <script src="public/assets/js/bs-stepper.min.js"></script>
 
 <script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+
   function deleteMessage(key) {
     const formData = new FormData();
     formData.append('key', key);
@@ -285,10 +297,6 @@
       });
     });
   });
-</script>
-
-
-<script>
 
   var stepper;
   document.addEventListener('DOMContentLoaded', function () {
