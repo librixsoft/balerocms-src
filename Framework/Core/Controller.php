@@ -101,6 +101,9 @@ class Controller
 
     private function runMethod(string $methodName, array $params = []): void
     {
+
+        $this->initLanguage();
+
         $result = $this->{$methodName}(...$params);
 
         if (is_string($result)) {
@@ -119,5 +122,14 @@ class Controller
         $langParams = LangSelector::getLanguageParams($this->request);
         return $this->view->render($template, array_merge($langParams, $params), $useTheme);
     }
+
+    protected function initLanguage(): void
+    {
+        if ($this->request) {
+            // Carga las traducciones y guarda en LangManager
+            LangSelector::getLanguageParams($this->request);
+        }
+    }
+
 
 }

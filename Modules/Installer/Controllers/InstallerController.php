@@ -12,7 +12,6 @@ use Modules\Installer\DTO\InstallerDTO;
 use Modules\Installer\Views\InstallerViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
-use Framework\I18n\LangSelector;
 
 class InstallerController extends Controller
 {
@@ -30,8 +29,6 @@ class InstallerController extends Controller
     #[Get('/')]
     public function home()
     {
-
-        LangSelector::getLanguageParams($this->request);
 
         // Recolectar errores y datos cacheados
         $params = [];
