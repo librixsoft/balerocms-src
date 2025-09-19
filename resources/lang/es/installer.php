@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Balero CMS 
- * @author Anibal Gomez <balerocms@gmail.com>
- * @license GNU General Public License
- */
-
 return [
+    'dbhost' => 'Host De Base De Datos',
     'finish' => 'Finalizar!',
 ];
