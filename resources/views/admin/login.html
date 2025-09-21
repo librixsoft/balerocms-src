@@ -40,14 +40,19 @@
 
                     <form method="POST" action="./login">
                         <div class="mb-3">
-                            <input type="text" id="username" name="usr" class="form-control" placeholder="{login.username}" required>
+                            <input type="text" id="username" name="usr" class="form-control" placeholder="{login.username}" >
                         </div>
 
                         <div class="mb-3">
-                            <input type="password" id="password" name="pwd" class="form-control" placeholder="{login.password}" required>
+                            <input type="password" id="password" name="pwd" class="form-control" placeholder="{login.password}" >
                         </div>
 
-                        <div class="mb-3 text-danger small">{login.message}</div>
+                        <%-- @if login_error -->
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-login_error">
+                            <i class="fas fa-exclamation-triangle"></i> {login_error}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="deleteMessage('login_error')"></button>
+                        </div>
+                        <%-- @endif -->
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary" name="login">
@@ -67,6 +72,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    //TODO: Need to be unified in one controller endpoint in flash messages beside installer flash messages and others
+    function deleteMessage(key) {
+        const formData = new FormData();
+        formData.append('key', key);
+
+        fetch('./login/delete_flash_message', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => { console.log(data.status, data.message); })
+            .catch(err => console.error('Error al borrar flash:', err));
+    }
+</script>
 
 <script src="public/assets/js/scripts.js"></script>
 </body>

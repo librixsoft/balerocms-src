@@ -30,8 +30,7 @@ class LoginManager
     {
         $counter = $this->security->toInt($this->request->cookie('counter', 0));
         if ($counter >= 5) {
-            $this->message = _LOGIN_ATTEMPS; // TODO: Return error messages
-            return false;
+            die("MAX LOGIN ATTEMPS, WAIT 5 MINUTES!");
         }
 
         // Intento de login por formulario
@@ -48,8 +47,8 @@ class LoginManager
             }
 
             // Falló el login → incrementar contador
-            $this->setCookie('counter', $counter + 1, 120);
-            $this->message = _LOGIN_ERROR;  // TODO: Return error messages
+            $this->setCookie('counter', $counter + 1, 300);
+            $this->message = __('login.message');
             return false;
         }
 
