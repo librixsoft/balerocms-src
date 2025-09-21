@@ -40,26 +40,28 @@
 
                     <form method="POST" action="./login">
                         <div class="mb-3">
-                            <input type="text" id="username" name="usr" class="form-control" placeholder="Usr" required>
+                            <input type="text" id="username" name="usr" class="form-control" placeholder="{login.username}" required>
                         </div>
 
                         <div class="mb-3">
-                            <input type="password" id="password" name="pwd" class="form-control" placeholder="Pwd" required>
+                            <input type="password" id="password" name="pwd" class="form-control" placeholder="{login.password}" required>
                         </div>
 
-                        <div class="mb-3 text-danger small">{message}</div>
+                        <div class="mb-3 text-danger small">{login.message}</div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary" name="login">
-                                <i class="fas fa-sign-in-alt"></i> Log In
+                                <i class="fas fa-sign-in-alt"></i> {login.submit}
                             </button>
                         </div>
                     </form>
 
                 </div>
+
                 <div class="card-footer text-center small">
-                    <a href="./">← Back to Front-End</a>
+                    <a href="./">{login.back}</a>
                 </div>
+
             </div>
 
         </div>
