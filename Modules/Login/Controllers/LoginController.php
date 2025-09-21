@@ -52,16 +52,4 @@ class LoginController extends Controller
         Redirect::to('/login/');
     }
 
-    //TODO: Need to be unified in one controller endpoint in flash messages beside installer flash messages and others
-    #[Post('/delete_flash_message')]
-    public function deleteFlashMessage()
-    {
-        $key = $this->request->post('key', '');
-        if ($key) {
-            Flash::delete($key);
-            return $this->json(['status' => 'ok', 'message' => "Flash '$key' eliminado"]);
-        }
-        return $this->json(['status' => 'error', 'message' => 'No se proporcionó clave']);
-    }
-
 }

@@ -247,35 +247,13 @@
 <script src="public/assets/js/jquery.min.js"></script>
 <script src="public/assets/js/bootstrap.bundle.min.js"></script>
 <script src="public/assets/js/bs-stepper.min.js"></script>
+<script src="public/assets/js/notification.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-  });
-
-  function deleteMessage(key) {
-    const formData = new FormData();
-    formData.append('key', key);
-
-    fetch('installer/delete_flash_message', {
-      method: 'POST',
-      body: formData
-    })
-            .then(res => res.json())
-            .then(data => { console.log(data.status, data.message); })
-            .catch(err => console.error('Error al borrar flash:', err));
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const alerts = document.querySelectorAll('.alert-dismissible');
-    alerts.forEach(alert => {
-      alert.addEventListener('closed.bs.alert', () => {
-        const key = alert.id.replace('alert-', '');
-        deleteMessage(key);
-      });
     });
   });
 

@@ -91,23 +91,4 @@ class InstallerController extends Controller
         Redirect::to("/installer/progressBar");
     }
 
-    #[Post('/delete_flash_message')]
-    public function deleteFlashMessage()
-    {
-        // Obtener la clave desde POST (no JSON)
-        $key = $this->request->post('key');
-
-        Flash::delete($key);
-        $status = 'success';
-        $message = "Clave '$key' eliminada correctamente.";
-
-        // Responder en JSON
-        header('Content-Type: application/json');
-        echo json_encode([
-            'status' => $status,
-            'message' => $message
-        ]);
-        exit;
-    }
-
 }

@@ -90,6 +90,9 @@ class Router
             }
 
             $currentModule = $this->request->get(self::PARAM_MODULE);
+            if ($currentModule === 'notification') {
+                return;
+            }
             $installed = $this->configSettings->installed;
 
             // Si no está instalado, forzar acceso al instalador
