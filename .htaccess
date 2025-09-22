@@ -1,10 +1,11 @@
+# raiz/.htaccess
 RewriteEngine On
 Options -Indexes
 
 # Bloquear acceso directo a /public/
 RewriteRule ^public(/.*)?$ - [F,L]
 
-# Convertir rutas limpias de la raíz a query string antes de enviar a public/index.php
+# Rutas limpias de la raíz hacia public/index.php
 RewriteCond %{REQUEST_URI} !^/index\.php$
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteRule ^([a-zA-Z0-9_-]+)$ public/index.php?module=$1 [QSA,L]
