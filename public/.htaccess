@@ -1,10 +1,15 @@
-# public/.htaccess
 RewriteEngine On
 Options -Indexes
 
-# Permitir acceso a index.php y assets
-RewriteRule ^index\.php$ - [L]
+# Bloquear acceso directo a index.php si se entra por /public/
+RewriteCond %{THE_REQUEST} /public/index\.php [NC]
+RewriteRule ^ - [F,L]
+
+# Permitir assets
 RewriteRule ^assets/ - [L]
+
+# Permitir index.php solo cuando es llamado desde la raíz (vía rewrite)
+RewriteRule ^index\.php$ - [L]
 
 # Bloquear todo lo demás
 RewriteRule ^ - [F,L]
