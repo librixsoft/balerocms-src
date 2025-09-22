@@ -1,15 +1,14 @@
 RewriteEngine On
-
-# Desactivar listado de directorios
 Options -Indexes
 
-# Bloquear acceso directo a /public y todo su contenido
+# Bloquear acceso directo a /public/
 RewriteRule ^public(/.*)?$ - [F,L]
 
-# Si el archivo o carpeta existe dentro de /public, sírvelo
-RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
-RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
-RewriteRule ^(.*)$ public/$1 [L]
+# Convertir rutas limpias de la raíz a query string antes de enviar a public/index.php
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^([a-zA-Z0-9_-]+)$ public/index.php?module=$1 [QSA,L]
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ public/index.php?module=$1&target=$2 [QSA,L]
 
-# Todo lo demás va a /public/index.php
+# Todo lo demás a public/index.php
 RewriteRule ^(.*)$ public/index.php [L]
