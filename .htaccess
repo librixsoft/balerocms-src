@@ -3,7 +3,12 @@ RewriteEngine On
 # Bloquear acceso web a carpetas internas
 RewriteRule ^(Framework|Modules|resources|vendor|tests|node_modules)/ - [F,L]
 
-# No reescribir si archivo o carpeta real
+# Permitir solo index.php en la raíz
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} !/index\.php$ [NC]
+RewriteRule ^ - [F,L]
+
+# No reescribir si es index.php o carpeta real
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
