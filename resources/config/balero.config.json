@@ -22,7 +22,7 @@
             "url": "http:\/\/www.balerocms.com\/",
             "description": "Description...",
             "keywords": "content, management, system",
-            "basepath": "http:\/\/localhost\/balerocms-src\/public\/",
+            "basepath": "http:\/\/localhost\/balerocms-src\/",
             "theme": "default",
             "footer": "© {year} Your Company. All rights reserved.\n"
         }
