@@ -9,19 +9,19 @@ body {
 }
 
 .row.align-items-center > .col-3 {
-    flex: 0 0 180px;       /* ancho fijo del label */
-    max-width: 180px;      /* ancho máximo del label */
-    padding-right: 20px;   /* espacio entre label e input */
-    text-align: right;     /* alineación a la derecha */
+    flex: 0 0 180px; /* ancho fijo del label */
+    max-width: 180px; /* ancho máximo del label */
+    padding-right: 20px; /* espacio entre label e input */
+    text-align: right; /* alineación a la derecha */
 }
 
 .row.align-items-center > .col-9 {
-    flex: 1;               /* ocupa el resto del espacio */
-    padding-left: 0;       /* opcional, distancia mínima */
+    flex: 1; /* ocupa el resto del espacio */
+    padding-left: 0; /* opcional, distancia mínima */
 }
 
 .col-form-label {
-    margin-bottom: 0;      /* alinea verticalmente con el input */
+    margin-bottom: 0; /* alinea verticalmente con el input */
 }
 
 /* Input mínimo para evitar que quede demasiado pequeño */
@@ -82,6 +82,6 @@ body {
     margin-top: 8px;
     font-size: 1.3rem;
     font-weight: 500;
-    color: #888;          /* gris más suave */
+    color: #888; /* gris más suave */
     text-align: center;
 }

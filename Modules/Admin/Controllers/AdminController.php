@@ -4,12 +4,12 @@ namespace Modules\Admin\Controllers;
 
 use Framework\Core\Controller;
 use Framework\Http\Auth;
-use Framework\IO\Uploader;
-use Modules\Admin\Models\AdminModel;
-use Modules\Admin\Views\AdminViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
+use Framework\IO\Uploader;
 use Framework\Static\Redirect;
+use Modules\Admin\Models\AdminModel;
+use Modules\Admin\Views\AdminViewModel;
 
 #[Auth(required: true)]
 class AdminController extends Controller
@@ -22,7 +22,8 @@ class AdminController extends Controller
         AdminModel $model,
         Uploader $uploader,
         AdminViewModel $viewModel
-    ) {
+    )
+    {
         $this->model = $model;
         $this->uploader = $uploader;
         $this->viewModel = $viewModel;
@@ -45,8 +46,8 @@ class AdminController extends Controller
     {
         $params = $this->viewModel->getSettingsParams([
             'virtual_pages' => $this->model->getVirtualPages(),
-            'pages_count'   => $this->model->getPagesCount(),
-            'blocks_count'  => $this->model->getBlocksCount(),
+            'pages_count' => $this->model->getPagesCount(),
+            'blocks_count' => $this->model->getBlocksCount(),
         ]);
 
         return $this->render("admin/dashboard.html", $params, false);
@@ -56,11 +57,11 @@ class AdminController extends Controller
     public function postSettings()
     {
         $data = [
-            'title'       => $this->request->post("title"),
+            'title' => $this->request->post("title"),
             'description' => $this->request->post("description"),
-            'keywords'    => $this->request->post("keywords"),
-            'theme'       => $this->request->post("theme"),
-            'footer'      => $this->request->post("footer"),
+            'keywords' => $this->request->post("keywords"),
+            'theme' => $this->request->post("theme"),
+            'footer' => $this->request->post("footer"),
         ];
 
         $this->model->updateSettings($data);
@@ -83,8 +84,8 @@ class AdminController extends Controller
     public function getAllPages()
     {
         $params = $this->viewModel->getAllPagesParams([
-            'pages'        => $this->model->getVirtualPages(),
-            'pages_count'  => $this->model->getPagesCount(),
+            'pages' => $this->model->getVirtualPages(),
+            'pages_count' => $this->model->getPagesCount(),
             'blocks_count' => $this->model->getBlocksCount(),
         ]);
 
@@ -95,11 +96,11 @@ class AdminController extends Controller
     public function postNewPage()
     {
         $data = [
-            'virtual_title'   => $this->request->post('virtual_title'),
-            'static_url'      => $this->request->post('static_url'),
+            'virtual_title' => $this->request->post('virtual_title'),
+            'static_url' => $this->request->post('static_url'),
             'virtual_content' => $this->request->raw('virtual_content'),
-            'visible'         => (int) $this->request->post('visible'),
-            'date'            => $this->request->post('date'),
+            'visible' => (int)$this->request->post('visible'),
+            'date' => $this->request->post('date'),
         ];
 
         $this->model->createPage($data);
@@ -110,7 +111,7 @@ class AdminController extends Controller
     public function editPage(int $id)
     {
         $params = $this->viewModel->getEditPageParams([
-            'page'        => $this->model->getPageById($id),
+            'page' => $this->model->getPageById($id),
             'pages_count' => $this->model->getPagesCount(),
         ]);
 
@@ -121,10 +122,10 @@ class AdminController extends Controller
     public function postEditPage(int $id)
     {
         $data = [
-            'id'             => $id,
-            'virtual_title'  => $this->request->post("virtual_title"),
-            'static_url'     => $this->request->post("static_url"),
-            'virtual_content'=> $this->request->raw("virtual_content"),
+            'id' => $id,
+            'virtual_title' => $this->request->post("virtual_title"),
+            'static_url' => $this->request->post("static_url"),
+            'virtual_content' => $this->request->raw("virtual_content"),
         ];
 
         $this->model->updatePage($id, $data);
@@ -152,8 +153,8 @@ class AdminController extends Controller
     public function listBlocks()
     {
         $params = $this->viewModel->getAllBlocksParams([
-            'blocks'       => $this->model->getBlocks(),
-            'pages_count'  => $this->model->getPagesCount(),
+            'blocks' => $this->model->getBlocks(),
+            'pages_count' => $this->model->getPagesCount(),
             'blocks_count' => $this->model->getBlocksCount(),
         ]);
 
@@ -183,9 +184,9 @@ class AdminController extends Controller
     public function createBlock()
     {
         $data = [
-            'name'       => $this->request->post('name'),
+            'name' => $this->request->post('name'),
             'sort_order' => $this->request->post('sort_order'),
-            'content'    => $this->request->raw('content'),
+            'content' => $this->request->raw('content'),
         ];
 
         $this->model->createBlock($data);
@@ -206,9 +207,9 @@ class AdminController extends Controller
     public function postEditBlock(int $id)
     {
         $data = [
-            'name'       => $this->request->post('name'),
+            'name' => $this->request->post('name'),
             'sort_order' => $this->request->post('sort_order'),
-            'content'    => $this->request->raw('content'),
+            'content' => $this->request->raw('content'),
         ];
 
         $this->model->updateBlock($id, $data);

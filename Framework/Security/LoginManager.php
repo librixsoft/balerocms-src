@@ -17,10 +17,19 @@ class LoginManager
         Security $security,
         ConfigSettings $config,
         RequestHelper $request
-    ) {
+    )
+    {
         $this->security = $security;
         $this->config = $config;
         $this->request = $request;
+    }
+
+    /**
+     * Devuelve true si ya hay login válido (cookie o post)
+     */
+    public function isLoggedIn(): bool
+    {
+        return $this->handleLogin();
     }
 
     /**
@@ -72,12 +81,14 @@ class LoginManager
         return false;
     }
 
-    /**
-     * Devuelve true si ya hay login válido (cookie o post)
-     */
-    public function isLoggedIn(): bool
+    private function setCookie(string $name, string $value, int $lifetime): void
     {
-        return $this->handleLogin();
+        setcookie($name, $value, time() + $lifetime, '/', '', false, true);
+    }
+
+    private function clearCookie(string $name): void
+    {
+        setcookie($name, '', time() - 3600, '/', '', false, true);
     }
 
     /**
@@ -88,21 +99,11 @@ class LoginManager
         return $this->message;
     }
 
-    private function setCookie(string $name, string $value, int $lifetime): void
-    {
-        setcookie($name, $value, time() + $lifetime, '/', '', false, true);
-    }
-
     /**
      * Cierra sesión
      */
     public function logout(): void
     {
         $this->clearCookie('admin_god_balero');
-    }
-
-    private function clearCookie(string $name): void
-    {
-        setcookie($name, '', time() - 3600, '/', '', false, true);
     }
 }

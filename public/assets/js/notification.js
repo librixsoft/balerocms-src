@@ -12,7 +12,9 @@ function deleteMessage(key) {
         body: formData
     })
         .then(res => res.json())
-        .then(data => { console.log(data.status, data.message); })
+        .then(data => {
+            console.log(data.status, data.message);
+        })
         .catch(err => console.error('Error deleting flash message:', err));
 }
 

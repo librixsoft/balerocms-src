@@ -18,6 +18,15 @@ class RequestHelper
         return $this->filter($_GET[$key] ?? $default);
     }
 
+    protected function filter($value)
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return $this->security->sanitize($value);
+    }
+
     public function post($key, $default = null)
     {
         return $this->filter($_POST[$key] ?? $default);
@@ -47,15 +56,6 @@ class RequestHelper
     public function hasCookie($key): bool
     {
         return isset($_COOKIE[$key]);
-    }
-
-    protected function filter($value)
-    {
-        if ($value === null) {
-            return null;
-        }
-
-        return $this->security->sanitize($value);
     }
 
     public function raw($key, $default = null)

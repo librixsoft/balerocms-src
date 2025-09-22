@@ -1,27 +1,12 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use Framework\Rendering\ProcessorIncludes;
+use PHPUnit\Framework\TestCase;
 
 class ProcessorIncludesTest extends TestCase
 {
     private ProcessorIncludes $processor;
     private string $viewsDir;
-
-    protected function setUp(): void
-    {
-        $this->processor = new ProcessorIncludes();
-        $this->viewsDir = __DIR__ . '/../../resources/views/includes/';
-
-        // Crear carpeta si no existe
-        if (!is_dir($this->viewsDir)) {
-            mkdir($this->viewsDir, 0777, true);
-        }
-
-        // Crear archivos de prueba
-        file_put_contents($this->viewsDir . 'header.html', '<header>HEADER CONTENT</header>');
-        file_put_contents($this->viewsDir . 'footer.html', '<footer>FOOTER CONTENT</footer>');
-    }
 
     public function testIncludeSingleFile()
     {
@@ -55,5 +40,20 @@ class ProcessorIncludesTest extends TestCase
         $result = $this->processor->process($template, '');
 
         $this->assertStringContainsString('INCLUDE ERROR: baseDir no definido', $result);
+    }
+
+    protected function setUp(): void
+    {
+        $this->processor = new ProcessorIncludes();
+        $this->viewsDir = __DIR__ . '/../../resources/views/includes/';
+
+        // Crear carpeta si no existe
+        if (!is_dir($this->viewsDir)) {
+            mkdir($this->viewsDir, 0777, true);
+        }
+
+        // Crear archivos de prueba
+        file_put_contents($this->viewsDir . 'header.html', '<header>HEADER CONTENT</header>');
+        file_put_contents($this->viewsDir . 'footer.html', '<footer>FOOTER CONTENT</footer>');
     }
 }

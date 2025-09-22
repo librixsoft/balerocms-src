@@ -3,12 +3,12 @@
 <head>
     <title>Admin Edit Page - {mod_name}</title>
     <base href="{basepath}">
-    <link rel="shortcut icon" href="favicon.ico">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="favicon.ico" rel="shortcut icon">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
     <!-- Bootstrap CSS -->
     <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="public/assets/css/dashboard.css" rel="stylesheet" media="screen">
+    <link href="public/assets/css/dashboard.css" media="screen" rel="stylesheet">
 
     <!-- Font Awesome 6 -->
     <link href="public/assets/css/all.min.css" rel="stylesheet">
@@ -36,36 +36,37 @@
                         <h5 class="mb-0">{lbl_edit_page}</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="./admin/pages/edit/{page.id}">
+                        <form action="./admin/pages/edit/{page.id}" method="POST">
                             <fieldset>
                                 <div class="mb-3 row">
-                                    <label for="virtual_title" class="col-sm-2 col-form-label">{lbl_title}</label>
+                                    <label class="col-sm-2 col-form-label" for="virtual_title">{lbl_title}</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="virtual_title" name="virtual_title"
-                                               value="{page.virtual_title}" required>
+                                        <input class="form-control" id="virtual_title" name="virtual_title" required
+                                               type="text" value="{page.virtual_title}">
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label for="static_url" class="col-sm-2 col-form-label">{lbl_static_url}</label>
+                                    <label class="col-sm-2 col-form-label" for="static_url">{lbl_static_url}</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="static_url" name="static_url"
-                                               value="{page.static_url}" readonly
-                                               style="background-color: #e9ecef; cursor: not-allowed;">
+                                        <input class="form-control" id="static_url" name="static_url" readonly
+                                               style="background-color: #e9ecef; cursor: not-allowed;" type="text"
+                                               value="{page.static_url}">
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label for="virtual_content" class="col-sm-2 col-form-label">{lbl_content}</label>
+                                    <label class="col-sm-2 col-form-label" for="virtual_content">{lbl_content}</label>
                                     <div class="col-sm-10">
-                                        <textarea class="summernote" name="virtual_content">{page.virtual_content}</textarea>
+                                        <textarea class="summernote"
+                                                  name="virtual_content">{page.virtual_content}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label for="visible" class="col-sm-2 col-form-label">{lbl_visible}</label>
+                                    <label class="col-sm-2 col-form-label" for="visible">{lbl_visible}</label>
                                     <div class="col-sm-10">
-                                        <select id="visible" name="visible" class="form-select w-auto">
+                                        <select class="form-select w-auto" id="visible" name="visible">
                                             <option value="1" {page.visible_selected}>{enabled}</option>
                                             <option value="0" {page.hidden_selected}>{disabled}</option>
                                         </select>
@@ -73,19 +74,19 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label for="created_at" class="col-sm-2 col-form-label">{lbl_date}</label>
+                                    <label class="col-sm-2 col-form-label" for="created_at">{lbl_date}</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="created_at" name="created_at"
-                                               value="{page.created_at}" readonly
-                                               style="background-color: #e9ecef; cursor: not-allowed;">
+                                        <input class="form-control" id="created_at" name="created_at" readonly
+                                               style="background-color: #e9ecef; cursor: not-allowed;" type="text"
+                                               value="{page.created_at}">
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-start">
-                                    <button type="submit" class="btn btn-primary me-2" name="submit">
+                                    <button class="btn btn-primary me-2" name="submit" type="submit">
                                         <i class="fas fa-check"></i> {btn_save}
                                     </button>
-                                    <a href="{basepath}admin/pages" class="btn btn-secondary">Cancel</a>
+                                    <a class="btn btn-secondary" href="{basepath}admin/pages">Cancel</a>
                                 </div>
 
                             </fieldset>
@@ -102,11 +103,11 @@
 </div>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.summernote').summernote({
             height: 350,
             callbacks: {
-                onImageUpload: function(files) {
+                onImageUpload: function (files) {
                     sendFile(files[0]);
                 }
             }
@@ -122,14 +123,14 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function(url) {
+                success: function (url) {
                     $('.summernote').summernote('insertImage', url);
                 }
             });
         }
 
         // Auto-generar slug para static_url al modificar título
-        $('#virtual_title').on('input', function() {
+        $('#virtual_title').on('input', function () {
             var title = $(this).val();
             var slug = title.toLowerCase()
                 .replace(/[^\w\s-]/g, '')

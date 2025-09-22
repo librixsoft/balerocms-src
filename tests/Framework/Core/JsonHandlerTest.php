@@ -1,6 +1,7 @@
 <?php
-use PHPUnit\Framework\TestCase;
+
 use Framework\Core\JSONHandler;
+use PHPUnit\Framework\TestCase;
 
 final class JsonHandlerTest extends TestCase
 {

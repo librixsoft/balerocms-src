@@ -8,38 +8,14 @@
 
 namespace Modules\Admin\Models;
 
-use Framework\Core\Model;
-use Framework\Core\ErrorConsole;
-use Framework\Static\Utils;
 use Exception;
+use Framework\Core\ErrorConsole;
+use Framework\Core\Model;
+use Framework\Static\Utils;
 use Throwable;
 
 class AdminModel extends Model
 {
-
-    public function getVirtualPages(): array
-    {
-        try {
-            $sql = "SELECT * FROM page WHERE visible = 1 ORDER BY id ASC";
-            $this->db->query($sql);
-            $this->db->get();
-
-            $rows = $this->db->getRows() ?? [];
-
-            // Generar URL estática para cada página virtual
-            foreach ($rows as &$row) {
-                $slug = Utils::slugify($row['static_url']);
-                $row['url'] = "{$slug}";
-            }
-
-            return $rows;
-        } catch (Throwable $e) {
-            ErrorConsole::handleException(
-                new Exception("Error al obtener páginas virtuales: " . $e->getMessage(), 0, $e)
-            );
-            return [];
-        }
-    }
 
     public function getPageById(int $id): ?array
     {
@@ -99,33 +75,34 @@ class AdminModel extends Model
         return count($pages);
     }
 
+    public function getVirtualPages(): array
+    {
+        try {
+            $sql = "SELECT * FROM page WHERE visible = 1 ORDER BY id ASC";
+            $this->db->query($sql);
+            $this->db->get();
+
+            $rows = $this->db->getRows() ?? [];
+
+            // Generar URL estática para cada página virtual
+            foreach ($rows as &$row) {
+                $slug = Utils::slugify($row['static_url']);
+                $row['url'] = "{$slug}";
+            }
+
+            return $rows;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al obtener páginas virtuales: " . $e->getMessage(), 0, $e)
+            );
+            return [];
+        }
+    }
+
     public function getBlocksCount(): int
     {
         $blocks = $this->getBlocks();
         return count($blocks);
-    }
-
-    public function updateSettings(array $data): void
-    {
-        $this->configSettings->title = $data['title'] ?? '';
-        $this->configSettings->description = $data['description'] ?? '';
-        $this->configSettings->keywords = $data['keywords'] ?? '';
-        $this->configSettings->theme = $data['theme'] ?? '';
-        $this->configSettings->footer = $data['footer'] ?? '';
-    }
-
-    public function deletePage(int $id): bool
-    {
-        try {
-            $sql = "DELETE FROM page WHERE id = ?";
-            $this->db->query($sql, [$id]);
-            return true;
-        } catch (Throwable $e) {
-            ErrorConsole::handleException(
-                new Exception("Error al eliminar página: " . $e->getMessage(), 0, $e)
-            );
-            return false;
-        }
     }
 
     /**
@@ -156,6 +133,29 @@ class AdminModel extends Model
                 new Exception("Error al obtener bloques: " . $e->getMessage(), 0, $e)
             );
             return [];
+        }
+    }
+
+    public function updateSettings(array $data): void
+    {
+        $this->configSettings->title = $data['title'] ?? '';
+        $this->configSettings->description = $data['description'] ?? '';
+        $this->configSettings->keywords = $data['keywords'] ?? '';
+        $this->configSettings->theme = $data['theme'] ?? '';
+        $this->configSettings->footer = $data['footer'] ?? '';
+    }
+
+    public function deletePage(int $id): bool
+    {
+        try {
+            $sql = "DELETE FROM page WHERE id = ?";
+            $this->db->query($sql, [$id]);
+            return true;
+        } catch (Throwable $e) {
+            ErrorConsole::handleException(
+                new Exception("Error al eliminar página: " . $e->getMessage(), 0, $e)
+            );
+            return false;
         }
     }
 

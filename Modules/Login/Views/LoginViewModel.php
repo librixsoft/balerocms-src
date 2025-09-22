@@ -8,8 +8,8 @@
 
 namespace Modules\Login\Views;
 
-use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
+use Framework\Core\ViewModel;
 
 class LoginViewModel
 {
@@ -29,12 +29,12 @@ class LoginViewModel
     {
         $this->viewModel->addAll([
             // Etiquetas
-            'lbl_login'     => 'Login',
-            'lbl_username'  => 'Username',
-            'lbl_password'  => 'Password',
+            'lbl_login' => 'Login',
+            'lbl_username' => 'Username',
+            'lbl_password' => 'Password',
 
             // Botones
-            'btn_login'     => 'Sign In',
+            'btn_login' => 'Sign In',
         ]);
 
         if (!empty($extraParams)) {

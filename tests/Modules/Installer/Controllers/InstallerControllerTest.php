@@ -1,11 +1,11 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Framework\Core\View;
+use Framework\Static\Flash;
 use Modules\Installer\Controllers\InstallerController;
 use Modules\Installer\Models\InstallerModel;
 use Modules\Installer\Views\InstallerViewModel;
-use Framework\Core\View;
-use Framework\Static\Flash;
+use PHPUnit\Framework\TestCase;
 
 class InstallerControllerTest extends TestCase
 {
@@ -13,47 +13,6 @@ class InstallerControllerTest extends TestCase
     private $viewModelMock;
     private $viewStub;
     private $controller;
-
-    protected function setUp(): void
-    {
-        /**
-         * Mock del modelo
-         */
-        $this->modelMock = $this->createMock(InstallerModel::class);
-        $this->modelMock->method('canConnectToDatabase')->willReturn(true);
-
-        /**
-         * Mock del ViewModel
-         */
-        $this->viewModelMock = $this->createMock(InstallerViewModel::class);
-        $this->viewModelMock->method('setInstallerParams')
-            ->willReturn(['db_ok' => true]);
-
-        /**
-         * Stub de View que devuelve HTML genérico
-         */
-        $this->viewStub = $this->createStub(View::class);
-        $this->viewStub->method('render')->willReturn('<html>HTML de prueba</html>');
-
-        /**
-         * Controller con render() que llama al View real
-         */
-        $this->controller = new class($this->modelMock, $this->viewModelMock) extends InstallerController {
-            public View $view;
-
-            /**
-             * Render que delega en el stub de View
-             */
-            protected function render($template, $params = [], $useTheme = true): string {
-                return $this->view->render($template, $params, $useTheme);
-            }
-        };
-
-        /**
-         * Inyectamos el stub
-         */
-        $this->controller->view = $this->viewStub;
-    }
 
     /**
      * Verifica que el método home retorna HTML
@@ -120,7 +79,7 @@ class InstallerControllerTest extends TestCase
          */
         $this->viewModelMock->expects($this->once())
             ->method('setInstallerParams')
-            ->with($this->callback(function($params) {
+            ->with($this->callback(function ($params) {
                 // Permitimos claves extra (como 'errors') y solo verificamos 'db_ok'
                 return isset($params['db_ok']);
             }))
@@ -189,6 +148,48 @@ class InstallerControllerTest extends TestCase
         // Comprobamos que Flash no tenga errores
         $errors = \Framework\Static\Flash::get('errors', []);
         $this->assertEmpty($errors);
+    }
+
+    protected function setUp(): void
+    {
+        /**
+         * Mock del modelo
+         */
+        $this->modelMock = $this->createMock(InstallerModel::class);
+        $this->modelMock->method('canConnectToDatabase')->willReturn(true);
+
+        /**
+         * Mock del ViewModel
+         */
+        $this->viewModelMock = $this->createMock(InstallerViewModel::class);
+        $this->viewModelMock->method('setInstallerParams')
+            ->willReturn(['db_ok' => true]);
+
+        /**
+         * Stub de View que devuelve HTML genérico
+         */
+        $this->viewStub = $this->createStub(View::class);
+        $this->viewStub->method('render')->willReturn('<html>HTML de prueba</html>');
+
+        /**
+         * Controller con render() que llama al View real
+         */
+        $this->controller = new class($this->modelMock, $this->viewModelMock) extends InstallerController {
+            public View $view;
+
+            /**
+             * Render que delega en el stub de View
+             */
+            protected function render($template, $params = [], $useTheme = true): string
+            {
+                return $this->view->render($template, $params, $useTheme);
+            }
+        };
+
+        /**
+         * Inyectamos el stub
+         */
+        $this->controller->view = $this->viewStub;
     }
 
 

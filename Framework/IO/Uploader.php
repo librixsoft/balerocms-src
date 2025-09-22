@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -15,10 +15,9 @@ use Framework\Static\Constant;
 
 class Uploader
 {
-    private ConfigSettings $configSettings;
-
     private const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
     private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
+    private ConfigSettings $configSettings;
 
     public function __construct(ConfigSettings $configSettings)
     {

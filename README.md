@@ -4,7 +4,7 @@ New version of Balero CMS.
 
 # Install
 
-Unzip and upload  to your /htdocs/ or your /www folder.
+Unzip and upload to your /htdocs/ or your /www folder.
 
 ```bash
 $ unzip balero-cms.zip -d /www
@@ -47,7 +47,8 @@ $ composer test
 
 ## Using Third-Party Libraries in Balerocms
 
-Balerocms is ready to use Composer for managing third-party libraries. Follow these steps to include and use external libraries in your CMS.
+Balerocms is ready to use Composer for managing third-party libraries. Follow these steps to include and use external
+libraries in your CMS.
 
 ### 1. Install libraries
 
@@ -58,7 +59,6 @@ $ composer install
 ```
 
 ### 1. Add a library with Composer
-
 
 ```bash
 $ composer require vendor/package-name
@@ -112,3 +112,18 @@ GitHub: [https://github.com/librixsoft/balerocms-src](https://github.com/librixs
 Mirror: [https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
 ](https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
 )
+
+# Sonar
+
+```
+$ docker-compose up -d
+```
+
+```
+docker run --rm \
+  -e SONAR_HOST_URL="http://host.docker.internal:9000" \
+  -e SONAR_TOKEN="sqa_3883c0bd01ccc056b9e62e5b1108674ceb1afde3" \
+  -v $(pwd):/usr/src \
+  sonarsource/sonar-scanner-cli
+```
+

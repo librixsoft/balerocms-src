@@ -3,12 +3,12 @@
 namespace Modules\Login\Controllers;
 
 use Framework\Core\Controller;
-use Modules\Login\Models\LoginModel;
-use Modules\Login\Views\LoginViewModel;
 use Framework\Http\Get;
 use Framework\Http\Post;
-use Framework\Static\Redirect;
 use Framework\Static\Flash;
+use Framework\Static\Redirect;
+use Modules\Login\Models\LoginModel;
+use Modules\Login\Views\LoginViewModel;
 
 class LoginController extends Controller
 {
@@ -18,7 +18,8 @@ class LoginController extends Controller
     public function __construct(
         LoginModel $model,
         LoginViewModel $viewModel
-    ) {
+    )
+    {
         $this->model = $model;
         $this->viewModel = $viewModel;
     }

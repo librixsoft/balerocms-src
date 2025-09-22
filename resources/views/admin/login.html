@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="expires" content="0"/>
-    <meta http-equiv="pragma" content="no-cache"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="no-cache, no-store, must-revalidate" http-equiv="cache-control"/>
+    <meta content="0" http-equiv="expires"/>
+    <meta content="no-cache" http-equiv="pragma"/>
 
     <title>Login - {mod_name}</title>
     <base href="{basepath}">
-    <link rel="shortcut icon" href="favicon.ico">
+    <link href="favicon.ico" rel="shortcut icon">
 
     <!-- Bootstrap CSS -->
     <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -31,31 +31,34 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4">
-            
+
             <div class="card shadow-sm">
                 <div class="card-header text-center">
-                    <img src="public/assets/images/admin/logo.png" class="logo img-fluid" style="max-height:80px;">
+                    <img class="logo img-fluid" src="public/assets/images/admin/logo.png" style="max-height:80px;">
                 </div>
                 <div class="card-body">
 
-                    <form method="POST" action="./login">
+                    <form action="./login" method="POST">
                         <div class="mb-3">
-                            <input type="text" id="username" name="usr" class="form-control" placeholder="{login.username}" >
+                            <input class="form-control" id="username" name="usr" placeholder="{login.username}"
+                                   type="text">
                         </div>
 
                         <div class="mb-3">
-                            <input type="password" id="password" name="pwd" class="form-control" placeholder="{login.password}" >
+                            <input class="form-control" id="password" name="pwd" placeholder="{login.password}"
+                                   type="password">
                         </div>
 
                         <%-- @if login_error -->
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-login_error">
+                        <div class="alert alert-danger alert-dismissible fade show" id="alert-login_error" role="alert">
                             <i class="fas fa-exclamation-triangle"></i> {login_error}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="deleteMessage('login_error')"></button>
+                            <button class="btn-close" data-bs-dismiss="alert" onclick="deleteMessage('login_error')"
+                                    type="button"></button>
                         </div>
                         <%-- @endif -->
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" name="login">
+                            <button class="btn btn-primary" name="login" type="submit">
                                 <i class="fas fa-sign-in-alt"></i> {login.submit}
                             </button>
                         </div>

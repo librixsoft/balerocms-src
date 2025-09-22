@@ -1,12 +1,12 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-use Framework\Rendering\ProcessorForEach;
-use Framework\Rendering\ProcessorFlattenParams;
-use Framework\Rendering\ProcessorIfBlocks;
-use Framework\Rendering\Conditions\OrCondition;
 use Framework\Rendering\Conditions\AndCondition;
 use Framework\Rendering\Conditions\ConditionFactory;
+use Framework\Rendering\Conditions\OrCondition;
+use Framework\Rendering\ProcessorFlattenParams;
+use Framework\Rendering\ProcessorForEach;
+use Framework\Rendering\ProcessorIfBlocks;
+use PHPUnit\Framework\TestCase;
 
 class ProcessorForEachTest extends TestCase
 {
@@ -14,53 +14,6 @@ class ProcessorForEachTest extends TestCase
     private ProcessorIfBlocks $processorIfBlocks;
     private $mockFlatten;
     private string $viewsDir;
-
-    protected function setUp(): void
-    {
-        // Mock ProcessorFlattenParams
-        $this->mockFlatten = $this->createMock(ProcessorFlattenParams::class);
-        $this->mockFlatten->method('process')
-            ->willReturnCallback(function ($array) {
-                $flat = [];
-                foreach ($array as $k => $v) {
-                    if (is_array($v)) {
-                        foreach ($v as $subk => $subv) {
-                            $flat["$k.$subk"] = $subv;
-                        }
-                    } else {
-                        $flat[$k] = $v;
-                    }
-                }
-                return $flat;
-            });
-
-        // Crear prototipos de Or y And
-        $orPrototype = new OrCondition();
-        $andPrototype = new AndCondition();
-
-        // Crear la fábrica de condiciones
-        $conditionFactory = new ConditionFactory($orPrototype, $andPrototype);
-
-        // Crear ProcessorIfBlocks con la fábrica
-        $this->processorIfBlocks = new ProcessorIfBlocks($conditionFactory);
-
-        // Crear ProcessorForEach con sus dependencias
-        $this->processorForEach = new ProcessorForEach(
-            $this->mockFlatten,
-            $this->processorIfBlocks
-        );
-
-        $this->viewsDir = __DIR__ . '/../../resources/views/foreach/';
-    }
-
-    private function loadTemplate(string $filename): string
-    {
-        $path = $this->viewsDir . $filename;
-        if (!file_exists($path)) {
-            throw new \RuntimeException("Template file not found: $path");
-        }
-        return file_get_contents($path);
-    }
 
     public function testForeachSimple()
     {
@@ -79,6 +32,15 @@ class ProcessorForEachTest extends TestCase
 
         $this->assertStringContainsString('Item: One, Value: 10', $resultNormalized);
         $this->assertStringContainsString('Item: Two, Value: 20', $resultNormalized);
+    }
+
+    private function loadTemplate(string $filename): string
+    {
+        $path = $this->viewsDir . $filename;
+        if (!file_exists($path)) {
+            throw new \RuntimeException("Template file not found: $path");
+        }
+        return file_get_contents($path);
     }
 
     public function testForeachWithIf()
@@ -175,8 +137,8 @@ class ProcessorForEachTest extends TestCase
         $params = [
             'errors' => [
                 'username' => 'El nombre de usuario no puede estar vacío.',
-                'passwd'   => 'La contraseña no puede estar vacía.',
-                'email'    => 'El correo electrónico no es válido.'
+                'passwd' => 'La contraseña no puede estar vacía.',
+                'email' => 'El correo electrónico no es válido.'
             ]
         ];
 
@@ -186,6 +148,44 @@ class ProcessorForEachTest extends TestCase
         $this->assertStringContainsString("Error en username: El nombre de usuario no puede estar vacío.", $resultNormalized);
         $this->assertStringContainsString("Error en passwd: La contraseña no puede estar vacía.", $resultNormalized);
         $this->assertStringContainsString("Error en email: El correo electrónico no es válido.", $resultNormalized);
+    }
+
+    protected function setUp(): void
+    {
+        // Mock ProcessorFlattenParams
+        $this->mockFlatten = $this->createMock(ProcessorFlattenParams::class);
+        $this->mockFlatten->method('process')
+            ->willReturnCallback(function ($array) {
+                $flat = [];
+                foreach ($array as $k => $v) {
+                    if (is_array($v)) {
+                        foreach ($v as $subk => $subv) {
+                            $flat["$k.$subk"] = $subv;
+                        }
+                    } else {
+                        $flat[$k] = $v;
+                    }
+                }
+                return $flat;
+            });
+
+        // Crear prototipos de Or y And
+        $orPrototype = new OrCondition();
+        $andPrototype = new AndCondition();
+
+        // Crear la fábrica de condiciones
+        $conditionFactory = new ConditionFactory($orPrototype, $andPrototype);
+
+        // Crear ProcessorIfBlocks con la fábrica
+        $this->processorIfBlocks = new ProcessorIfBlocks($conditionFactory);
+
+        // Crear ProcessorForEach con sus dependencias
+        $this->processorForEach = new ProcessorForEach(
+            $this->mockFlatten,
+            $this->processorIfBlocks
+        );
+
+        $this->viewsDir = __DIR__ . '/../../resources/views/foreach/';
     }
 
 }

@@ -1,7 +1,8 @@
 <?php
-use PHPUnit\Framework\TestCase;
-use Framework\Core\JSONHandler;
+
 use Framework\Core\ConfigSettings;
+use Framework\Core\JSONHandler;
+use PHPUnit\Framework\TestCase;
 
 final class ConfigTest extends TestCase
 {
@@ -22,25 +23,25 @@ final class ConfigTest extends TestCase
                     'dbname' => 'cms',
                 ],
                 'admin' => [
-                    'username'  => 'admin',
-                    'pass'      => 'admin123',
-                    'email'     => 'admin@test.com',
+                    'username' => 'admin',
+                    'pass' => 'admin123',
+                    'email' => 'admin@test.com',
                     'firstname' => 'Anibal',
-                    'lastname'  => 'Gomez',
+                    'lastname' => 'Gomez',
                 ],
                 'system' => [
                     'installed' => '1'
                 ],
                 'site' => [
-                    'title'      => 'Mi CMS',
-                    'description'=> 'Descripción del sitio',
-                    'url'        => 'http://localhost/',
-                    'keywords'   => 'cms,php',
-                    'basepath'   => '/',
-                    'theme'      => 'default',
-                    'footer'     => '© 2025 Mi CMS',
-                    'multilang'  => '0',
-                    'editor'     => 'tiny'
+                    'title' => 'Mi CMS',
+                    'description' => 'Descripción del sitio',
+                    'url' => 'http://localhost/',
+                    'keywords' => 'cms,php',
+                    'basepath' => '/',
+                    'theme' => 'default',
+                    'footer' => '© 2025 Mi CMS',
+                    'multilang' => '0',
+                    'editor' => 'tiny'
                 ]
             ]
         ];
@@ -86,7 +87,7 @@ final class ConfigTest extends TestCase
 
         // Cambiamos valores usando magic setter
         $config->dbhost = '192.168.0.1';
-        $config->theme  = 'darkmode';
+        $config->theme = 'darkmode';
         $config->username = 'superadmin';
 
         // Validamos cambios usando magic getter

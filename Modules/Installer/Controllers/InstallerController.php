@@ -2,16 +2,16 @@
 
 namespace Modules\Installer\Controllers;
 
-use Framework\Core\Validator;
 use Framework\Core\Controller;
-use Framework\Static\Redirect;
-use Framework\Static\Flash;
-use Modules\Installer\Mapper\InstallerMapper;
-use Modules\Installer\Models\InstallerModel;
-use Modules\Installer\DTO\InstallerDTO;
-use Modules\Installer\Views\InstallerViewModel;
+use Framework\Core\Validator;
 use Framework\Http\Get;
 use Framework\Http\Post;
+use Framework\Static\Flash;
+use Framework\Static\Redirect;
+use Modules\Installer\DTO\InstallerDTO;
+use Modules\Installer\Mapper\InstallerMapper;
+use Modules\Installer\Models\InstallerModel;
+use Modules\Installer\Views\InstallerViewModel;
 
 class InstallerController extends Controller
 {
@@ -21,7 +21,8 @@ class InstallerController extends Controller
     public function __construct(
         InstallerModel $model,
         InstallerViewModel $installerViewModel
-    ) {
+    )
+    {
         $this->model = $model;
         $this->installerViewModel = $installerViewModel;
     }
@@ -53,7 +54,7 @@ class InstallerController extends Controller
     public function postInstall()
     {
         $installerDTO = InstallerDTO::fromRequest($this->request);
-        $input = (array) $installerDTO;
+        $input = (array)$installerDTO;
 
         $validator = Validator::make($input)
             ->required('username', 'El nombre de usuario no puede estar vacío.')

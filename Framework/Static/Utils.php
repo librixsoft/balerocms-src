@@ -2,7 +2,8 @@
 
 namespace Framework\Static;
 
-class Utils {
+class Utils
+{
 
     /**
      * Genera un slug amigable para URLs basado en el título (opcional)

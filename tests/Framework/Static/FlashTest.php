@@ -1,22 +1,10 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use Framework\Static\Flash;
+use PHPUnit\Framework\TestCase;
 
 class FlashTest extends TestCase
 {
-    /**
-     * Reinicia la sesión antes de cada prueba para garantizar
-     * un entorno limpio y evitar fugas de estado entre tests.
-     */
-    protected function setUp(): void
-    {
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
-        $_SESSION = []; // limpiar la sesión manualmente
-    }
-
     /**
      * Verifica que los valores guardados en Flash con set()
      * puedan recuperarse correctamente usando get(),
@@ -65,7 +53,7 @@ class FlashTest extends TestCase
     {
         Flash::set('errors', [
             'username' => 'Username is required.',
-            'email'    => 'Email is invalid.',
+            'email' => 'Email is invalid.',
         ]);
 
         $this->assertTrue(Flash::has('errors'));
@@ -132,7 +120,7 @@ class FlashTest extends TestCase
         // Agregar array al flash
         Flash::set('errors', [
             'username' => 'Username is required.',
-            'email'    => 'Email is invalid.',
+            'email' => 'Email is invalid.',
         ]);
 
         // Agregar valor simple al flash
@@ -158,6 +146,18 @@ class FlashTest extends TestCase
         // Eliminar valor simple
         Flash::delete('email');
         $this->assertFalse(Flash::has('email'));
+    }
+
+    /**
+     * Reinicia la sesión antes de cada prueba para garantizar
+     * un entorno limpio y evitar fugas de estado entre tests.
+     */
+    protected function setUp(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+        $_SESSION = []; // limpiar la sesión manualmente
     }
 
 }

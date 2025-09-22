@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
 namespace Framework\Routing;
 
+use Exception;
 use Framework\Core\Boot;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ErrorConsole;
@@ -16,7 +17,6 @@ use Framework\Static\Constant;
 use Framework\Static\Redirect;
 use Modules\Admin\AdminElements;
 use Throwable;
-use Exception;
 
 class Router
 {
@@ -38,44 +38,12 @@ class Router
     public function __construct(
         ConfigSettings $configSettings,
         RequestHelper $request
-    ) {
+    )
+    {
         $this->configSettings = $configSettings;
         $this->request = $request;
 
         $this->checkInstallerRedirect();
-    }
-
-    public function initBalero(): self
-    {
-        // Cargar helpers
-        require_once Constant::LANG_HELPER;
-
-        // Resolver application
-        $module = $this->request->get(self::PARAM_MODULE);
-
-        if (!$module) {
-            $this->initModule(self::DEFAULT_MODULE);
-            exit;
-        }
-
-        // Default load
-        match ($module) {
-            default => $this->initModule(ucfirst($module)),
-        };
-
-        return $this;
-    }
-
-    private function initModule(string $module): void
-    {
-        $this->module = $module;
-        $controllerClass = "Modules\\{$module}\\Controllers\\{$module}Controller";
-
-        if (!class_exists($controllerClass)) {
-            ErrorConsole::handleException(new Exception("Controller class not found: $controllerClass"));
-        }
-
-        Boot::loadController($controllerClass);
     }
 
     private function checkInstallerRedirect(): void
@@ -110,6 +78,39 @@ class Router
         } catch (Throwable $e) {
             ErrorConsole::handleException($e);
         }
+    }
+
+    public function initBalero(): self
+    {
+        // Cargar helpers
+        require_once Constant::LANG_HELPER;
+
+        // Resolver application
+        $module = $this->request->get(self::PARAM_MODULE);
+
+        if (!$module) {
+            $this->initModule(self::DEFAULT_MODULE);
+            exit;
+        }
+
+        // Default load
+        match ($module) {
+            default => $this->initModule(ucfirst($module)),
+        };
+
+        return $this;
+    }
+
+    private function initModule(string $module): void
+    {
+        $this->module = $module;
+        $controllerClass = "Modules\\{$module}\\Controllers\\{$module}Controller";
+
+        if (!class_exists($controllerClass)) {
+            ErrorConsole::handleException(new Exception("Controller class not found: $controllerClass"));
+        }
+
+        Boot::loadController($controllerClass);
     }
 
 }

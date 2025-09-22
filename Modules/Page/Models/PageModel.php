@@ -1,19 +1,17 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
 namespace Modules\Page\Models;
 
-use Framework\Core\Model;
-use Framework\Core\ErrorConsole;
-use Framework\Core\ConfigSettings;
-use Framework\Database\MySQL;
-use Framework\Static\Utils;
 use Exception;
+use Framework\Core\ErrorConsole;
+use Framework\Core\Model;
+use Framework\Static\Utils;
 use Throwable;
 
 class PageModel extends Model

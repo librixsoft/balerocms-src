@@ -9,9 +9,9 @@
 namespace Modules\Page\Controllers;
 
 use Framework\Core\Controller;
+use Framework\Http\Get;
 use Modules\Page\Models\PageModel;
 use Modules\Page\Views\PageViewModel;
-use Framework\Http\Get;
 
 class PageController extends Controller
 {
@@ -21,7 +21,8 @@ class PageController extends Controller
     public function __construct(
         PageModel $model,
         PageViewModel $viewModel
-    ) {
+    )
+    {
         $this->model = $model;
         $this->viewModel = $viewModel;
     }
@@ -41,14 +42,14 @@ class PageController extends Controller
 
         if (empty($page)) {
             return $this->render("page_detail.html", $this->viewModel->setPageParams([
-                'error_message'   => "La página solicitada no existe.",
-                'virtual_pages'   => $this->model->getVirtualPages(),
+                'error_message' => "La página solicitada no existe.",
+                'virtual_pages' => $this->model->getVirtualPages(),
             ]));
         }
 
         return $this->render("page_detail.html", $this->viewModel->setPageParams([
-            'page'            => $page,
-            'virtual_pages'   => $this->model->getVirtualPages(),
+            'page' => $page,
+            'virtual_pages' => $this->model->getVirtualPages(),
         ]));
     }
 }

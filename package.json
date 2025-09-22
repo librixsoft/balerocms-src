@@ -1,11 +1,9 @@
 {
   "name": "balero-assets",
   "version": "1.0.0",
-
   "scripts": {
     "postinstall": "node copy-libs.js"
   },
-
   "dependencies": {
     "bootstrap": "^5.3.3",
     "jquery": "^3.7.1",
@@ -13,11 +11,11 @@
     "summernote": "^0.9.1",
     "bs-stepper": "^1.7.0"
   },
-
   "assets": {
-    "@fortawesome/fontawesome-free": ["css/all.min.css"]
+    "@fortawesome/fontawesome-free": [
+      "css/all.min.css"
+    ]
   },
-
   "//": [
     "📌 Notas:",
     "- Todo lo que tenga dist/css, dist/js, css, js se copia automáticamente.",

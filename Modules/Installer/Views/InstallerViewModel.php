@@ -2,8 +2,8 @@
 
 namespace Modules\Installer\Views;
 
-use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
+use Framework\Core\ViewModel;
 use Framework\Static\Constant;
 
 class InstallerViewModel
@@ -53,16 +53,16 @@ class InstallerViewModel
         $dbOk = $extraParams['db_ok'] ?? false;
 
         // Estado del sistema
-        $fieldsValid     = $this->areFieldsValid($extraParams);
-        $modRewrite      = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
-        $configWritable  = is_writable(Constant::CONFIG_PATH);
+        $fieldsValid = $this->areFieldsValid($extraParams);
+        $modRewrite = function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules());
+        $configWritable = is_writable(Constant::CONFIG_PATH);
 
         // Agregar estado como flags
         $this->viewModel->addAll([
-            'fields_valid'      => $fieldsValid,
-            'db_ok'             => $dbOk,
-            'mod_rewrite_enabled'    => $modRewrite,
-            'config_writable'   => $configWritable,
+            'fields_valid' => $fieldsValid,
+            'db_ok' => $dbOk,
+            'mod_rewrite_enabled' => $modRewrite,
+            'config_writable' => $configWritable,
         ]);
 
         // Merge con parámetros extra (por ejemplo errores o datos cacheados)

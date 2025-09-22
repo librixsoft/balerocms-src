@@ -51,31 +51,32 @@ class ConditionFactory
             NotEqualsCondition::class,
             TruthyCondition::class
         ]
-    ) {
+    )
+    {
         $this->orPrototype = $orPrototype;
         $this->andPrototype = $andPrototype;
         $this->conditionClasses = $conditionClasses;
     }
 
     /**
-     * Crea una instancia de condición simple a partir de una expresión.
+     * Parsea una expresión compleja con AND y OR.
      *
-     * @param string $expression La expresión a evaluar.
-     * @return ConditionInterface La condición correspondiente.
-     *
-     * @throws \InvalidArgumentException Si no hay clase que soporte la expresión.
+     * @param string $expression La expresión compleja a parsear.
+     * @return ConditionInterface La condición raíz (OR) con toda la estructura de condiciones.
      */
-    public function create(string $expression): ConditionInterface
+    public function parseExpression(string $expression): ConditionInterface
     {
-        $expression = trim($expression);
+        $orCondition = $this->createOr();
 
-        foreach ($this->conditionClasses as $class) {
-            if ($class::supports($expression)) {
-                return $class::fromExpression($expression);
+        foreach (OrCondition::splitExpression($expression) as $orPart) {
+            $andCondition = $this->createAnd();
+            foreach (AndCondition::splitExpression($orPart) as $and) {
+                $andCondition->addCondition($this->create(trim($and)));
             }
+            $orCondition->addCondition($andCondition);
         }
 
-        throw new \InvalidArgumentException("Expresión no soportada: $expression");
+        return $orCondition;
     }
 
     /**
@@ -99,23 +100,23 @@ class ConditionFactory
     }
 
     /**
-     * Parsea una expresión compleja con AND y OR.
+     * Crea una instancia de condición simple a partir de una expresión.
      *
-     * @param string $expression La expresión compleja a parsear.
-     * @return ConditionInterface La condición raíz (OR) con toda la estructura de condiciones.
+     * @param string $expression La expresión a evaluar.
+     * @return ConditionInterface La condición correspondiente.
+     *
+     * @throws \InvalidArgumentException Si no hay clase que soporte la expresión.
      */
-    public function parseExpression(string $expression): ConditionInterface
+    public function create(string $expression): ConditionInterface
     {
-        $orCondition = $this->createOr();
+        $expression = trim($expression);
 
-        foreach (OrCondition::splitExpression($expression) as $orPart) {
-            $andCondition = $this->createAnd();
-            foreach (AndCondition::splitExpression($orPart) as $and) {
-                $andCondition->addCondition($this->create(trim($and)));
+        foreach ($this->conditionClasses as $class) {
+            if ($class::supports($expression)) {
+                return $class::fromExpression($expression);
             }
-            $orCondition->addCondition($andCondition);
         }
 
-        return $orCondition;
+        throw new \InvalidArgumentException("Expresión no soportada: $expression");
     }
 }

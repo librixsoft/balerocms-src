@@ -10,15 +10,16 @@ class ProcessorForEach
     public function __construct(
         ProcessorFlattenParams $processFlattenParams,
         ProcessorIfBlocks $processorIfBlocks
-    ) {
+    )
+    {
         $this->processFlattenParams = $processFlattenParams;
         $this->processorIfBlocks = $processorIfBlocks;
     }
 
     /**
      * Procesa bloques:
-     *   @foreach var as item
-     *   @foreach var as key => value
+     * @foreach var as item
+     * @foreach var as key => value
      */
     public function process(string $content, array $params): string
     {
@@ -29,7 +30,7 @@ class ProcessorForEach
                 $arrayKey = $matches[1]; // ej: 'errors'
                 $firstVar = $matches[2]; // ej: 'field'
                 $secondVar = $matches[3] ?? null; // ej: 'message'
-                $block    = $matches[4]; // contenido dentro del foreach
+                $block = $matches[4]; // contenido dentro del foreach
 
                 if (!isset($params[$arrayKey]) || !is_array($params[$arrayKey])) {
                     return ''; // No existe o no es array

@@ -1,20 +1,13 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Framework\Core\ConfigSettings;
 use Framework\Services\RedirectService;
 use Framework\Static\Redirect;
-use Framework\Core\ConfigSettings;
+use PHPUnit\Framework\TestCase;
 
 class RedirectServiceTest extends TestCase
 {
     protected ConfigSettings $config;
-
-    protected function setUp(): void
-    {
-        // Configuración simulada
-        $this->config = $this->createMock(ConfigSettings::class);
-        $this->config->basepath = '/basepath';
-    }
 
     /**
      * Test RedirectService::to() genera URL correcta sin hacer exit
@@ -76,5 +69,12 @@ class RedirectServiceTest extends TestCase
 
         // Llamada a la fachada sin instancia
         Redirect::to('/installer');
+    }
+
+    protected function setUp(): void
+    {
+        // Configuración simulada
+        $this->config = $this->createMock(ConfigSettings::class);
+        $this->config->basepath = '/basepath';
     }
 }

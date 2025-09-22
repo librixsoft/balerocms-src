@@ -30,13 +30,13 @@ const EXCLUDE_PREFIXES = [
 
 function copyFileSafe(src, dest) {
     const destDir = path.dirname(dest);
-    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, {recursive: true});
     if (fs.existsSync(src)) fs.copyFileSync(src, dest);
 }
 
 function copyFolderSync(src, dest) {
     if (!fs.existsSync(src)) return;
-    if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+    if (!fs.existsSync(dest)) fs.mkdirSync(dest, {recursive: true});
 
     fs.readdirSync(src).forEach(file => {
         const srcFile = path.join(src, file);

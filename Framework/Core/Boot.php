@@ -1,20 +1,15 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
 namespace Framework\Core;
 
-use Framework\Http\RequestHelper;
-use Framework\Core\View;
 use Framework\Config\Context;
-
 use Framework\Static\Constant;
-use Throwable;
-use Exception;
 
 class Boot
 {
@@ -42,40 +37,6 @@ class Boot
         // Global services
         Context::init(self::$container);
 
-    }
-
-    /**
-     * Autocarga una clase PHP dado su namespace.
-     * Busca el archivo PHP correspondiente dentro de los directorios base definidos.
-     *
-     * @param string $class Nombre completo del namespace + clase.
-     * @return void
-     */
-    public function autoloadClass(string $class): void
-    {
-        $baseDirs = [
-            Constant::LOCAL_BASEPATH . '/',
-        ];
-
-        $relativeClass = ltrim($class, '\\');
-        $relativePath = str_replace('\\', '/', $relativeClass) . '.php';
-
-        // Corrección en caso de doble prefijo 'Modules/Modules/'
-        if (str_starts_with($relativePath, 'Modules/Modules/')) {
-            $relativePath = substr($relativePath, strlen('Modules/'));
-        }
-
-        foreach ($baseDirs as $baseDir) {
-            $file = $baseDir . $relativePath;
-
-            if (file_exists($file)) {
-                require_once $file;
-                return;
-            }
-        }
-
-        $message = "No se pudo cargar la clase <code>$class</code><br>Ruta esperada: <code>$relativePath</code>";
-        ErrorConsole::handleException(new \Exception($message));
     }
 
     /**
@@ -116,6 +77,40 @@ class Boot
     public static function instantiateClass(string $class): object
     {
         return self::$container->resolveInstance($class);
+    }
+
+    /**
+     * Autocarga una clase PHP dado su namespace.
+     * Busca el archivo PHP correspondiente dentro de los directorios base definidos.
+     *
+     * @param string $class Nombre completo del namespace + clase.
+     * @return void
+     */
+    public function autoloadClass(string $class): void
+    {
+        $baseDirs = [
+            Constant::LOCAL_BASEPATH . '/',
+        ];
+
+        $relativeClass = ltrim($class, '\\');
+        $relativePath = str_replace('\\', '/', $relativeClass) . '.php';
+
+        // Corrección en caso de doble prefijo 'Modules/Modules/'
+        if (str_starts_with($relativePath, 'Modules/Modules/')) {
+            $relativePath = substr($relativePath, strlen('Modules/'));
+        }
+
+        foreach ($baseDirs as $baseDir) {
+            $file = $baseDir . $relativePath;
+
+            if (file_exists($file)) {
+                require_once $file;
+                return;
+            }
+        }
+
+        $message = "No se pudo cargar la clase <code>$class</code><br>Ruta esperada: <code>$relativePath</code>";
+        ErrorConsole::handleException(new \Exception($message));
     }
 
 }

@@ -2,10 +2,10 @@
 
 namespace Modules\Installer\Models;
 
-use Framework\Core\Model;
-use Framework\Core\ErrorConsole;
-use Framework\Static\Constant;
 use Exception;
+use Framework\Core\ErrorConsole;
+use Framework\Core\Model;
+use Framework\Static\Constant;
 use Throwable;
 
 class InstallerModel extends Model

@@ -1,40 +1,15 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-use Framework\Rendering\ProcessorIfBlocks;
-use Framework\Rendering\Conditions\OrCondition;
 use Framework\Rendering\Conditions\AndCondition;
 use Framework\Rendering\Conditions\ConditionFactory;
+use Framework\Rendering\Conditions\OrCondition;
+use Framework\Rendering\ProcessorIfBlocks;
+use PHPUnit\Framework\TestCase;
 
 class ProcessorIfBlocksTest extends TestCase
 {
     private ProcessorIfBlocks $processor;
     private string $viewsDir;
-
-    protected function setUp(): void
-    {
-        // Crear prototipos de Or y And
-        $orPrototype = new OrCondition();
-        $andPrototype = new AndCondition();
-
-        // Crear la fábrica con prototipos inyectados
-        $factory = new ConditionFactory($orPrototype, $andPrototype);
-
-        // Inyectar la fábrica en ProcessorIfBlocks
-        $this->processor = new ProcessorIfBlocks($factory);
-
-        // Ruta relativa a los templates
-        $this->viewsDir = __DIR__ . '/../../resources/views/if/';
-    }
-
-    private function loadTemplate(string $filename): string
-    {
-        $path = $this->viewsDir . $filename;
-        if (!file_exists($path)) {
-            throw new \RuntimeException("Template file not found: $path");
-        }
-        return file_get_contents($path);
-    }
 
     public function testIfEquals()
     {
@@ -47,6 +22,15 @@ class ProcessorIfBlocksTest extends TestCase
         $flatParams['theme'] = 'inactive';
         $result = $this->processor->process($template, $flatParams);
         $this->assertStringContainsString('Inactive Theme', $result);
+    }
+
+    private function loadTemplate(string $filename): string
+    {
+        $path = $this->viewsDir . $filename;
+        if (!file_exists($path)) {
+            throw new \RuntimeException("Template file not found: $path");
+        }
+        return file_get_contents($path);
     }
 
     public function testIfNegation()
@@ -260,6 +244,22 @@ class ProcessorIfBlocksTest extends TestCase
         $result = $this->processor->process($template, $flatParams);
         $this->assertStringContainsString('Inactive Theme', $result);
         $this->assertStringNotContainsString('Active Theme', $result);
+    }
+
+    protected function setUp(): void
+    {
+        // Crear prototipos de Or y And
+        $orPrototype = new OrCondition();
+        $andPrototype = new AndCondition();
+
+        // Crear la fábrica con prototipos inyectados
+        $factory = new ConditionFactory($orPrototype, $andPrototype);
+
+        // Inyectar la fábrica en ProcessorIfBlocks
+        $this->processor = new ProcessorIfBlocks($factory);
+
+        // Ruta relativa a los templates
+        $this->viewsDir = __DIR__ . '/../../resources/views/if/';
     }
 
 

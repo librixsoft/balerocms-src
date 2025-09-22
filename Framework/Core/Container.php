@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -9,7 +9,6 @@
 namespace Framework\Core;
 
 use Closure;
-use ReflectionClass;
 
 class Container
 {

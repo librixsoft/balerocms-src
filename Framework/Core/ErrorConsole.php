@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -29,27 +29,6 @@ class ErrorConsole
         self::cleanOutput();
         $message = "Error [$errno]: $errstr in $errfile on line $errline";
         self::renderConsole($message);
-    }
-
-    public static function handleException(Throwable $e)
-    {
-        self::cleanOutput();
-        $message = "Exception: " . get_class($e) . "\n";
-        $message .= "Message: " . $e->getMessage() . "\n";
-        $message .= "File: " . $e->getFile() . " (" . $e->getLine() . ")\n";
-        $message .= "Trace:\n" . $e->getTraceAsString();
-
-        self::renderConsole($message, $e);
-    }
-
-    public static function handleShutdown()
-    {
-        $error = error_get_last();
-        if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-            self::cleanOutput();
-            $message = "Fatal Error: {$error['message']} in {$error['file']} on line {$error['line']}";
-            self::renderConsole($message);
-        }
     }
 
     private static function cleanOutput()
@@ -189,5 +168,26 @@ class ErrorConsole
 
         echo '</div></div></body></html>';
         exit;
+    }
+
+    public static function handleException(Throwable $e)
+    {
+        self::cleanOutput();
+        $message = "Exception: " . get_class($e) . "\n";
+        $message .= "Message: " . $e->getMessage() . "\n";
+        $message .= "File: " . $e->getFile() . " (" . $e->getLine() . ")\n";
+        $message .= "Trace:\n" . $e->getTraceAsString();
+
+        self::renderConsole($message, $e);
+    }
+
+    public static function handleShutdown()
+    {
+        $error = error_get_last();
+        if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+            self::cleanOutput();
+            $message = "Fatal Error: {$error['message']} in {$error['file']} on line {$error['line']}";
+            self::renderConsole($message);
+        }
     }
 }

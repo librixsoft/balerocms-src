@@ -26,7 +26,8 @@ class TemplateEngine
         ProcessorIfBlocks $processorIfBlocks,
         ProcessorVariables $processorVariables,
         ProcessorKeyPath $processorKeyPath
-    ) {
+    )
+    {
         $this->processorIncludes = $processorIncludes;
         $this->processFlattenParams = $processFlattenParams;
         $this->processorForEach = $processorForEach;

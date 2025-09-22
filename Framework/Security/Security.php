@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
 
 namespace Framework\Security;
 
-class Security {
-	
-	private string $var;
+class Security
+{
+
+    private string $var;
 
     /**
      * Anti-XSS Method for tech rich editor
@@ -18,7 +19,8 @@ class Security {
      * @param int $rich Is Rich Text?
      * @return Proccesed String
      */
-    public function antiXSS($val) {
+    public function antiXSS($val)
+    {
         if (!is_string($val)) {
             return $val; // Solo procesar strings
         }
@@ -44,7 +46,8 @@ class Security {
     }
 
 
-    public function sanitize(string $val): string {
+    public function sanitize(string $val): string
+    {
         return htmlspecialchars($val);
     }
 
@@ -53,15 +56,17 @@ class Security {
      * @param $var
      * @return int
      */
-    public function toInt($var) {
+    public function toInt($var)
+    {
         $this->var = $var;
         $this->var = preg_replace('/[^0-9,.]+/i', '', $this->var);
         $this->var = htmlentities($this->var);
-        return (int) $this->var;
+        return (int)$this->var;
     }
-	
-	public function __toString() {
-		return (string)$this->var;
-	}
+
+    public function __toString()
+    {
+        return (string)$this->var;
+    }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Framework\Http;
 
 use Attribute;
@@ -8,5 +9,7 @@ class Auth
 {
     public function __construct(
         public bool $required = true
-    ) {}
+    )
+    {
+    }
 }

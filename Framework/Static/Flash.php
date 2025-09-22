@@ -2,8 +2,6 @@
 
 namespace Framework\Static;
 
-use Framework\Rendering\ProcessorFlattenParams;
-
 class Flash
 {
     private const FLASH_KEY = '_flash';
@@ -15,6 +13,16 @@ class Flash
     {
         self::ensureSessionStarted();
         $_SESSION[self::FLASH_KEY][$key] = $value;
+    }
+
+    /**
+     * Asegura que la sesión esté iniciada
+     */
+    private static function ensureSessionStarted(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     /**
@@ -77,16 +85,6 @@ class Flash
             } else {
                 break;
             }
-        }
-    }
-
-    /**
-     * Asegura que la sesión esté iniciada
-     */
-    private static function ensureSessionStarted(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
         }
     }
 }

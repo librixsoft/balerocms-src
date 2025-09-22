@@ -8,7 +8,6 @@
 
 namespace Framework\Core;
 
-use Framework\Core\ConfigSettings;
 use Framework\Database\MySQL;
 
 class Model

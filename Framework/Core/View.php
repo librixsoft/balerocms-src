@@ -2,9 +2,8 @@
 
 namespace Framework\Core;
 
-use Framework\Core\ConfigSettings;
-use Framework\Static\Constant;
 use Framework\Rendering\TemplateEngine;
+use Framework\Static\Constant;
 
 class View
 {
@@ -31,31 +30,11 @@ class View
     }
 
     /**
-     * Devuelve los parámetros por defecto de todas las vistas
-     * y mezcla con parámetros dinámicos si se pasan.
+     * Normaliza un path para que termine con exactamente una sola barra.
      */
-    public function getDefaultParams(array $params = []): array
+    private function normalizePath(string $path): string
     {
-        return array_merge([
-            'title'       => $this->configSettings->title,
-            'url'         => $this->configSettings->url,
-            'keywords'    => $this->configSettings->keywords,
-            'description' => $this->configSettings->description,
-            'basepath'    => $this->configSettings->basepath,
-            'year'        => date('Y'),
-            'footer'      => $this->configSettings->footer,
-            'theme'       => $this->configSettings->theme,
-        ], $params);
-    }
-
-    /**
-     * Método global para procesar cualquier texto dinámico
-     *     (ej: contenido de posts con placeholders como {year}, {title}, etc.)
-     */
-    public function parsePlaceholders(string $text, array $extraParams = []): string
-    {
-        $params = $this->getDefaultParams($extraParams);
-        return $this->templateEngine->processTemplate($text, $params);
+        return rtrim($path, '/') . '/';
     }
 
     /**
@@ -118,10 +97,30 @@ class View
     }
 
     /**
-     * Normaliza un path para que termine con exactamente una sola barra.
+     * Devuelve los parámetros por defecto de todas las vistas
+     * y mezcla con parámetros dinámicos si se pasan.
      */
-    private function normalizePath(string $path): string
+    public function getDefaultParams(array $params = []): array
     {
-        return rtrim($path, '/') . '/';
+        return array_merge([
+            'title' => $this->configSettings->title,
+            'url' => $this->configSettings->url,
+            'keywords' => $this->configSettings->keywords,
+            'description' => $this->configSettings->description,
+            'basepath' => $this->configSettings->basepath,
+            'year' => date('Y'),
+            'footer' => $this->configSettings->footer,
+            'theme' => $this->configSettings->theme,
+        ], $params);
+    }
+
+    /**
+     * Método global para procesar cualquier texto dinámico
+     *     (ej: contenido de posts con placeholders como {year}, {title}, etc.)
+     */
+    public function parsePlaceholders(string $text, array $extraParams = []): string
+    {
+        $params = $this->getDefaultParams($extraParams);
+        return $this->templateEngine->processTemplate($text, $params);
     }
 }

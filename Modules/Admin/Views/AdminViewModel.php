@@ -2,9 +2,9 @@
 
 namespace Modules\Admin\Views;
 
-use Framework\Core\ViewModel;
 use Framework\Core\ConfigSettings;
 use Framework\Core\ThemesReader;
+use Framework\Core\ViewModel;
 
 class AdminViewModel
 {
@@ -17,19 +17,6 @@ class AdminViewModel
         $this->themesReader = $themesReader;
     }
 
-    private function createViewModel(): ViewModel
-    {
-        $viewModel = new ViewModel();
-
-        // Parámetros base disponibles en todas las vistas
-        $viewModel->addAll([
-            'username' => $this->config->username,
-            'email'    => $this->config->email,
-        ]);
-
-        return $viewModel;
-    }
-
     public function getSettingsParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
@@ -37,25 +24,25 @@ class AdminViewModel
         $currentLang = $_SESSION['lang'] ?? $this->config->language ?? 'en';
 
         $viewModel->addAll([
-            'core_version'   => _CORE_VERSION,
-            'defaultTheme'   => $this->config->theme,
+            'core_version' => _CORE_VERSION,
+            'defaultTheme' => $this->config->theme,
             'themes' => $this->themesReader->getThemes(),
-            'activeMenu'    => 'settings',
-            'lbl_theme'     => "Theme",
-            'lbl_settings'  => __('admin.settings'),
-            'lbl_title'     => 'Title',
-            'lbl_keywords'  => 'Keywords',
+            'activeMenu' => 'settings',
+            'lbl_theme' => "Theme",
+            'lbl_settings' => __('admin.settings'),
+            'lbl_title' => 'Title',
+            'lbl_keywords' => 'Keywords',
             'lbl_description' => 'Description',
             'lbl_footer' => 'Footer',
 
-            'lbl_language'    => 'Default System Language',
-            'languages'       => ['en' => 'English', 'es' => 'Español'],
+            'lbl_language' => 'Default System Language',
+            'languages' => ['en' => 'English', 'es' => 'Español'],
             'defaultLanguage' => $currentLang,
 
-            'txt_title'       => $this->config->title,
-            'txt_keywords'    => $this->config->keywords,
+            'txt_title' => $this->config->title,
+            'txt_keywords' => $this->config->keywords,
             'txt_description' => $this->config->description,
-            'txt_footer'      => $this->config->footer,
+            'txt_footer' => $this->config->footer,
 
             'btn_refresh' => 'Refresh',
         ]);
@@ -67,17 +54,30 @@ class AdminViewModel
         return $viewModel->all();
     }
 
+    private function createViewModel(): ViewModel
+    {
+        $viewModel = new ViewModel();
+
+        // Parámetros base disponibles en todas las vistas
+        $viewModel->addAll([
+            'username' => $this->config->username,
+            'email' => $this->config->email,
+        ]);
+
+        return $viewModel;
+    }
+
     public function getPagesParams(array $extraParams = []): array
     {
         $viewModel = $this->createViewModel();
 
         $viewModel->addAll([
-            'lbl_title'    => 'Title',
+            'lbl_title' => 'Title',
             'current_date' => date('Y-m-d H:i:s'),
-            'new_page'     => 'New page',
-            'btn_add'      => 'Create',
-            'lbl_visible'  => 'Visible',
-            'activeMenu'   => 'all_pages',
+            'new_page' => 'New page',
+            'btn_add' => 'Create',
+            'lbl_visible' => 'Visible',
+            'activeMenu' => 'all_pages',
         ]);
 
         if (!empty($extraParams)) {
@@ -122,9 +122,9 @@ class AdminViewModel
         $viewModel = $this->createViewModel();
 
         $viewModel->addAll([
-            'lbl_blocks'    => 'Blocks',
+            'lbl_blocks' => 'Blocks',
             'lbl_new_block' => 'New Block',
-            'activeMenu'    => 'all_blocks',
+            'activeMenu' => 'all_blocks',
         ]);
 
         if (!empty($extraParams)) {
@@ -140,7 +140,7 @@ class AdminViewModel
 
         $viewModel->addAll([
             'lbl_new_block' => 'New Block',
-            'activeMenu'    => 'blocks',
+            'activeMenu' => 'blocks',
         ]);
 
         if (!empty($extraParams)) {
@@ -156,7 +156,7 @@ class AdminViewModel
 
         $viewModel->addAll([
             'lbl_edit_block' => 'Edit Block',
-            'activeMenu'     => 'blocks',
+            'activeMenu' => 'blocks',
         ]);
 
         if (!empty($extraParams)) {

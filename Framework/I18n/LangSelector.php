@@ -1,4 +1,5 @@
 <?php
+
 namespace Framework\I18n;
 
 use Framework\Http\RequestHelper;

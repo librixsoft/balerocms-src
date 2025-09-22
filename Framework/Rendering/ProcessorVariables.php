@@ -16,7 +16,8 @@ class ProcessorVariables
     private Security $security;
 
     public function __construct(
-        Security $security) {
+        Security $security)
+    {
         $this->security = $security;
     }
 

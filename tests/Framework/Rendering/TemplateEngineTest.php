@@ -2,18 +2,33 @@
 
 namespace Tests\Framework\Rendering;
 
-use PHPUnit\Framework\TestCase;
-use Framework\Rendering\TemplateEngine;
-
-use Framework\Rendering\ProcessorIncludes;
 use Framework\Rendering\ProcessorFlattenParams;
 use Framework\Rendering\ProcessorForEach;
 use Framework\Rendering\ProcessorIfBlocks;
-use Framework\Rendering\ProcessorVariables;
+use Framework\Rendering\ProcessorIncludes;
 use Framework\Rendering\ProcessorKeyPath;
+use Framework\Rendering\ProcessorVariables;
+use Framework\Rendering\TemplateEngine;
+use PHPUnit\Framework\TestCase;
 
 class TemplateEngineTest extends TestCase
 {
+    public function testProcessTemplateFunctional(): void
+    {
+        $engine = $this->createTemplateEngineWithMocks();
+
+        $engine->setBaseDir('/base/path');
+
+        $template = 'Hola, {{ nombre }}!';
+        $params = ['nombre' => 'Aníbal'];
+
+        $output = $engine->processTemplate($template, $params);
+
+        $expected = 'Hola, Aníbal![Includes:/base/path/][ForEach][Variables][IfBlocks][KeyPath]';
+
+        $this->assertSame($expected, $output); // ✅ corregido para evitar deprecaciones
+    }
+
     private function createTemplateEngineWithMocks(): TemplateEngine
     {
         $processorIncludes = $this->createMock(ProcessorIncludes::class);
@@ -49,21 +64,5 @@ class TemplateEngineTest extends TestCase
             $processorVariables,
             $processorKeyPath
         );
-    }
-
-    public function testProcessTemplateFunctional(): void
-    {
-        $engine = $this->createTemplateEngineWithMocks();
-
-        $engine->setBaseDir('/base/path');
-
-        $template = 'Hola, {{ nombre }}!';
-        $params = ['nombre' => 'Aníbal'];
-
-        $output = $engine->processTemplate($template, $params);
-
-        $expected = 'Hola, Aníbal![Includes:/base/path/][ForEach][Variables][IfBlocks][KeyPath]';
-
-        $this->assertSame($expected, $output); // ✅ corregido para evitar deprecaciones
     }
 }

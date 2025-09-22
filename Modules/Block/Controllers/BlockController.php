@@ -9,11 +9,10 @@
 namespace Modules\Block\Controllers;
 
 use Framework\Core\Controller;
+use Framework\Http\Get;
 use Modules\Block\Models\BlockModel;
 use Modules\Block\Views\BlockViewModel;
-use Framework\Http\Get;
 use Modules\Page\Models\PageModel;
-use Exception;
 
 class BlockController extends Controller
 {
@@ -27,7 +26,8 @@ class BlockController extends Controller
         PageModel $pageModel,
         BlockModel $model,
         BlockViewModel $viewModel
-    ) {
+    )
+    {
         $this->blockModel = $blockModel;
         $this->pageModel = $pageModel;
         $this->model = $model;
@@ -38,7 +38,7 @@ class BlockController extends Controller
     public function index()
     {
         $params = $this->viewModel->setBlockParams([
-            'blocks'        => $this->blockModel->getBlocks(),
+            'blocks' => $this->blockModel->getBlocks(),
             'virtual_pages' => $this->pageModel->getVirtualPages(),
         ]);
         return $this->render("main.html", $params);

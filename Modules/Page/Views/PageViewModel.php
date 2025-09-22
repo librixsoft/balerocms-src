@@ -32,11 +32,11 @@ class PageViewModel
         $this->viewModel->addAll([
             // Etiquetas comunes
             'lbl_virtual_pages' => 'Virtual Pages',
-            'lbl_home'          => 'Home',
-            'lbl_no_pages'      => 'No virtual pages available.',
+            'lbl_home' => 'Home',
+            'lbl_no_pages' => 'No virtual pages available.',
 
             // Botones
-            'btn_refresh'       => 'Refresh',
+            'btn_refresh' => 'Refresh',
         ]);
 
         if (!empty($extraParams)) {

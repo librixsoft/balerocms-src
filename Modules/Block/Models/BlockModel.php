@@ -8,9 +8,9 @@
 
 namespace Modules\Block\Models;
 
-use Framework\Core\Model;
-use Framework\Core\ErrorConsole;
 use Exception;
+use Framework\Core\ErrorConsole;
+use Framework\Core\Model;
 use Throwable;
 
 class BlockModel extends Model

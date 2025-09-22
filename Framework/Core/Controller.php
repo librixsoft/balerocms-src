@@ -11,8 +11,8 @@ namespace Framework\Core;
 use Framework\Http\Get;
 use Framework\Http\Post;
 use Framework\Http\RequestHelper;
-use Framework\Security\LoginManager;
 use Framework\I18n\LangSelector;
+use Framework\Security\LoginManager;
 
 class Controller
 {
@@ -40,15 +40,6 @@ class Controller
     public function initControllerAndInject(): void
     {
         $this->run();
-    }
-
-    private function initBasePath(): void
-    {
-        $basepath = trim($this->configSettings->basepath ?? '');
-        if ($basepath === '') {
-            $basepath = $this->configSettings->getFullBasepath();
-        }
-        $this->configSettings->basepath = $basepath;
     }
 
     public function run(): void
@@ -99,6 +90,15 @@ class Controller
         );
     }
 
+    private function initBasePath(): void
+    {
+        $basepath = trim($this->configSettings->basepath ?? '');
+        if ($basepath === '') {
+            $basepath = $this->configSettings->getFullBasepath();
+        }
+        $this->configSettings->basepath = $basepath;
+    }
+
     private function runMethod(string $methodName, array $params = []): void
     {
 
@@ -117,18 +117,18 @@ class Controller
         }
     }
 
-    protected function render(string $template, array $params = [], bool $useTheme = true): string
-    {
-        $langParams = LangSelector::getLanguageParams($this->request);
-        return $this->view->render($template, array_merge($langParams, $params), $useTheme);
-    }
-
     protected function initLanguage(): void
     {
         if ($this->request) {
             // Carga las traducciones y guarda en LangManager
             LangSelector::getLanguageParams($this->request);
         }
+    }
+
+    protected function render(string $template, array $params = [], bool $useTheme = true): string
+    {
+        $langParams = LangSelector::getLanguageParams($this->request);
+        return $this->view->render($template, array_merge($langParams, $params), $useTheme);
     }
 
 

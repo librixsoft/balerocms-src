@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Balero CMS 
+ * Balero CMS
  * @author Anibal Gomez <balerocms@gmail.com>
  * @license GNU General Public License
  */
@@ -34,21 +34,21 @@ class InstallerDTO
     {
         $dto = new self();
 
-        $dto->dbhost     = $request->post('dbhost') ?? '';
-        $dto->dbuser     = $request->post('dbuser') ?? '';
-        $dto->dbpass     = $request->post('dbpass') ?? '';
-        $dto->dbname     = $request->post('dbname') ?? '';
-        $dto->title      = $request->post('title') ?? '';
-        $dto->url        = $request->post('url') ?? '';
-        $dto->description= $request->post('description') ?? '';
-        $dto->keywords   = $request->post('keywords') ?? '';
-        $dto->basepath   = $request->post('basepath') ?? '';
-        $dto->username   = $request->post('username') ?? '';
-        $dto->passwd     = $request->post('passwd') ?? '';
-        $dto->passwd2    = $request->post('passwd2') ?? '';
-        $dto->firstname  = $request->post('firstname') ?? '';
-        $dto->lastname   = $request->post('lastname') ?? '';
-        $dto->email      = $request->post('email') ?? '';
+        $dto->dbhost = $request->post('dbhost') ?? '';
+        $dto->dbuser = $request->post('dbuser') ?? '';
+        $dto->dbpass = $request->post('dbpass') ?? '';
+        $dto->dbname = $request->post('dbname') ?? '';
+        $dto->title = $request->post('title') ?? '';
+        $dto->url = $request->post('url') ?? '';
+        $dto->description = $request->post('description') ?? '';
+        $dto->keywords = $request->post('keywords') ?? '';
+        $dto->basepath = $request->post('basepath') ?? '';
+        $dto->username = $request->post('username') ?? '';
+        $dto->passwd = $request->post('passwd') ?? '';
+        $dto->passwd2 = $request->post('passwd2') ?? '';
+        $dto->firstname = $request->post('firstname') ?? '';
+        $dto->lastname = $request->post('lastname') ?? '';
+        $dto->email = $request->post('email') ?? '';
 
         return $dto;
     }

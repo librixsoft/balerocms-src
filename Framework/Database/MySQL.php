@@ -10,8 +10,8 @@ namespace Framework\Database;
 
 use Exception;
 use Framework\Core\ConfigSettings;
-use Throwable;
 use Framework\Core\ErrorConsole;
+use Throwable;
 
 class MySQL
 {
@@ -46,7 +46,6 @@ class MySQL
 
         $this->status = !$this->conn->connect_error;
     }
-
 
 
     public function query(string $query, array $params = []): void
@@ -154,24 +153,63 @@ class MySQL
 
     // Getters and setters...
 
-    public function getConn(): \mysqli { return $this->conn; }
-    public function setConn(\mysqli $conn): void { $this->conn = $conn; }
+    public function getConn(): \mysqli
+    {
+        return $this->conn;
+    }
 
-    public function getResult(): \mysqli_result|bool|null { return $this->result; }
-    public function setResult(\mysqli_result|bool|null $result): void { $this->result = $result; }
+    public function setConn(\mysqli $conn): void
+    {
+        $this->conn = $conn;
+    }
+
+    public function getResult(): \mysqli_result|bool|null
+    {
+        return $this->result;
+    }
+
+    public function setResult(\mysqli_result|bool|null $result): void
+    {
+        $this->result = $result;
+    }
 
     public function isError(): bool
     {
-        return (bool) $this->error;
+        return (bool)$this->error;
     }
-    public function setError(bool|string $error): void { $this->error = $error; }
 
-    public function getRows(): array { return $this->rows; }
-    public function setRows(array $rows): void { $this->rows = $rows; }
+    public function setError(bool|string $error): void
+    {
+        $this->error = $error;
+    }
 
-    public function getRow(): ?array { return $this->row; }
-    public function setRow(?array $row): void { $this->row = $row; }
+    public function getRows(): array
+    {
+        return $this->rows;
+    }
 
-    public function isStatus(): bool { return $this->status; }
-    public function setStatus(bool $status): void { $this->status = $status; }
+    public function setRows(array $rows): void
+    {
+        $this->rows = $rows;
+    }
+
+    public function getRow(): ?array
+    {
+        return $this->row;
+    }
+
+    public function setRow(?array $row): void
+    {
+        $this->row = $row;
+    }
+
+    public function isStatus(): bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): void
+    {
+        $this->status = $status;
+    }
 }

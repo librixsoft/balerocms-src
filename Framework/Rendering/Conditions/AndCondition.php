@@ -6,6 +6,16 @@ class AndCondition implements ConditionInterface
 {
     private array $conditions = [];
 
+    public static function splitExpression(string $expression): array
+    {
+        return preg_split('/\s+AND\s+/i', $expression);
+    }
+
+    public static function supports(string $expression): bool
+    {
+        return false;
+    }
+
     public function addCondition(ConditionInterface $condition): void
     {
         $this->conditions[] = $condition;
@@ -19,15 +29,5 @@ class AndCondition implements ConditionInterface
             }
         }
         return true;
-    }
-
-    public static function splitExpression(string $expression): array
-    {
-        return preg_split('/\s+AND\s+/i', $expression);
-    }
-
-    public static function supports(string $expression): bool
-    {
-        return false;
     }
 }

@@ -2,39 +2,39 @@
 
 namespace Framework\Core;
 
-use Framework\Static\Constant;
 use Exception;
+use Framework\Static\Constant;
 
 class ConfigSettings
 {
     private array $fields = [
         // Database
-        'dbhost'    => '/config/database/dbhost',
-        'dbuser'    => '/config/database/dbuser',
-        'dbpass'    => '/config/database/dbpass',
-        'dbname'    => '/config/database/dbname',
+        'dbhost' => '/config/database/dbhost',
+        'dbuser' => '/config/database/dbuser',
+        'dbpass' => '/config/database/dbpass',
+        'dbname' => '/config/database/dbname',
 
         // Admin
-        'username'  => '/config/admin/username',
-        'pass'      => '/config/admin/passwd',
-        'email'     => '/config/admin/email',
+        'username' => '/config/admin/username',
+        'pass' => '/config/admin/passwd',
+        'email' => '/config/admin/email',
         'firstname' => '/config/admin/firstname',
-        'lastname'  => '/config/admin/lastname',
+        'lastname' => '/config/admin/lastname',
 
         // System
         'installed' => '/config/system/installed',
 
         // Site
-        'language'      => '/config/site/language',
-        'title'      => '/config/site/title',
-        'description'=> '/config/site/description',
-        'url'        => '/config/site/url',
-        'keywords'   => '/config/site/keywords',
-        'basepath'   => '/config/site/basepath',
-        'theme'      => '/config/site/theme',
-        'footer'     => '/config/site/footer',
-        'multilang'  => '/config/site/multilang',
-        'editor'     => '/config/site/editor'
+        'language' => '/config/site/language',
+        'title' => '/config/site/title',
+        'description' => '/config/site/description',
+        'url' => '/config/site/url',
+        'keywords' => '/config/site/keywords',
+        'basepath' => '/config/site/basepath',
+        'theme' => '/config/site/theme',
+        'footer' => '/config/site/footer',
+        'multilang' => '/config/site/multilang',
+        'editor' => '/config/site/editor'
     ];
 
     private array $data = [];
@@ -102,7 +102,7 @@ class ConfigSettings
         $dir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
 
         // Construir base con slash final
-        if ($dir === '' || $dir === '.' ) {
+        if ($dir === '' || $dir === '.') {
             $dir = '/';
         } else {
             $dir .= '/';

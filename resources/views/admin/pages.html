@@ -4,14 +4,14 @@
     <title>Admin Home Page - {mod_name}</title>
     <!-- basepath -->
     <base href="{basepath}">
-    <link rel="shortcut icon" href="favicon.ico">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="favicon.ico" rel="shortcut icon">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
     <!-- Bootstrap 5 -->
     <link href="public/assets/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles -->
-    <link href="public/assets/css/dashboard.css" rel="stylesheet" media="screen">
+    <link href="public/assets/css/dashboard.css" media="screen" rel="stylesheet">
 
     <!-- Font Awesome 6 -->
     <link href="public/assets/css/all.min.css" rel="stylesheet">
@@ -60,13 +60,14 @@
                                 <tr>
                                     <td>{page.virtual_title}</td>
                                     <td>
-                                        <a href="./admin/pages/edit/{page.id}" class="btn btn-sm btn-info">
+                                        <a class="btn btn-sm btn-info" href="./admin/pages/edit/{page.id}">
                                             <i class="fas fa-pencil-alt"></i> {lbl_edit}
                                         </a>
 
-                                        <form method="post" action="./admin/pages/delete/{page.id}" style="display:inline;"
-                                              onsubmit="return confirm('{lbl_confirm_delete}')">
-                                            <button type="submit" class="btn btn-sm btn-danger">
+                                        <form action="./admin/pages/delete/{page.id}" method="post"
+                                              onsubmit="return confirm('{lbl_confirm_delete}')"
+                                              style="display:inline;">
+                                            <button class="btn btn-sm btn-danger" type="submit">
                                                 <i class="fas fa-trash"></i> {lbl_delete}
                                             </button>
                                         </form>
@@ -79,7 +80,7 @@
 
                         <!-- Botón New Page abajo a la derecha -->
                         <div class="text-end mt-3">
-                            <a href="./admin/new-page" class="btn btn-sm btn-info">
+                            <a class="btn btn-sm btn-info" href="./admin/new-page">
                                 <i class="fas fa-plus"></i> New Page
                             </a>
                         </div>
@@ -88,15 +89,16 @@
                 <!-- /block -->
 
                 <script>
-                    $(document).ready(function() {
+                    $(document).ready(function () {
                         $('.summernote').summernote({
                             height: 350,
                             callbacks: {
-                                onImageUpload: function(files) {
+                                onImageUpload: function (files) {
                                     sendFile(files[0]);
                                 }
                             }
                         });
+
                         function sendFile(file) {
                             var data = new FormData();
                             data.append("file", file);
@@ -107,7 +109,7 @@
                                 cache: false,
                                 contentType: false,
                                 processData: false,
-                                success: function(url) {
+                                success: function (url) {
                                     $('.summernote').summernote('insertImage', url);
                                 }
                             });
