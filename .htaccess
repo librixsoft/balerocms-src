@@ -1,15 +1,27 @@
-# raiz/.htaccess
 RewriteEngine On
 Options -Indexes
 
-# Bloquear acceso directo a /public/
+# -----------------------------
+# Permitir acceso a ciertos archivos de la raíz
+# -----------------------------
+RewriteRule ^favicon\.ico$ public/favicon.ico [L]
+RewriteRule ^robots\.txt$ public/robots.txt [L]
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+# -----------------------------
+# Bloquear acceso directo a /public/ excepto los permitidos
+# -----------------------------
 RewriteRule ^public(/.*)?$ - [F,L]
 
-# Rutas limpias de la raíz hacia public/index.php
+# -----------------------------
+# Rutas limpias hacia public/index.php
+# -----------------------------
 RewriteCond %{REQUEST_URI} !^/index\.php$
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteRule ^([a-zA-Z0-9_-]+)$ public/index.php?module=$1 [QSA,L]
 RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ public/index.php?module=$1&target=$2 [QSA,L]
 
+# -----------------------------
 # Todo lo demás a public/index.php
+# -----------------------------
 RewriteRule ^(.*)$ public/index.php [L]
