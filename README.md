@@ -4,7 +4,7 @@ New version of Balero CMS.
 
 # Install
 
-Unzip and upload to your /htdocs/ or your /www folder.
+Unzip and upload to your /htdocs/ or your /www folder. (It requires PHP 8.x+ and Mysql).
 
 ```bash
 $ unzip balero-cms.zip -d /www
@@ -13,14 +13,53 @@ $ unzip balero-cms.zip -d /www
 Set write permissions to config file.
 
 ```bash
-$ chmod 755 ./balerocms-src/resources/config/balero.config.json
+$ chmod u+rw ./balerocms-src/resources/config/balero.config.json
 ```
 
 Go to: [http://localhost/balerocms-src/](http://localhost/balerocms-src/) and installer will install for you.
 
 Enjoy. Done!
 
-# Extra configuration for developers or customization
+# Ignore the steps below if you are not a developer
+
+## BaleroCMS Docker Setup Guide
+
+Only for local environments or if you are using Docker:
+
+### Starting the environment
+
+1. **First time or after changing Dockerfile/images**:
+
+```
+docker-compose up -d --build
+```
+
+- `-d` → run in background
+- `--build` → rebuild images before starting containers
+
+2. **Just start existing containers**:
+
+```
+docker-compose up -d
+```
+
+---
+
+### Accessing services
+
+- **BaleroCMS:** http://localhost:8080
+- **MySQL:**
+    - Host: `localhost`
+    - Port: `3307`
+    - User: `root`
+    - Database: `balero_cms`
+    - Password: `""` (empty)
+
+- **SonarQube:** http://localhost:9000
+    - User: `admin`
+    - Password: `admin`
+
+---
 
 ## Update/Install Front-End Libs
 
@@ -105,19 +144,15 @@ class ExampleController extends Controller
 }
 ```
 
-# Reposiroty
-
-GitHub: [https://github.com/librixsoft/balerocms-src](https://github.com/librixsoft/balerocms-src)
-
-Mirror: [https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
-](https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
-)
-
 # Sonar
+
+### Start SonarQube with Docker
 
 ```
 $ docker-compose up -d
 ```
+
+### Run Sonar Scanner
 
 ```
 docker run --rm \
@@ -127,3 +162,38 @@ docker run --rm \
   sonarsource/sonar-scanner-cli
 ```
 
+### How to get your Sonar token from the dashboard
+
+1. Open your browser and go to your SonarQube dashboard:
+
+```
+http://localhost:9000
+```
+
+2. Log in with your account (default admin/admin).
+
+3. Click on your avatar in the top right corner → **My Account**.
+
+4. Go to the **Security** tab.
+
+5. Under **Tokens**, click **Generate Token**.
+
+6. Give your token a name (e.g., `balero_project`) and click **Generate**.
+
+7. Copy the token immediately — this is your `SONAR_TOKEN` to use in the scanner command.
+
+8. Replace the token in your Docker command:
+
+```
+-e SONAR_TOKEN="your_generated_token_here"
+```
+
+Now you can run the scanner and it will authenticate with SonarQube using your token.
+
+# Reposiroty
+
+GitHub: [https://github.com/librixsoft/balerocms-src](https://github.com/librixsoft/balerocms-src)
+
+Mirror: [https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
+](https://balerocms@bitbucket.org/librixsoft/balerocms-src.git
+)
