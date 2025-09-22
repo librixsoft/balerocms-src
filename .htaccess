@@ -1,13 +1,15 @@
 RewriteEngine On
 
-# Bloquear acceso web a carpetas internas
-RewriteRule ^(Framework|Modules|resources|vendor|tests|node_modules)/ - [F,L]
+# Desactivar listado de directorios
+Options -Indexes
 
-# No reescribir si archivo o carpeta real
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+# Bloquear acceso directo a /public y todo su contenido
+RewriteRule ^public(/.*)?$ - [F,L]
 
-# Rutas limpias: /module y /module/target
-RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?module=$1 [QSA,L]
-RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?module=$1&target=$2 [QSA,L]
+# Si el archivo o carpeta existe dentro de /public, sírvelo
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Todo lo demás va a /public/index.php
+RewriteRule ^(.*)$ public/index.php [L]

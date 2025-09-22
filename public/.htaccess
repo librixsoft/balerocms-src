@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# 1) No reescribir si es archivo o carpeta real (sirve CSS, JS, imágenes, etc.)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2) Rutas limpias
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?module=$1 [QSA,L]
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?module=$1&target=$2 [QSA,L]
