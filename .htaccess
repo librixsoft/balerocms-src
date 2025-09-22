@@ -1,18 +1,18 @@
 RewriteEngine On
 
-# Bloquear acceso web a carpetas internas
+# 1) Bloquear acceso a carpetas internas
 RewriteRule ^(Framework|Modules|resources|vendor|tests|node_modules)/ - [F,L]
 
-# Permitir solo index.php en la raíz
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteCond %{REQUEST_URI} !/index\.php$ [NC]
-RewriteRule ^ - [F,L]
+# 2) Permitir todo dentro de /public/
+RewriteRule ^public/ - [L]
 
-# No reescribir si es index.php o carpeta real
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+# 3) Permitir la raíz (/) y index.php
+RewriteRule ^$ - [L]
+RewriteRule ^index\.php$ - [L]
 
-# Rutas limpias: /module y /module/target
+# 4) Rutas limpias: /module y /module/target
 RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?module=$1 [QSA,L]
 RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?module=$1&target=$2 [QSA,L]
+
+# 5) Bloquear todo lo demás
+RewriteRule ^ - [F,L]
