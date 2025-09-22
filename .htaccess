@@ -1,16 +1,13 @@
 RewriteEngine On
 
-# 1) Redirigir /assets/... → /public/assets/... (relativo, sin carpeta fija)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{DOCUMENT_ROOT}/public/assets/$1 -f
-RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+# Bloquear acceso web a carpetas internas
+RewriteRule ^(Framework|Modules|resources|vendor|tests|node_modules)/ - [F,L]
 
-# 2) No reescribir si archivo o carpeta real
+# No reescribir si archivo o carpeta real
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# 3) Rutas limpias: /module y /module/target
+# Rutas limpias: /module y /module/target
 RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?module=$1 [QSA,L]
 RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?module=$1&target=$2 [QSA,L]
