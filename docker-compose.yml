@@ -1,14 +1,18 @@
 version: "3.9"
 
 services:
+  # -----------------------------
+  # LAMP Stack (Apache + PHP + MySQL)
+  # -----------------------------
   lamp:
     image: mattrayner/lamp:latest-2004-php8
     container_name: lamp-app
     ports:
-      - "8080:80"      # Apache
-      - "3307:3306"    # MySQL
+      - "8080:80"       # Apache → http://localhost:8080
+      - "3307:3306"     # MySQL → localhost:3307
     volumes:
-      - ./:/var/www/html    # monta tu raíz de proyecto
+      - ./:/var/www/html                     # monta todo el proyecto
+      - ./apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: balero_cms
@@ -16,20 +20,25 @@ services:
       MYSQL_PASSWORD: ""
     restart: unless-stopped
 
-  # SonarQube
+  # -----------------------------
+  # SonarQube (análisis estático)
+  # -----------------------------
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube
     ports:
-      - "9000:9000"
+      - "9000:9000"     # UI → http://localhost:9000
     environment:
       SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: sonar
     depends_on:
       - db
+    restart: unless-stopped
 
+  # -----------------------------
   # PostgreSQL para SonarQube
+  # -----------------------------
   db:
     image: postgres:15
     container_name: postgres-sonar
@@ -39,6 +48,7 @@ services:
       POSTGRES_DB: sonar
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
 volumes:
   postgres_data:
