@@ -1,27 +1,10 @@
-RewriteEngine On
+# Evitar listado de directorios
 Options -Indexes
 
-# -----------------------------
-# Permitir acceso a ciertos archivos de la raíz
-# -----------------------------
-RewriteRule ^favicon\.ico$ public/favicon.ico [L]
-RewriteRule ^robots\.txt$ public/robots.txt [L]
-RewriteRule ^assets/(.*)$ public/assets/$1 [L]
-
-# -----------------------------
-# Bloquear acceso directo a /public/ excepto los permitidos
-# -----------------------------
-RewriteRule ^public(/.*)?$ - [F,L]
-
-# -----------------------------
-# Rutas limpias hacia public/index.php
-# -----------------------------
-RewriteCond %{REQUEST_URI} !^/index\.php$
-RewriteCond %{REQUEST_URI} !^/public/
-RewriteRule ^([a-zA-Z0-9_-]+)$ public/index.php?module=$1 [QSA,L]
-RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ public/index.php?module=$1&target=$2 [QSA,L]
-
-# -----------------------------
-# Todo lo demás a public/index.php
-# -----------------------------
-RewriteRule ^(.*)$ public/index.php [L]
+# Denegar acceso web directo a todo este nivel
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>

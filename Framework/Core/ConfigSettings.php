@@ -101,11 +101,6 @@ class ConfigSettings
         // Normalizar separadores y sacar directorio
         $dir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
 
-        // Si termina en /public, quitarlo
-        if (substr($dir, -7) === '/public') {
-            $dir = substr($dir, 0, -7);
-        }
-
         // Construir base con slash final
         if ($dir === '' || $dir === '.') {
             $dir = '/';

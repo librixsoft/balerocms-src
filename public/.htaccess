@@ -1,15 +1,19 @@
 RewriteEngine On
 Options -Indexes
 
-# Bloquear acceso directo a index.php si se entra por /public/
-RewriteCond %{THE_REQUEST} /public/index\.php [NC]
-RewriteRule ^ - [F,L]
-
-# Permitir assets
+# -----------------------------
+# Permitir acceso a assets
+# -----------------------------
 RewriteRule ^assets/ - [L]
 
-# Permitir index.php solo cuando es llamado desde la raíz (vía rewrite)
-RewriteRule ^index\.php$ - [L]
+# -----------------------------
+# Rutas limpias hacia index.php
+# -----------------------------
+RewriteCond %{REQUEST_URI} !^/index\.php$ [NC]
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?module=$1 [QSA,L]
+RewriteRule ^([a-zA-Z0-9_-]+)/(.*)$ index.php?module=$1&target=$2 [QSA,L]
 
-# Bloquear todo lo demás
-RewriteRule ^ - [F,L]
+# -----------------------------
+# Todo lo demás a index.php
+# -----------------------------
+RewriteRule ^(.*)$ index.php [L]
